@@ -1,0 +1,170 @@
+---
+import { getCollection } from 'astro:content';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Get featured concerts and upcoming performances
+const allConcerts = await getCollection('concerts');
+const featuredConcerts = allConcerts
+  .filter((concert) => concert.data.featured)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
+
+const upcomingConcerts = allConcerts
+  .filter((concert) => concert.data.status === 'upcoming')
+  .sort((a, b) => a.data.date.getTime() - b.data.date.getTime())
+  .slice(0, 3);
+
+// Get featured press
+const allPress = await getCollection('press');
+const featuredPress = allPress
+  .filter((item) => item.data.featured)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 2);
+---
+
+<BaseLayout title="Davis Ponjuan - Conductor">
+  <section>
+    <h1>Davis Ponjuan</h1>
+    <p>Conductor • Music Director • Educator</p>
+  </section>
+
+  {
+    upcomingConcerts.length > 0 && (
+      <section>
+        <h2>Upcoming Performances</h2>
+        <ul>
+          {upcomingConcerts.map((concert) => (
+            <li>
+              <a href={`/concerts/${concert.id}`}>
+                <strong>{concert.data.title}</strong>
+              </a>
+              <div>
+                {concert.data.date.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </div>
+              <div>
+                {concert.data.venue}, {concert.data.location}
+              </div>
+              <div>{concert.data.orchestra}</div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    featuredConcerts.length > 0 && (
+      <section>
+        <h2>Featured Performances</h2>
+        <ul>
+          {featuredConcerts.map((concert) => (
+            <li>
+              <a href={`/concerts/${concert.id}`}>
+                <strong>{concert.data.title}</strong>
+              </a>
+              <div>
+                {concert.data.date.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </div>
+              <div>
+                {concert.data.venue}, {concert.data.location}
+              </div>
+              <div>{concert.data.orchestra}</div>
+            </li>
+          ))}
+        </ul>
+        <a href="/concerts">View all concerts →</a>
+      </section>
+    )
+  }
+
+  {
+    featuredPress.length > 0 && (
+      <section>
+        <h2>Press</h2>
+        <ul>
+          {featuredPress.map((item) => (
+            <li>
+              <blockquote>{item.data.excerpt}</blockquote>
+              <cite>
+                — {item.data.publication}
+                {item.data.author && `, ${item.data.author}`}
+              </cite>
+            </li>
+          ))}
+        </ul>
+        <a href="/press">View all press →</a>
+      </section>
+    )
+  }
+
+  <section>
+    <h2>About</h2>
+    <p>
+      [Biography excerpt will go here - for now, this is a placeholder. Link to full bio below.]
+    </p>
+    <a href="/about">Read full biography →</a>
+  </section>
+</BaseLayout>
+
+<style>
+  section {
+    margin-bottom: 4rem;
+  }
+
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #333;
+    padding-bottom: 0.5rem;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #eee;
+  }
+
+  li:last-child {
+    border-bottom: none;
+  }
+
+  blockquote {
+    font-style: italic;
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+  }
+
+  cite {
+    font-style: normal;
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  a {
+    color: #2d7a3e;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+</style>
