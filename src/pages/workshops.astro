@@ -34,9 +34,9 @@ const years = Object.keys(workshopsByYear)
   title="Workshops & Masterclasses - Davis Ponjuan"
   description="Educational activities and teaching engagements"
 >
-  <header class="section fade-in">
-    <h1 class="mb-6">Workshops & Masterclasses</h1>
-    <p class="text-xl leading-relaxed text-muted-foreground max-w-3xl">
+  <header class="mb-8 fade-in">
+    <h1 class="text-4xl md:text-5xl mb-3">Workshops & Masterclasses</h1>
+    <p class="text-lg text-muted-foreground max-w-2xl">
       Educational activities and teaching engagements at institutions worldwide.
     </p>
   </header>
@@ -45,60 +45,59 @@ const years = Object.keys(workshopsByYear)
 
   {
     years.map((year, yearIndex) => (
-      <section class={`section fade-in-up delay-${Math.min(yearIndex + 1, 5)}`}>
-        <h2 class="text-4xl font-serif text-primary border-b-2 border-primary pb-2 mb-8 inline-block">
+      <section class={`mb-10 fade-in-up delay-${Math.min(yearIndex + 1, 5)}`}>
+        <h2 class="text-2xl font-serif text-primary mb-4 pb-1 border-b border-primary inline-block">
           {year}
         </h2>
-        <div class="grid gap-8">
+        <div class="space-y-4">
           {workshopsByYear[year].map(async (workshop) => {
             const { Content } = await workshop.render();
             return (
-              <article class="border border-border rounded-lg p-8 bg-card">
-                <div class="flex items-start gap-4 mb-6 pb-4 border-b border-border">
-                  <h3 class="text-2xl font-serif m-0 flex-1">{workshop.data.title}</h3>
-                  <Badge variant="featured" className="flex-shrink-0">
+              <article class="border border-border rounded-md p-4 bg-card">
+                <div class="flex items-start gap-3 mb-3">
+                  <h3 class="text-lg font-serif flex-1">{workshop.data.title}</h3>
+                  <Badge variant="featured" className="flex-shrink-0 text-[10px]">
                     {workshop.data.type}
                   </Badge>
                 </div>
 
-                <div class="mb-6 space-y-3">
+                <div class="grid grid-cols-2 gap-2 mb-3 text-xs">
                   <div>
-                    <strong class="text-muted-foreground mr-2">Institution:</strong>{' '}
+                    <span class="text-muted-foreground">Institution:</span>{' '}
                     {workshop.data.institution}
                   </div>
                   <div>
-                    <strong class="text-muted-foreground mr-2">Location:</strong>{' '}
-                    {workshop.data.location}
+                    <span class="text-muted-foreground">Location:</span> {workshop.data.location}
                   </div>
                   <div>
-                    <strong class="text-muted-foreground mr-2">Date:</strong>{' '}
+                    <span class="text-muted-foreground">Date:</span>{' '}
                     {workshop.data.date.toLocaleDateString('en-US', {
                       year: 'numeric',
-                      month: 'long',
+                      month: 'short',
                       day: 'numeric',
                     })}
                     {workshop.data.endDate &&
                       workshop.data.endDate.getTime() !== workshop.data.date.getTime() &&
                       ` – ${workshop.data.endDate.toLocaleDateString('en-US', {
-                        month: 'long',
+                        month: 'short',
                         day: 'numeric',
                       })}`}
                   </div>
-                  {workshop.data.topic && (
-                    <div class="italic">
-                      <strong class="text-muted-foreground mr-2 not-italic">Topic:</strong>{' '}
-                      {workshop.data.topic}
-                    </div>
-                  )}
                   {workshop.data.participants && (
                     <div>
-                      <strong class="text-muted-foreground mr-2">Participants:</strong>{' '}
+                      <span class="text-muted-foreground">Participants:</span>{' '}
                       {workshop.data.participants}
                     </div>
                   )}
                 </div>
 
-                <div class="leading-relaxed text-muted-foreground [&_p]:mb-4 [&_p:last-child]:mb-0">
+                {workshop.data.topic && (
+                  <div class="text-sm font-serif italic text-muted-foreground mb-3">
+                    {workshop.data.topic}
+                  </div>
+                )}
+
+                <div class="text-sm text-muted-foreground [&_p]:mb-2 [&_p:last-child]:mb-0">
                   <Content />
                 </div>
               </article>

@@ -27,9 +27,9 @@ const educational = allOrganizations
   title="Organizations - Davis Ponjuan"
   description="Current and past musical positions and affiliations"
 >
-  <header class="section fade-in">
-    <h1 class="mb-6">Organizations</h1>
-    <p class="text-xl leading-relaxed text-muted-foreground max-w-3xl">
+  <header class="mb-8 fade-in">
+    <h1 class="text-4xl md:text-5xl mb-3">Organizations</h1>
+    <p class="text-lg text-muted-foreground max-w-2xl">
       Current and past musical positions and affiliations.
     </p>
   </header>
@@ -38,158 +38,149 @@ const educational = allOrganizations
 
   {
     current.length > 0 && (
-      <section class="section fade-in-up delay-1">
-        <h2 class="section-heading">Current Positions</h2>
-        <ul class="list-none p-0">
+      <section class="mb-10 fade-in-up delay-1">
+        <h2 class="text-nav text-muted-foreground mb-4">Current Positions</h2>
+        <div class="divide-y divide-border">
           {current.map(async (org) => {
             const { Content } = await org.render();
             return (
-              <li class="mb-12 pb-12 border-b border-border last:border-b-0">
-                <h3 class="text-2xl font-serif mb-2 text-primary">{org.data.role}</h3>
-                <div class="text-xl font-semibold mb-2">{org.data.name}</div>
-                <div class="metadata mb-4 flex flex-wrap gap-x-1">
+              <article class="py-5 first:pt-0">
+                <h3 class="text-xl font-serif text-primary mb-1">{org.data.role}</h3>
+                <div class="font-medium mb-2">{org.data.name}</div>
+                <div class="text-xs text-muted-foreground mb-3 flex flex-wrap gap-x-3">
                   <span>{org.data.location}</span>
-                  <span class="metadata-separator" />
                   <span>
                     {org.data.startDate.toLocaleDateString('en-US', {
                       year: 'numeric',
-                      month: 'long',
+                      month: 'short',
                     })}{' '}
                     – Present
                   </span>
                   {org.data.website && (
-                    <>
-                      <span class="metadata-separator" />
-                      <a
-                        href={org.data.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="text-primary hover:underline underline-offset-4"
-                      >
-                        Website
-                      </a>
-                    </>
+                    <a
+                      href={org.data.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-primary hover:underline underline-offset-4"
+                    >
+                      Website
+                    </a>
                   )}
                 </div>
-                <div class="leading-relaxed text-muted-foreground">
+                <div class="text-sm text-muted-foreground">
                   <Content />
                 </div>
-              </li>
+              </article>
             );
           })}
-        </ul>
+        </div>
       </section>
     )
   }
 
   {
     educational.length > 0 && (
-      <section class="section fade-in-up delay-2">
-        <h2 class="section-heading">Educational & Teaching</h2>
-        <ul class="list-none p-0">
+      <section class="mb-10 fade-in-up delay-2">
+        <h2 class="text-nav text-muted-foreground mb-4">Educational & Teaching</h2>
+        <div class="divide-y divide-border">
           {educational.map(async (org) => {
             const { Content } = await org.render();
             return (
-              <li class="mb-12 pb-12 border-b border-border last:border-b-0">
-                <h3 class="text-2xl font-serif mb-2 text-primary">{org.data.role}</h3>
-                <div class="text-xl font-semibold mb-2">{org.data.name}</div>
-                <div class="metadata mb-4 flex flex-wrap gap-x-1">
+              <article class="py-5 first:pt-0">
+                <h3 class="text-xl font-serif text-primary mb-1">{org.data.role}</h3>
+                <div class="font-medium mb-2">{org.data.name}</div>
+                <div class="text-xs text-muted-foreground mb-3 flex flex-wrap gap-x-3">
                   <span>{org.data.location}</span>
                   {org.data.website && (
-                    <>
-                      <span class="metadata-separator" />
-                      <a
-                        href={org.data.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="text-primary hover:underline underline-offset-4"
-                      >
-                        Website
-                      </a>
-                    </>
+                    <a
+                      href={org.data.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-primary hover:underline underline-offset-4"
+                    >
+                      Website
+                    </a>
                   )}
                 </div>
-                <div class="leading-relaxed text-muted-foreground">
+                <div class="text-sm text-muted-foreground">
                   <Content />
                 </div>
-              </li>
+              </article>
             );
           })}
-        </ul>
+        </div>
       </section>
     )
   }
 
   {
     past.length > 0 && (
-      <section class="section fade-in-up delay-3">
-        <h2 class="section-heading">Past Positions</h2>
-        <ul class="list-none p-0">
+      <section class="mb-10 fade-in-up delay-3">
+        <h2 class="text-nav text-muted-foreground mb-4">Past Positions</h2>
+        <div class="divide-y divide-border">
           {past.map(async (org) => {
             const { Content } = await org.render();
             return (
-              <li class="mb-12 pb-12 border-b border-border last:border-b-0">
-                <h3 class="text-2xl font-serif mb-2 text-primary">{org.data.role}</h3>
-                <div class="text-xl font-semibold mb-2">{org.data.name}</div>
-                <div class="metadata mb-4 flex flex-wrap gap-x-1">
+              <article class="py-5 first:pt-0">
+                <h3 class="text-lg font-serif text-primary mb-1">{org.data.role}</h3>
+                <div class="font-medium mb-2">{org.data.name}</div>
+                <div class="text-xs text-muted-foreground mb-3 flex flex-wrap gap-x-3">
                   <span>{org.data.location}</span>
-                  <span class="metadata-separator" />
                   <span>
                     {org.data.startDate.toLocaleDateString('en-US', {
                       year: 'numeric',
-                      month: 'long',
+                      month: 'short',
                     })}{' '}
                     –{' '}
                     {org.data.endDate?.toLocaleDateString('en-US', {
                       year: 'numeric',
-                      month: 'long',
+                      month: 'short',
                     })}
                   </span>
                 </div>
-                <div class="leading-relaxed text-muted-foreground">
+                <div class="text-sm text-muted-foreground">
                   <Content />
                 </div>
-              </li>
+              </article>
             );
           })}
-        </ul>
+        </div>
       </section>
     )
   }
 
   {
     guest.length > 0 && (
-      <section class="section fade-in-up delay-4">
-        <h2 class="section-heading">Guest Conducting</h2>
-        <ul class="list-none p-0">
+      <section class="mb-10 fade-in-up delay-4">
+        <h2 class="text-nav text-muted-foreground mb-4">Guest Conducting</h2>
+        <div class="divide-y divide-border">
           {guest.map(async (org) => {
             const { Content } = await org.render();
             return (
-              <li class="mb-12 pb-12 border-b border-border last:border-b-0">
-                <h3 class="text-2xl font-serif mb-2 text-primary">{org.data.name}</h3>
-                <div class="metadata mb-4 flex flex-wrap gap-x-1">
+              <article class="py-4 first:pt-0">
+                <h3 class="text-base font-serif text-primary">{org.data.name}</h3>
+                <div class="text-xs text-muted-foreground mt-1 flex flex-wrap gap-x-3">
                   <span>{org.data.location}</span>
-                  <span class="metadata-separator" />
                   <span>
                     {org.data.startDate.toLocaleDateString('en-US', {
                       year: 'numeric',
-                      month: 'long',
+                      month: 'short',
                     })}
                     {org.data.endDate &&
                       org.data.endDate.getTime() !== org.data.startDate.getTime() &&
                       ` – ${org.data.endDate.toLocaleDateString('en-US', {
                         year: 'numeric',
-                        month: 'long',
+                        month: 'short',
                       })}`}
                   </span>
                 </div>
-                <div class="leading-relaxed text-muted-foreground">
+                <div class="text-sm text-muted-foreground mt-2">
                   <Content />
                 </div>
-              </li>
+              </article>
             );
           })}
-        </ul>
+        </div>
       </section>
     )
   }

@@ -5,106 +5,94 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Contact - Davis Ponjuan" description="Get in touch for bookings and inquiries">
-  <header class="section fade-in">
-    <h1 class="mb-6">Contact</h1>
-    <p class="text-xl leading-relaxed text-muted-foreground max-w-3xl">
+  <header class="mb-8 fade-in">
+    <h1 class="text-4xl md:text-5xl mb-3">Contact</h1>
+    <p class="text-lg text-muted-foreground max-w-2xl">
       For conducting engagements, guest appearances, and masterclass inquiries.
     </p>
   </header>
 
   <hr class="divider-dashed" />
 
-  <section class="section fade-in-up delay-1">
-    <h2 class="section-heading">Booking Inquiries</h2>
-    <div class="bg-card border border-border rounded-lg p-8 mt-6">
-      <p class="mb-4">
-        <strong>Email:</strong>
-        <span class="text-muted-foreground">[your.email@example.com]</span>
-      </p>
-      <p class="mb-4">
-        <strong>Phone:</strong>
-        <span class="text-muted-foreground">[Your phone number]</span>
-      </p>
-      <p class="mb-0">
-        <strong>Management:</strong>
-        <span class="text-muted-foreground">[Management company name, if applicable]</span>
-      </p>
-    </div>
-  </section>
-
-  <section class="section fade-in-up delay-2">
-    <h2 class="section-heading">General Contact</h2>
-    <form class="max-w-xl space-y-6">
-      <div>
-        <label for="name" class="block mb-2 font-semibold text-sm uppercase tracking-wide"
-          >Name</label
-        >
-        <input
-          type="text"
-          id="name"
-          name="name"
-          required
-          class="w-full p-4 border border-border rounded-md text-base bg-background outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300"
-        />
+  <div class="grid lg:grid-cols-5 gap-8 lg:gap-12">
+    <!-- Contact Info Sidebar -->
+    <aside class="lg:col-span-2 fade-in-up delay-1">
+      <h2 class="text-nav text-muted-foreground mb-4">Booking Inquiries</h2>
+      <div class="bg-card border border-border rounded-md p-5 space-y-3">
+        <div>
+          <div class="text-xs text-muted-foreground uppercase tracking-wide mb-1">Email</div>
+          <div class="text-sm">[your.email@example.com]</div>
+        </div>
+        <div>
+          <div class="text-xs text-muted-foreground uppercase tracking-wide mb-1">Phone</div>
+          <div class="text-sm">[Your phone number]</div>
+        </div>
+        <div>
+          <div class="text-xs text-muted-foreground uppercase tracking-wide mb-1">Management</div>
+          <div class="text-sm">[Management company name, if applicable]</div>
+        </div>
       </div>
+    </aside>
 
-      <div>
-        <label for="email" class="block mb-2 font-semibold text-sm uppercase tracking-wide"
-          >Email</label
-        >
-        <input
-          type="email"
-          id="email"
-          name="email"
-          required
-          class="w-full p-4 border border-border rounded-md text-base bg-background outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300"
-        />
-      </div>
+    <!-- Contact Form -->
+    <section class="lg:col-span-3 fade-in-up delay-2">
+      <h2 class="text-nav text-muted-foreground mb-4">General Contact</h2>
+      <form class="space-y-4">
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label for="name" class="block mb-1.5 text-xs font-medium uppercase tracking-wide"
+              >Name</label
+            >
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              class="w-full px-3 py-2.5 border border-border rounded-md text-sm bg-background outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all duration-300"
+            />
+          </div>
+          <div>
+            <label for="email" class="block mb-1.5 text-xs font-medium uppercase tracking-wide"
+              >Email</label
+            >
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              class="w-full px-3 py-2.5 border border-border rounded-md text-sm bg-background outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all duration-300"
+            />
+          </div>
+        </div>
 
-      <div>
-        <label for="subject" class="block mb-2 font-semibold text-sm uppercase tracking-wide"
-          >Subject</label
-        >
-        <input
-          type="text"
-          id="subject"
-          name="subject"
-          required
-          class="w-full p-4 border border-border rounded-md text-base bg-background outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300"
-        />
-      </div>
+        <div>
+          <label for="subject" class="block mb-1.5 text-xs font-medium uppercase tracking-wide"
+            >Subject</label
+          >
+          <input
+            type="text"
+            id="subject"
+            name="subject"
+            required
+            class="w-full px-3 py-2.5 border border-border rounded-md text-sm bg-background outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all duration-300"
+          />
+        </div>
 
-      <div>
-        <label for="message" class="block mb-2 font-semibold text-sm uppercase tracking-wide"
-          >Message</label
-        >
-        <textarea
-          id="message"
-          name="message"
-          rows="6"
-          required
-          class="w-full p-4 border border-border rounded-md text-base bg-background outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 resize-y"
-        ></textarea>
-      </div>
+        <div>
+          <label for="message" class="block mb-1.5 text-xs font-medium uppercase tracking-wide"
+            >Message</label
+          >
+          <textarea
+            id="message"
+            name="message"
+            rows="5"
+            required
+            class="w-full px-3 py-2.5 border border-border rounded-md text-sm bg-background outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all duration-300 resize-y"
+          ></textarea>
+        </div>
 
-      <Button size="xl" className="w-full sm:w-auto">Send Message</Button>
-    </form>
-
-    <!-- TODO: Connect form to backend (Formspree, Netlify Forms, etc.) before going live -->
-    <!-- <p class="mt-4 text-sm text-gray-600 italic">
-      Note: This is a placeholder form. You'll need to connect it to a backend service (Formspree,
-      Netlify Forms, etc.) to actually receive messages.
-    </p> -->
-  </section>
-
-  <!-- TODO: Add your actual social media URLs before going live -->
-  <!-- <section class="mb-16">
-    <h2 class="text-3xl mb-6 border-b-2 border-gray-800 pb-2">Social Media</h2>
-    <ul class="list-none p-0 flex gap-8">
-      <li><a href="https://instagram.com/yourusername" target="_blank" rel="noopener noreferrer" class="text-[#2d7a3e] no-underline text-lg hover:underline">Instagram</a></li>
-      <li><a href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer" class="text-[#2d7a3e] no-underline text-lg hover:underline">Twitter/X</a></li>
-      <li><a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer" class="text-[#2d7a3e] no-underline text-lg hover:underline">LinkedIn</a></li>
-      <li><a href="https://youtube.com/@yourusername" target="_blank" rel="noopener noreferrer" class="text-[#2d7a3e] no-underline text-lg hover:underline">YouTube</a></li>
-    </ul>
-  </section> -->
+        <Button className="w-full sm:w-auto">Send Message</Button>
+      </form>
+    </section>
+  </div>
 </BaseLayout>

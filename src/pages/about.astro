@@ -22,19 +22,19 @@ const featuredAwards = allAwards
 ---
 
 <BaseLayout title="About - Davis Ponjuan" description="Biography of conductor Davis Ponjuan">
-  <header class="section fade-in">
-    <h1 class="mb-6">About</h1>
-    <p class="text-xl leading-relaxed text-muted-foreground max-w-3xl">
+  <header class="mb-8 fade-in">
+    <h1 class="text-4xl md:text-5xl mb-3">About</h1>
+    <p class="text-lg text-muted-foreground max-w-2xl">
       A dynamic conductor known for combining technical precision with deep musical insight.
     </p>
   </header>
 
   <hr class="divider-dashed" />
 
-  <!-- TODO: Add your biography content here before going live -->
-  <section class="section fade-in-up delay-1">
-    <h2 class="section-heading">Biography</h2>
-    <div class="space-y-6 text-lg leading-relaxed max-w-3xl">
+  <!-- Biography -->
+  <section class="mb-10 fade-in-up delay-1">
+    <h2 class="text-nav text-muted-foreground mb-4">Biography</h2>
+    <div class="space-y-4 text-base leading-relaxed max-w-2xl">
       <p>
         Davis Ponjuan is a dynamic conductor known for combining technical precision with deep
         musical insight. Currently serving as Music Director of the Metro City Symphony Orchestra,
@@ -50,51 +50,60 @@ const featuredAwards = allAwards
     </div>
   </section>
 
-  <hr class="divider-dashed-sm" />
+  <!-- Two Column Layout for Quick Facts -->
+  <div class="grid lg:grid-cols-2 gap-8 mb-10">
+    <section class="fade-in-up delay-2">
+      <h2 class="text-nav text-muted-foreground mb-3">Current Positions</h2>
+      <ul class="divide-y divide-border">
+        {
+          currentPositions.map((org) => (
+            <li class="py-2.5 first:pt-0">
+              <div class="font-serif">{org.data.role}</div>
+              <div class="text-sm text-muted-foreground">{org.data.name}</div>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
 
-  <section class="section-sm fade-in-up delay-2">
-    <h2 class="section-heading-sm">Current Positions</h2>
-    <ul class="list-none p-0 space-y-4">
-      {
-        currentPositions.map((org) => (
-          <li class="flex flex-col md:flex-row md:gap-4">
-            <span class="font-semibold text-lg">{org.data.role}</span>
-            <span class="text-muted-foreground">{org.data.name}</span>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
+    <section class="fade-in-up delay-3">
+      <h2 class="text-nav text-muted-foreground mb-3">Education</h2>
+      <ul class="divide-y divide-border">
+        {
+          sortedEducation.map((edu) => (
+            <li class="py-2.5 first:pt-0">
+              <div class="font-serif">
+                {edu.data.degree} in {edu.data.field}
+              </div>
+              <div class="text-sm text-muted-foreground">
+                {edu.data.institution},{' '}
+                {edu.data.endDate
+                  ? edu.data.endDate.toLocaleDateString('en-US', { year: 'numeric' })
+                  : 'In Progress'}
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
 
-  <section class="section-sm fade-in-up delay-3">
-    <h2 class="section-heading-sm">Education</h2>
-    <ul class="list-none p-0 space-y-4">
-      {
-        sortedEducation.map((edu) => (
-          <li class="flex flex-col md:flex-row md:items-baseline md:gap-4">
-            <span class="font-semibold">
-              {edu.data.degree} in {edu.data.field}
-            </span>
-            <span class="text-muted-foreground text-sm">
-              {edu.data.institution},{' '}
-              {edu.data.endDate
-                ? edu.data.endDate.toLocaleDateString('en-US', { year: 'numeric' })
-                : 'In Progress'}
-            </span>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
-
-  <section class="section-sm fade-in-up delay-4">
-    <h2 class="section-heading-sm">Awards & Honors</h2>
-    <ul class="list-none p-0 space-y-4">
+  <section class="mb-10 fade-in-up delay-4">
+    <div class="flex items-baseline justify-between mb-3">
+      <h2 class="text-nav text-muted-foreground">Awards & Honors</h2>
+      <a
+        href="/cv"
+        class="text-nav text-primary hover:underline underline-offset-4 transition-all duration-300"
+      >
+        View all →
+      </a>
+    </div>
+    <ul class="divide-y divide-border">
       {
         featuredAwards.map((award) => (
-          <li class="flex flex-col md:flex-row md:items-baseline md:gap-4">
-            <span class="font-semibold">{award.data.title}</span>
-            <span class="text-muted-foreground text-sm">
+          <li class="py-2.5 first:pt-0 flex flex-col md:flex-row md:items-baseline md:gap-3">
+            <span class="font-serif">{award.data.title}</span>
+            <span class="text-xs text-muted-foreground">
               {award.data.organization},{' '}
               {award.data.date.toLocaleDateString('en-US', { year: 'numeric' })}
             </span>
@@ -102,23 +111,15 @@ const featuredAwards = allAwards
         ))
       }
     </ul>
-    <div class="mt-6">
-      <a
-        href="/cv"
-        class="text-primary hover:underline underline-offset-4 transition-all duration-300"
-      >
-        View complete awards list →
-      </a>
-    </div>
   </section>
 
   <hr class="divider-dashed" />
 
-  <nav class="flex flex-col sm:flex-row gap-4 fade-in-up delay-5">
-    <Button asChild size="xl">
+  <nav class="flex flex-wrap gap-3 fade-in-up delay-5">
+    <Button asChild>
       <a href="/cv">View Full CV</a>
     </Button>
-    <Button asChild variant="outline" size="xl">
+    <Button asChild variant="outline">
       <a href="/concerts">View Performances</a>
     </Button>
   </nav>

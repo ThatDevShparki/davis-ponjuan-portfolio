@@ -17,7 +17,7 @@ const pastConcerts = allConcerts
   .filter((concert) => concert.data.status === 'past')
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-// Featured past concerts (for hero section)
+// Featured past concerts
 const featuredConcerts = pastConcerts.filter((c) => c.data.featured).slice(0, 3);
 
 // Group past concerts by year
@@ -42,54 +42,51 @@ const years = Object.keys(concertsByYear)
   title="Concerts - Davis Ponjuan"
   description="Concert history and upcoming performances"
 >
-  <header class="section fade-in">
-    <h1 class="mb-6">Concerts</h1>
-    <p class="text-xl leading-relaxed text-muted-foreground max-w-3xl">
+  <header class="mb-8 fade-in">
+    <h1 class="text-4xl md:text-5xl mb-3">Concerts</h1>
+    <p class="text-lg text-muted-foreground max-w-2xl">
       Upcoming performances and a complete archive of past concerts.
     </p>
   </header>
 
   <hr class="divider-dashed" />
 
-  <!-- Upcoming Performances - Hero Treatment -->
+  <!-- Upcoming Performances -->
   {
     upcomingConcerts.length > 0 && (
-      <section class="mb-16 fade-in-up delay-1">
-        <h2 class="text-nav text-muted-foreground mb-8">Upcoming Performances</h2>
+      <section class="mb-10 fade-in-up delay-1">
+        <h2 class="text-nav text-muted-foreground mb-4">Upcoming Performances</h2>
 
-        <div class="grid gap-6">
+        <div class="space-y-4">
           {upcomingConcerts.map((concert, index) => (
             <article
-              class={`group relative border-2 border-primary rounded-lg overflow-hidden bg-card fade-in-up delay-${Math.min(index + 2, 5)}`}
+              class={`group border border-primary rounded-md overflow-hidden bg-card fade-in-up delay-${Math.min(index + 2, 5)}`}
             >
-              <div class="p-8 md:p-10">
-                <div class="flex flex-col lg:flex-row lg:items-start gap-8">
-                  {/* Date block - large editorial style */}
-                  <div class="lg:w-40 flex-shrink-0 text-center lg:text-left">
-                    <div class="text-6xl font-serif text-primary leading-none">
+              <div class="p-5 md:p-6">
+                <div class="flex flex-col md:flex-row md:items-start gap-4 md:gap-6">
+                  {/* Date block */}
+                  <div class="md:w-20 flex-shrink-0 text-center md:text-left">
+                    <div class="text-3xl font-serif text-primary leading-none">
                       {concert.data.date.toLocaleDateString('en-US', { day: 'numeric' })}
                     </div>
-                    <div class="text-nav text-muted-foreground mt-2">
+                    <div class="text-nav text-muted-foreground mt-1">
                       {concert.data.date.toLocaleDateString('en-US', {
-                        month: 'long',
+                        month: 'short',
                         year: 'numeric',
                       })}
-                    </div>
-                    <div class="text-sm text-muted-foreground mt-1">
-                      {concert.data.date.toLocaleDateString('en-US', { weekday: 'long' })}
                     </div>
                   </div>
 
                   {/* Content */}
                   <div class="flex-1">
-                    <h3 class="text-2xl md:text-3xl font-serif mb-4 group-hover:text-primary transition-colors duration-300">
+                    <h3 class="text-xl font-serif mb-2 group-hover:text-primary transition-colors duration-300">
                       <a href={`/concerts/${concert.id}`}>{concert.data.title}</a>
                     </h3>
 
-                    <div class="flex flex-wrap gap-4 mb-6 text-sm">
-                      <div class="flex items-center gap-2">
+                    <div class="flex flex-wrap gap-3 text-sm text-muted-foreground mb-3">
+                      <span class="flex items-center gap-1">
                         <svg
-                          class="w-4 h-4 text-primary"
+                          class="w-3.5 h-3.5 text-primary"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -107,52 +104,65 @@ const years = Object.keys(concertsByYear)
                             d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                           />
                         </svg>
-                        <span>
-                          {concert.data.venue}, {concert.data.location}
-                        </span>
-                      </div>
-                      <div class="flex items-center gap-2">
-                        <svg
-                          class="w-4 h-4 text-primary"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
-                          />
-                        </svg>
-                        <span>{concert.data.orchestra}</span>
-                      </div>
+                        {concert.data.venue}, {concert.data.location}
+                      </span>
+                      <span>·</span>
+                      <span>{concert.data.orchestra}</span>
                     </div>
 
                     {concert.data.program && concert.data.program.length > 0 && (
-                      <div class="border-t border-border pt-6">
-                        <div class="text-nav text-muted-foreground mb-3">Program</div>
-                        <ul class="list-none p-0 space-y-2">
-                          {concert.data.program.map((piece) => (
-                            <li class="flex flex-wrap gap-x-2">
-                              <span class="font-medium">{piece.composer}</span>
-                              <span class="font-serif italic text-muted-foreground">
-                                {piece.work}
-                              </span>
-                              {piece.soloist && (
-                                <span class="text-primary text-sm">({piece.soloist})</span>
-                              )}
-                            </li>
-                          ))}
-                        </ul>
+                      <div class="text-sm">
+                        {concert.data.program.slice(0, 2).map((piece) => (
+                          <div class="mb-1">
+                            <span class="font-medium">{piece.composer}</span>:{' '}
+                            <span class="font-serif italic">{piece.work}</span>
+                            {piece.soloist && <span class="text-primary"> ({piece.soloist})</span>}
+                          </div>
+                        ))}
+                        {concert.data.program.length > 2 && (
+                          <div class="text-muted-foreground">
+                            +{concert.data.program.length - 2} more
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
                 </div>
               </div>
+              <div class="h-0.5 bg-primary" />
+            </article>
+          ))}
+        </div>
+      </section>
+    )
+  }
 
-              {/* Accent stripe */}
-              <div class="h-1 bg-primary" />
+  <!-- Featured Past Performances -->
+  {
+    featuredConcerts.length > 0 && (
+      <section class="mb-10 fade-in-up delay-2">
+        <h2 class="text-nav text-muted-foreground mb-4">Highlights</h2>
+
+        <div class="grid md:grid-cols-3 gap-3">
+          {featuredConcerts.map((concert, index) => (
+            <article
+              class={`group p-4 border border-border rounded-md bg-card hover:border-primary transition-colors duration-300 fade-in-up delay-${Math.min(index + 3, 5)}`}
+            >
+              <Badge variant="featured" className="mb-2 text-[10px]">
+                Featured
+              </Badge>
+              <div class="text-nav text-muted-foreground mb-1">
+                {concert.data.date.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                })}
+              </div>
+              <h3 class="text-sm font-serif mb-2 leading-tight group-hover:text-primary transition-colors duration-300">
+                <a href={`/concerts/${concert.id}`}>{concert.data.title}</a>
+              </h3>
+              <div class="text-xs text-muted-foreground">
+                {concert.data.orchestra} · {concert.data.venue}
+              </div>
             </article>
           ))}
         </div>
@@ -162,50 +172,9 @@ const years = Object.keys(concertsByYear)
 
   <hr class="divider-dashed" />
 
-  <!-- Featured Past Performances - Showcase Cards -->
-  {
-    featuredConcerts.length > 0 && (
-      <section class="mb-16 fade-in-up delay-2">
-        <h2 class="text-nav text-muted-foreground mb-8">Highlights</h2>
-
-        <div class="grid md:grid-cols-3 gap-6">
-          {featuredConcerts.map((concert, index) => (
-            <article
-              class={`group p-6 border border-border rounded-lg bg-card hover:border-primary transition-colors duration-300 fade-in-up delay-${Math.min(index + 3, 5)}`}
-            >
-              <Badge variant="featured" className="mb-4">
-                Featured
-              </Badge>
-              <div class="text-nav text-muted-foreground mb-2">
-                {concert.data.date.toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                })}
-              </div>
-              <h3 class="text-lg font-serif mb-3 group-hover:text-primary transition-colors duration-300">
-                <a href={`/concerts/${concert.id}`}>{concert.data.title}</a>
-              </h3>
-              <div class="text-sm text-muted-foreground mb-4">
-                {concert.data.orchestra}
-                <br />
-                {concert.data.venue}
-              </div>
-              <a
-                href={`/concerts/${concert.id}`}
-                class="text-nav text-primary hover:underline underline-offset-4"
-              >
-                View Details →
-              </a>
-            </article>
-          ))}
-        </div>
-      </section>
-    )
-  }
-
   <!-- Past Performances Archive -->
-  <section class="section fade-in-up delay-3">
-    <h2 class="text-nav text-muted-foreground mb-8">Archive</h2>
+  <section class="fade-in-up delay-3">
+    <h2 class="text-nav text-muted-foreground mb-4">Archive</h2>
     {
       years.length === 0 && (
         <EmptyState
@@ -216,43 +185,30 @@ const years = Object.keys(concertsByYear)
     }
     {
       years.map((year, yearIndex) => (
-        <div class={`mb-12 fade-in-up delay-${Math.min(yearIndex + 4, 5)}`}>
-          <h3 class="text-4xl font-serif text-primary mb-6 pb-2 border-b-2 border-primary inline-block">
+        <div class={`mb-8 fade-in-up delay-${Math.min(yearIndex + 4, 5)}`}>
+          <h3 class="text-2xl font-serif text-primary mb-3 pb-1 border-b border-primary inline-block">
             {year}
           </h3>
-          <ul class="list-none p-0">
+          <ul class="divide-y divide-border">
             {concertsByYear[year].map((concert) => (
-              <li class="group flex flex-col md:flex-row gap-4 md:gap-8 list-divider py-5">
-                <div class="flex-shrink-0 md:w-20">
-                  <span class="text-nav text-muted-foreground">
-                    {concert.data.date.toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                  </span>
-                </div>
-                <div class="flex-1">
-                  <h4 class="m-0 mb-1 text-lg font-serif group-hover:text-primary transition-colors duration-300">
-                    <a href={`/concerts/${concert.id}`}>{concert.data.title}</a>
-                  </h4>
-                  <div class="text-sm text-muted-foreground flex flex-wrap gap-x-2">
-                    <span>{concert.data.orchestra}</span>
-                    <span>·</span>
-                    <span>
-                      {concert.data.venue}, {concert.data.location}
+              <li class="group py-3 first:pt-0">
+                <div class="flex gap-4">
+                  <div class="w-12 flex-shrink-0">
+                    <span class="text-nav text-muted-foreground">
+                      {concert.data.date.toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                      })}
                     </span>
                   </div>
-                  {concert.data.program && concert.data.program.length > 0 && (
-                    <div class="text-sm text-muted-foreground mt-2 font-serif italic">
-                      {concert.data.program[0].composer}: {concert.data.program[0].work}
-                      {concert.data.program.length > 1 && (
-                        <span class="not-italic text-primary">
-                          {' '}
-                          + {concert.data.program.length - 1} more
-                        </span>
-                      )}
+                  <div class="flex-1 min-w-0">
+                    <h4 class="text-base font-serif group-hover:text-primary transition-colors duration-300 truncate">
+                      <a href={`/concerts/${concert.id}`}>{concert.data.title}</a>
+                    </h4>
+                    <div class="text-xs text-muted-foreground mt-0.5 truncate">
+                      {concert.data.orchestra} · {concert.data.venue}
                     </div>
-                  )}
+                  </div>
                 </div>
               </li>
             ))}

@@ -49,9 +49,9 @@ const genreLabels: Record<string, string> = {
 ---
 
 <BaseLayout title="Repertoire - Davis Ponjuan" description="Complete list of works conducted">
-  <header class="section fade-in">
-    <h1 class="mb-6">Repertoire</h1>
-    <p class="text-xl leading-relaxed text-muted-foreground max-w-3xl">
+  <header class="mb-8 fade-in">
+    <h1 class="text-4xl md:text-5xl mb-3">Repertoire</h1>
+    <p class="text-lg text-muted-foreground max-w-2xl">
       A selection of works conducted throughout my career, organized by genre.
     </p>
   </header>
@@ -60,47 +60,43 @@ const genreLabels: Record<string, string> = {
 
   {
     genres.map((genre, index) => (
-      <section class={`section fade-in-up delay-${Math.min(index + 1, 5)}`}>
-        <h2 class="text-3xl font-serif text-primary border-b-2 border-primary pb-2 mb-8">
+      <section class={`mb-10 fade-in-up delay-${Math.min(index + 1, 5)}`}>
+        <h2 class="text-xl font-serif text-primary mb-4 pb-1 border-b border-primary inline-block">
           {genreLabels[genre]}
         </h2>
-        <ul class="list-none p-0">
+        <ul class="divide-y divide-border">
           {byGenre[genre].map((work) => (
-            <li class="list-divider py-5">
-              <div class="text-lg font-semibold">{work.data.composer}</div>
-              <div class="mt-1 text-base font-serif italic">{work.data.work}</div>
-              <div class="metadata mt-2 flex flex-wrap gap-x-1">
+            <li class="py-3 first:pt-0">
+              <div class="flex flex-col md:flex-row md:items-baseline md:gap-3">
+                <span class="font-medium">{work.data.composer}</span>
+                <span class="font-serif italic text-muted-foreground">{work.data.work}</span>
+              </div>
+              <div class="text-xs text-muted-foreground mt-1 flex flex-wrap gap-x-3">
                 <span>
                   Performed {work.data.timesPerformed}{' '}
                   {work.data.timesPerformed === 1 ? 'time' : 'times'}
                 </span>
                 {work.data.firstPerformed && (
-                  <>
-                    <span class="metadata-separator" />
-                    <span>
-                      First:{' '}
-                      {work.data.firstPerformed.toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                      })}
-                    </span>
-                  </>
+                  <span>
+                    First:{' '}
+                    {work.data.firstPerformed.toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                    })}
+                  </span>
                 )}
                 {work.data.lastPerformed && (
-                  <>
-                    <span class="metadata-separator" />
-                    <span>
-                      Most recent:{' '}
-                      {work.data.lastPerformed.toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                      })}
-                    </span>
-                  </>
+                  <span>
+                    Recent:{' '}
+                    {work.data.lastPerformed.toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                    })}
+                  </span>
                 )}
               </div>
               {work.data.notes && (
-                <div class="mt-2 text-sm text-muted-foreground italic">{work.data.notes}</div>
+                <div class="mt-1 text-xs text-muted-foreground italic">{work.data.notes}</div>
               )}
             </li>
           ))}
