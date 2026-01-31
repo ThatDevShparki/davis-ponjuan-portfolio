@@ -4,6 +4,7 @@
 /* ─────────────────────────────────────────────────────────
    TYPOGRAPHY - Cormorant Garamond for classical authority
    ───────────────────────────────────────────────────────── */
+/* Font loaded with display=swap in URL for FOUT prevention */
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
 
 @custom-variant dark (&:is(.dark *));
@@ -254,11 +255,28 @@
     @apply border-border outline-ring/50;
   }
 
+  /* Selection styling - branded feel */
+  ::selection {
+    background-color: oklch(0.48 0.12 145 / 20%); /* Primary with transparency */
+    color: var(--foreground);
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
     font-size: var(--font-size-lg); /* 18px base for comfortable reading */
     line-height: var(--line-height-relaxed); /* 1.625 for body text */
+  }
+
+  /* Smooth scrolling for anchor links (respects reduced motion) */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 
   /* Typography Hierarchy - BOLDER with Serif/Sans Pairing */
@@ -623,6 +641,16 @@
       opacity: 1;
     }
   }
+
+  /* Focus ring utility - consistent keyboard focus */
+  .focus-ring {
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+
+  /* No external icon - for links that shouldn't show arrow */
+  .no-external-icon::after {
+    content: none !important;
+  }
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -635,6 +663,42 @@ a[target='_blank']:not(.no-external-icon)::after {
   font-size: 0.85em;
   opacity: 0.7;
   margin-left: 0.15em;
+}
+
+/* ─────────────────────────────────────────────────────────
+   FORM ELEMENTS - Editorial styling
+   ───────────────────────────────────────────────────────── */
+
+/* Form inputs - consistent focus and styling */
+input[type='text'],
+input[type='email'],
+input[type='tel'],
+input[type='url'],
+input[type='search'],
+input[type='password'],
+textarea,
+select {
+  font-size: var(--font-size-sm);
+  transition:
+    border-color 0.2s ease-out,
+    box-shadow 0.2s ease-out;
+}
+
+/* Enhanced focus for form elements */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow:
+    0 0 0 3px oklch(0.48 0.12 145 / 15%),
+    0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+/* Placeholder styling */
+::placeholder {
+  color: var(--muted-foreground);
+  opacity: 0.6;
 }
 
 /* Reduced motion support - respect user preferences */
