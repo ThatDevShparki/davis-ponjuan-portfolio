@@ -7,9 +7,15 @@ import { Button } from '@/components/ui/button';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const allRecordings = await getCollection('recordings');
-const sortedRecordings = allRecordings.sort(
-  (a, b) => b.data.releaseDate.getTime() - a.data.releaseDate.getTime()
-);
+
+// Separate featured and regular recordings
+const featuredRecordings = allRecordings
+  .filter((r) => r.data.featured)
+  .sort((a, b) => b.data.releaseDate.getTime() - a.data.releaseDate.getTime());
+
+const otherRecordings = allRecordings
+  .filter((r) => !r.data.featured)
+  .sort((a, b) => b.data.releaseDate.getTime() - a.data.releaseDate.getTime());
 ---
 
 <BaseLayout title="Recordings - Davis Ponjuan" description="Discography and recordings">
@@ -22,90 +28,209 @@ const sortedRecordings = allRecordings.sort(
 
   <hr class="divider-dashed" />
 
-  <section class="grid gap-12">
-    {
-      sortedRecordings.map(async (recording, index) => {
-        const { Content } = await recording.render();
-        return (
-          <article
-            class={`border border-border rounded-lg p-8 bg-card fade-in-up delay-${Math.min(index + 1, 5)}`}
-          >
-            <div class="flex items-center gap-4 mb-6 pb-4 border-b-2 border-primary">
-              <h2 class="text-2xl md:text-3xl font-serif m-0 flex-1">{recording.data.title}</h2>
-              {recording.data.featured && <Badge variant="featured">Featured</Badge>}
-            </div>
+  <!-- Featured Recordings - Hero Treatment -->
+  {
+    featuredRecordings.length > 0 && (
+      <section class="mb-16 fade-in-up delay-1">
+        <h2 class="text-nav text-muted-foreground mb-8">Featured Recordings</h2>
 
-            <div class="mb-6 space-y-2">
-              <div>
-                <strong class="text-muted-foreground mr-2">Orchestra:</strong>{' '}
-                {recording.data.orchestra}
-              </div>
-              <div>
-                <strong class="text-muted-foreground mr-2">Label:</strong> {recording.data.label}
-              </div>
-              <div>
-                <strong class="text-muted-foreground mr-2">Released:</strong>{' '}
-                {recording.data.releaseDate.toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                })}
-              </div>
-              <div>
-                <strong class="text-muted-foreground mr-2">Format:</strong>{' '}
-                {recording.data.format.join(', ')}
-              </div>
-              {recording.data.catalogNumber && (
-                <div>
-                  <strong class="text-muted-foreground mr-2">Catalog:</strong>{' '}
-                  {recording.data.catalogNumber}
+        <div class="grid lg:grid-cols-2 gap-8">
+          {featuredRecordings.map(async (recording, index) => {
+            const { Content } = await recording.render();
+            return (
+              <article
+                class={`group relative border-2 border-primary rounded-lg p-8 md:p-10 bg-card fade-in-up delay-${Math.min(index + 2, 5)}`}
+              >
+                {/* Featured accent */}
+                <div class="absolute top-0 right-0 w-24 h-24 overflow-hidden">
+                  <div class="absolute top-4 -right-8 rotate-45 bg-primary text-background text-xs font-medium py-1 px-8 text-center">
+                    Featured
+                  </div>
                 </div>
-              )}
-            </div>
 
-            {recording.data.works && recording.data.works.length > 0 && (
-              <div class="mb-6">
-                <strong>Works:</strong>
-                <ul class="list-none p-0 mt-2 space-y-1">
-                  {recording.data.works.map((work) => (
-                    <li class="pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-primary font-serif italic">
-                      {work}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+                <h3 class="text-2xl md:text-3xl font-serif mb-6 pr-16">{recording.data.title}</h3>
 
-            {recording.data.awards && recording.data.awards.length > 0 && (
-              <div class="mb-6 p-4 bg-background border-l-4 border-primary">
-                {recording.data.awards.map((award) => (
-                  <div class="text-primary font-semibold mb-2 last:mb-0">{award}</div>
-                ))}
-              </div>
-            )}
+                <div class="grid sm:grid-cols-2 gap-4 mb-6 text-sm">
+                  <div>
+                    <span class="text-muted-foreground">Orchestra</span>
+                    <div class="font-medium">{recording.data.orchestra}</div>
+                  </div>
+                  <div>
+                    <span class="text-muted-foreground">Label</span>
+                    <div class="font-medium">{recording.data.label}</div>
+                  </div>
+                  <div>
+                    <span class="text-muted-foreground">Released</span>
+                    <div class="font-medium">
+                      {recording.data.releaseDate.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                      })}
+                    </div>
+                  </div>
+                  <div>
+                    <span class="text-muted-foreground">Format</span>
+                    <div class="font-medium">{recording.data.format.join(', ')}</div>
+                  </div>
+                </div>
 
-            <div class="leading-relaxed mb-6 text-muted-foreground">
-              <Content />
-            </div>
+                {recording.data.works && recording.data.works.length > 0 && (
+                  <div class="mb-6">
+                    <div class="text-muted-foreground text-sm mb-2">Program</div>
+                    <ul class="list-none p-0 space-y-1">
+                      {recording.data.works.slice(0, 3).map((work) => (
+                        <li class="font-serif italic text-sm">{work}</li>
+                      ))}
+                      {recording.data.works.length > 3 && (
+                        <li class="text-muted-foreground text-sm">
+                          +{recording.data.works.length - 3} more works
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                )}
 
-            <div class="flex gap-4 flex-wrap">
-              {recording.data.purchaseUrl && (
-                <Button asChild size="lg">
-                  <a href={recording.data.purchaseUrl} target="_blank" rel="noopener noreferrer">
-                    Purchase
-                  </a>
-                </Button>
-              )}
-              {recording.data.streamingUrl && (
-                <Button asChild variant="outline" size="lg">
-                  <a href={recording.data.streamingUrl} target="_blank" rel="noopener noreferrer">
-                    Listen
-                  </a>
-                </Button>
-              )}
-            </div>
-          </article>
-        );
-      })
-    }
-  </section>
+                {recording.data.awards && recording.data.awards.length > 0 && (
+                  <div class="mb-6 p-4 bg-primary/5 border-l-4 border-primary rounded-r">
+                    {recording.data.awards.map((award) => (
+                      <div class="text-primary font-semibold text-sm mb-1 last:mb-0">{award}</div>
+                    ))}
+                  </div>
+                )}
+
+                <div class="text-muted-foreground text-sm mb-6 line-clamp-3">
+                  <Content />
+                </div>
+
+                <div class="flex gap-4 flex-wrap">
+                  {recording.data.purchaseUrl && (
+                    <Button asChild>
+                      <a
+                        href={recording.data.purchaseUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Purchase
+                      </a>
+                    </Button>
+                  )}
+                  {recording.data.streamingUrl && (
+                    <Button asChild variant="outline">
+                      <a
+                        href={recording.data.streamingUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Listen
+                      </a>
+                    </Button>
+                  )}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+    )
+  }
+
+  <!-- All Other Recordings -->
+  {
+    otherRecordings.length > 0 && (
+      <section>
+        <h2 class="text-nav text-muted-foreground mb-8 fade-in-up delay-3">Discography</h2>
+
+        <div class="grid gap-8">
+          {otherRecordings.map(async (recording, index) => {
+            const { Content } = await recording.render();
+            return (
+              <article
+                class={`border border-border rounded-lg p-8 bg-card hover:border-primary/50 transition-colors duration-300 fade-in-up delay-${Math.min(index + 4, 5)}`}
+              >
+                <div class="flex flex-col md:flex-row md:items-start gap-6">
+                  {/* Date sidebar */}
+                  <div class="md:w-32 flex-shrink-0">
+                    <div class="text-3xl font-serif text-primary">
+                      {recording.data.releaseDate.getFullYear()}
+                    </div>
+                    <div class="text-nav text-muted-foreground">
+                      {recording.data.releaseDate.toLocaleDateString('en-US', { month: 'short' })}
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div class="flex-1">
+                    <h3 class="text-xl md:text-2xl font-serif mb-4">{recording.data.title}</h3>
+
+                    <div class="grid sm:grid-cols-3 gap-4 mb-4 text-sm">
+                      <div>
+                        <span class="text-muted-foreground">Orchestra:</span>{' '}
+                        {recording.data.orchestra}
+                      </div>
+                      <div>
+                        <span class="text-muted-foreground">Label:</span> {recording.data.label}
+                      </div>
+                      <div>
+                        <span class="text-muted-foreground">Format:</span>{' '}
+                        {recording.data.format.join(', ')}
+                      </div>
+                    </div>
+
+                    {recording.data.works && recording.data.works.length > 0 && (
+                      <div class="mb-4">
+                        <ul class="list-none p-0 flex flex-wrap gap-x-4 gap-y-1">
+                          {recording.data.works.map((work) => (
+                            <li class="font-serif italic text-sm text-muted-foreground">{work}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {recording.data.awards && recording.data.awards.length > 0 && (
+                      <div class="mb-4 flex flex-wrap gap-2">
+                        {recording.data.awards.map((award) => (
+                          <Badge variant="outline" className="text-primary border-primary">
+                            {award}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+
+                    <div class="text-muted-foreground text-sm mb-4 line-clamp-2">
+                      <Content />
+                    </div>
+
+                    <div class="flex gap-3 flex-wrap">
+                      {recording.data.purchaseUrl && (
+                        <Button asChild size="sm">
+                          <a
+                            href={recording.data.purchaseUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Purchase
+                          </a>
+                        </Button>
+                      )}
+                      {recording.data.streamingUrl && (
+                        <Button asChild variant="outline" size="sm">
+                          <a
+                            href={recording.data.streamingUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Listen
+                          </a>
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+    )
+  }
 </BaseLayout>

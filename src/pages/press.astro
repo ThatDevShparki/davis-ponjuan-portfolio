@@ -1,10 +1,19 @@
 ---
 import { getCollection } from 'astro:content';
 
+import FeaturedCarousel from '../components/FeaturedCarousel.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const allPress = await getCollection('press');
 const sortedPress = allPress.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+// Featured press for carousel
+const featuredPress = sortedPress.filter((item) => item.data.featured).slice(0, 5);
+const pressQuotes = featuredPress.map((item) => ({
+  text: item.data.excerpt,
+  publication: item.data.publication,
+  author: item.data.author,
+}));
 ---
 
 <BaseLayout title="Press - Davis Ponjuan" description="Press coverage and reviews">
@@ -15,54 +24,97 @@ const sortedPress = allPress.sort((a, b) => b.data.date.getTime() - a.data.date.
     </p>
   </header>
 
+  <!-- Featured Quotes Carousel -->
+  {
+    pressQuotes.length > 0 && (
+      <section class="py-16 md:py-20 bg-muted/30 -mx-6 md:-mx-12 lg:-mx-24 px-6 md:px-12 lg:px-24 my-12 fade-in-up delay-1">
+        <FeaturedCarousel quotes={pressQuotes} interval={7000} />
+      </section>
+    )
+  }
+
   <hr class="divider-dashed" />
 
-  <ul class="list-none p-0">
-    {
-      sortedPress.map(async (item, index) => {
-        const { Content } = await item.render();
-        return (
-          <li class={`section fade-in-up delay-${Math.min(index + 1, 5)}`}>
-            <article>
-              <div class="metadata mb-4 flex flex-wrap gap-x-1">
-                <strong class="text-foreground">{item.data.publication}</strong>
-                {item.data.author && (
-                  <>
-                    <span class="metadata-separator" />
-                    <span>{item.data.author}</span>
-                  </>
-                )}
-                <span class="metadata-separator" />
-                <time datetime={item.data.date.toISOString()}>
-                  {item.data.date.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </time>
-              </div>
-              <h2 class="text-2xl md:text-3xl mb-6">{item.data.title}</h2>
-              <blockquote class="press-quote-lg">{item.data.excerpt}</blockquote>
-              <div class="leading-relaxed text-muted-foreground mt-6 max-w-3xl">
-                <Content />
-              </div>
-              {item.data.url && (
-                <div class="mt-6">
-                  <a
-                    href={item.data.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-primary hover:underline underline-offset-4 transition-all duration-300 no-external-icon"
-                  >
-                    Read full article ↗
-                  </a>
+  <!-- All Press Items -->
+  <section class="fade-in-up delay-2">
+    <h2 class="text-nav text-muted-foreground mb-8">All Reviews</h2>
+
+    <div class="grid gap-0">
+      {
+        sortedPress.map(async (item, index) => {
+          const { Content } = await item.render();
+          return (
+            <article
+              class={`group py-10 border-b border-border last:border-b-0 fade-in-up delay-${Math.min(index + 2, 5)}`}
+            >
+              <div class="grid lg:grid-cols-12 gap-6 lg:gap-12">
+                {/* Sidebar - Publication info */}
+                <div class="lg:col-span-3">
+                  <div class="lg:sticky lg:top-24">
+                    <div class="text-lg font-semibold mb-1">{item.data.publication}</div>
+                    {item.data.author && (
+                      <div class="text-sm text-muted-foreground mb-2">{item.data.author}</div>
+                    )}
+                    <time
+                      datetime={item.data.date.toISOString()}
+                      class="text-nav text-muted-foreground"
+                    >
+                      {item.data.date.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </time>
+                    {item.data.featured && (
+                      <div class="mt-3">
+                        <span class="inline-block px-2 py-1 text-xs font-medium bg-primary/10 text-primary rounded">
+                          Featured
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              )}
+
+                {/* Main content */}
+                <div class="lg:col-span-9">
+                  <h3 class="text-2xl md:text-3xl font-serif mb-6 group-hover:text-primary transition-colors duration-300">
+                    {item.data.title}
+                  </h3>
+
+                  <blockquote class="text-xl md:text-2xl font-serif italic leading-relaxed text-foreground mb-6 pl-6 border-l-4 border-primary">
+                    "{item.data.excerpt}"
+                  </blockquote>
+
+                  <div class="leading-relaxed text-muted-foreground max-w-2xl">
+                    <Content />
+                  </div>
+
+                  {item.data.url && (
+                    <div class="mt-6">
+                      <a
+                        href={item.data.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 text-primary hover:underline underline-offset-4 transition-all duration-300"
+                      >
+                        Read full article
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                          />
+                        </svg>
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </div>
             </article>
-            <hr class="divider-dashed-sm mt-12" />
-          </li>
-        );
-      })
-    }
-  </ul>
+          );
+        })
+      }
+    </div>
+  </section>
 </BaseLayout>

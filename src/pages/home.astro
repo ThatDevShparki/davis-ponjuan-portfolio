@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 
+import FeaturedCarousel from '../components/FeaturedCarousel.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 // Get featured concerts and upcoming performances
@@ -13,154 +14,286 @@ const featuredConcerts = allConcerts
 const upcomingConcerts = allConcerts
   .filter((concert) => concert.data.status === 'upcoming')
   .sort((a, b) => a.data.date.getTime() - b.data.date.getTime())
-  .slice(0, 3);
+  .slice(0, 4);
 
-// Get featured press
+// Get featured press for carousel
 const allPress = await getCollection('press');
 const featuredPress = allPress
   .filter((item) => item.data.featured)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0, 2);
+  .slice(0, 5);
+
+// Transform press items to carousel format
+const pressQuotes = featuredPress.map((item) => ({
+  text: item.data.excerpt,
+  publication: item.data.publication,
+  author: item.data.author,
+}));
 ---
 
 <BaseLayout title="Davis Ponjuan - Conductor">
-  <!-- Hero Section - DRAMATIC -->
-  <header class="section fade-in">
-    <h1 class="text-display-sm md:text-display mb-6">Davis Ponjuan</h1>
-    <p class="text-xl leading-relaxed text-muted-foreground max-w-3xl">
-      Conductor • Music Director • Educator
-    </p>
+  <!-- Hero Section - Asymmetric with offset typography -->
+  <header class="min-h-[60vh] flex flex-col justify-center fade-in relative">
+    <!-- Decorative accent line -->
+    <div
+      class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-32 bg-primary hidden lg:block"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div class="lg:pl-12">
+      <p
+        class="text-nav text-primary mb-4 tracking-widest fade-in-up delay-1"
+        aria-label="Professional title"
+      >
+        Conductor
+      </p>
+      <h1
+        class="text-display-sm md:text-display lg:text-[7rem] leading-[0.9] mb-8 fade-in-up delay-2"
+      >
+        Davis<br />Ponjuan
+      </h1>
+      <p
+        class="text-xl md:text-2xl leading-relaxed text-muted-foreground max-w-xl fade-in-up delay-3"
+      >
+        Music Director • Educator • Champion of Contemporary Works
+      </p>
+    </div>
   </header>
 
-  <hr class="divider-dashed" />
-
+  <!-- Featured Press Carousel - Full width showcase -->
   {
-    upcomingConcerts.length > 0 && (
-      <section class="section fade-in-up delay-1">
-        <h2 class="section-heading">Upcoming Performances</h2>
-        <ul class="list-none p-0">
-          {upcomingConcerts.map((concert) => (
-            <li class="list-divider py-6">
-              <h3 class="text-xl md:text-2xl font-serif mb-2">
-                <a
-                  href={`/concerts/${concert.id}`}
-                  class="hover:text-primary transition-colors duration-300"
-                >
-                  {concert.data.title}
-                </a>
-              </h3>
-              <div class="metadata flex flex-wrap gap-x-1">
-                <span>
-                  {concert.data.date.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </span>
-                <span class="metadata-separator" />
-                <span>
-                  {concert.data.venue}, {concert.data.location}
-                </span>
-                <span class="metadata-separator" />
-                <span>{concert.data.orchestra}</span>
-              </div>
-            </li>
-          ))}
-        </ul>
+    pressQuotes.length > 0 && (
+      <section class="py-16 md:py-24 bg-muted/30 -mx-6 md:-mx-12 lg:-mx-24 px-6 md:px-12 lg:px-24 fade-in-up delay-4">
+        <FeaturedCarousel quotes={pressQuotes} interval={6000} />
       </section>
     )
   }
 
+  <hr class="divider-dashed" />
+
+  <!-- Asymmetric Two-Column Layout -->
+  <div class="grid lg:grid-cols-12 gap-12 lg:gap-16">
+    <!-- Main Column - Upcoming Performances -->
+    <div class="lg:col-span-7">
+      {
+        upcomingConcerts.length > 0 && (
+          <section class="section fade-in-up delay-1">
+            <div class="flex items-baseline justify-between mb-8">
+              <h2 class="text-3xl md:text-4xl font-serif">Upcoming</h2>
+              <a
+                href="/concerts"
+                class="text-nav text-primary hover:underline underline-offset-4 transition-all duration-300"
+              >
+                All Concerts →
+              </a>
+            </div>
+
+            <div class="space-y-0">
+              {upcomingConcerts.map((concert, index) => (
+                <article
+                  class={`group py-8 border-b border-border last:border-b-0 fade-in-up delay-${Math.min(index + 2, 5)}`}
+                >
+                  <div class="flex flex-col md:flex-row md:items-start gap-4 md:gap-8">
+                    {/* Date block - editorial style */}
+                    <div class="md:w-24 flex-shrink-0">
+                      <div class="text-4xl font-serif text-primary leading-none">
+                        {concert.data.date.toLocaleDateString('en-US', { day: 'numeric' })}
+                      </div>
+                      <div class="text-nav text-muted-foreground mt-1">
+                        {concert.data.date.toLocaleDateString('en-US', {
+                          month: 'short',
+                          year: 'numeric',
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div class="flex-1">
+                      <h3 class="text-xl md:text-2xl font-serif mb-2 group-hover:text-primary transition-colors duration-300">
+                        <a href={`/concerts/${concert.id}`}>{concert.data.title}</a>
+                      </h3>
+                      <div class="text-muted-foreground">
+                        <span class="font-medium">{concert.data.orchestra}</span>
+                        <span class="mx-2">·</span>
+                        <span>
+                          {concert.data.venue}, {concert.data.location}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )
+      }
+    </div>
+
+    <!-- Sidebar Column - About & Quick Links -->
+    <aside class="lg:col-span-5 lg:border-l lg:border-border lg:pl-12">
+      <!-- About Snippet -->
+      <section class="section fade-in-up delay-3">
+        <h2 class="text-nav text-muted-foreground mb-6">About</h2>
+        <p class="text-lg leading-relaxed mb-6">
+          Davis Ponjuan is a dynamic conductor known for combining technical precision with deep
+          musical insight, bringing fresh perspectives to both standard repertoire and contemporary
+          works.
+        </p>
+        <a
+          href="/about"
+          class="inline-flex items-center gap-2 text-primary hover:underline underline-offset-4 transition-all duration-300"
+        >
+          Read full biography
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"
+            ></path>
+          </svg>
+        </a>
+      </section>
+
+      <hr class="divider-dashed my-12" />
+
+      <!-- Quick Navigation -->
+      <nav class="fade-in-up delay-4" aria-label="Quick links">
+        <h2 class="text-nav text-muted-foreground mb-6">Explore</h2>
+        <ul class="space-y-4">
+          <li>
+            <a
+              href="/repertoire"
+              class="group flex items-center justify-between py-3 border-b border-border hover:border-primary transition-colors duration-300"
+            >
+              <span
+                class="text-lg font-serif group-hover:text-primary transition-colors duration-300"
+                >Repertoire</span
+              >
+              <svg
+                class="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a
+              href="/recordings"
+              class="group flex items-center justify-between py-3 border-b border-border hover:border-primary transition-colors duration-300"
+            >
+              <span
+                class="text-lg font-serif group-hover:text-primary transition-colors duration-300"
+                >Recordings</span
+              >
+              <svg
+                class="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a
+              href="/press"
+              class="group flex items-center justify-between py-3 border-b border-border hover:border-primary transition-colors duration-300"
+            >
+              <span
+                class="text-lg font-serif group-hover:text-primary transition-colors duration-300"
+                >Press & Reviews</span
+              >
+              <svg
+                class="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a
+              href="/contact"
+              class="group flex items-center justify-between py-3 border-b border-border hover:border-primary transition-colors duration-300"
+            >
+              <span
+                class="text-lg font-serif group-hover:text-primary transition-colors duration-300"
+                >Contact</span
+              >
+              <svg
+                class="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+              </svg>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+  </div>
+
+  <hr class="divider-dashed" />
+
+  <!-- Featured Performances - Full Width Cards -->
   {
     featuredConcerts.length > 0 && (
-      <section class="section fade-in-up delay-2">
-        <h2 class="section-heading">Featured Performances</h2>
-        <ul class="list-none p-0">
-          {featuredConcerts.map((concert) => (
-            <li class="list-divider py-6">
-              <h3 class="text-xl md:text-2xl font-serif mb-2">
-                <a
-                  href={`/concerts/${concert.id}`}
-                  class="hover:text-primary transition-colors duration-300"
-                >
-                  {concert.data.title}
-                </a>
-              </h3>
-              <div class="metadata flex flex-wrap gap-x-1">
-                <span>
-                  {concert.data.date.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </span>
-                <span class="metadata-separator" />
-                <span>
-                  {concert.data.venue}, {concert.data.location}
-                </span>
-                <span class="metadata-separator" />
-                <span>{concert.data.orchestra}</span>
+      <section class="section fade-in-up delay-5">
+        <div class="flex items-baseline justify-between mb-12">
+          <h2 class="text-3xl md:text-4xl font-serif">Featured Performances</h2>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+          {featuredConcerts.map((concert, index) => (
+            <article
+              class={`group p-6 md:p-8 border border-border rounded-lg bg-card hover:border-primary transition-all duration-300 fade-in-up delay-${Math.min(index + 1, 5)}`}
+            >
+              <div class="text-nav text-muted-foreground mb-4">
+                {concert.data.date.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                })}
               </div>
-            </li>
+              <h3 class="text-xl font-serif mb-3 group-hover:text-primary transition-colors duration-300">
+                <a href={`/concerts/${concert.id}`}>{concert.data.title}</a>
+              </h3>
+              <div class="text-sm text-muted-foreground mb-4">
+                {concert.data.orchestra}
+                <br />
+                {concert.data.venue}
+              </div>
+              <a
+                href={`/concerts/${concert.id}`}
+                class="text-nav text-primary hover:underline underline-offset-4"
+              >
+                Details →
+              </a>
+            </article>
           ))}
-        </ul>
-        <div class="mt-8">
-          <a
-            href="/concerts"
-            class="text-primary hover:underline underline-offset-4 transition-all duration-300"
-          >
-            View all concerts →
-          </a>
         </div>
       </section>
     )
   }
-
-  <hr class="divider-dashed" />
-
-  {
-    featuredPress.length > 0 && (
-      <section class="section fade-in-up delay-3">
-        <h2 class="section-heading">Press</h2>
-        <ul class="list-none p-0">
-          {featuredPress.map((item) => (
-            <li class="mb-12">
-              <blockquote class="press-quote-lg">{item.data.excerpt}</blockquote>
-              <cite class="press-quote-cite pl-10">
-                — {item.data.publication}
-                {item.data.author && `, ${item.data.author}`}
-              </cite>
-            </li>
-          ))}
-        </ul>
-        <div class="mt-8">
-          <a
-            href="/press"
-            class="text-primary hover:underline underline-offset-4 transition-all duration-300"
-          >
-            View all press →
-          </a>
-        </div>
-      </section>
-    )
-  }
-
-  <hr class="divider-dashed" />
-
-  <!-- TODO: Customize this bio excerpt before going live -->
-  <section class="section fade-in-up delay-4">
-    <h2 class="section-heading">About</h2>
-    <p class="text-xl leading-relaxed max-w-3xl">
-      Davis Ponjuan is a dynamic conductor known for combining technical precision with deep musical
-      insight, bringing fresh perspectives to both standard repertoire and contemporary works.
-    </p>
-    <div class="mt-8">
-      <a
-        href="/about"
-        class="text-primary hover:underline underline-offset-4 transition-all duration-300"
-      >
-        Read full biography →
-      </a>
-    </div>
-  </section>
 </BaseLayout>
