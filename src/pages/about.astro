@@ -1,6 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 
+import { Button } from '@/components/ui/button';
+
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const allOrganizations = await getCollection('organizations');
@@ -81,11 +83,17 @@ const featuredAwards = allAwards
         ))
       }
     </ul>
-    <a href="/cv" class="link-primary">View complete awards list →</a>
+    <Button asChild variant="link">
+      <a href="/cv">View complete awards list →</a>
+    </Button>
   </section>
 
-  <nav class="mt-12 flex gap-8">
-    <a href="/cv" class="btn-primary">View Full CV →</a>
-    <a href="/concerts" class="btn-primary">View Performances →</a>
+  <nav class="mt-12 flex gap-4">
+    <Button asChild size="lg">
+      <a href="/cv">View Full CV →</a>
+    </Button>
+    <Button asChild size="lg">
+      <a href="/concerts">View Performances →</a>
+    </Button>
   </nav>
 </BaseLayout>

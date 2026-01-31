@@ -373,30 +373,6 @@
     margin-bottom: var(--spacing-section-sm);
   }
 
-  /* Link styles - Primary (forest green) */
-  .link-primary {
-    color: var(--color-primary);
-    text-decoration: none;
-    transition: all var(--transition-normal) var(--transition-timing);
-  }
-
-  .link-primary:hover {
-    text-decoration: underline;
-    color: var(--color-primary-hover);
-  }
-
-  /* Link styles - Foreground (default text color) */
-  .link-foreground {
-    color: var(--color-foreground);
-    text-decoration: none;
-    transition: all var(--transition-normal) var(--transition-timing);
-  }
-
-  .link-foreground:hover {
-    color: var(--color-primary);
-    text-decoration: underline;
-  }
-
   /* Section heading with underline */
   .section-heading {
     font-size: var(--font-size-3xl);
@@ -423,37 +399,6 @@
     border-bottom: none;
   }
 
-  /* Button primary pattern */
-  .btn-primary {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    background-color: var(--color-primary);
-    color: var(--color-primary-foreground);
-    text-decoration: none;
-    border-radius: var(--radius-lg);
-    font-weight: 500;
-    transition: all var(--transition-normal) var(--transition-timing);
-  }
-
-  .btn-primary:hover {
-    background-color: var(--color-primary-hover);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-lg);
-  }
-
-  /* Badge pattern - Featured/status indicators */
-  .badge {
-    display: inline-block;
-    padding: 0.125rem 0.5rem;
-    background-color: var(--color-primary);
-    color: var(--color-primary-foreground);
-    font-size: var(--font-size-xs);
-    font-weight: 500;
-    border-radius: var(--radius-md);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
   /* Metadata text pattern - dates, venues, etc. */
   .metadata {
     color: var(--color-muted-foreground);
@@ -465,38 +410,6 @@
   .metadata-separator::before {
     content: ' • ';
     margin: 0 0.25rem;
-  }
-
-  /* Empty state component */
-  .empty-state {
-    text-align: center;
-    padding: var(--spacing-section) var(--spacing-gap);
-    color: var(--color-muted-foreground);
-  }
-
-  .empty-state h3 {
-    font-size: var(--font-size-xl);
-    margin-bottom: 0.5rem;
-    color: var(--color-foreground);
-  }
-
-  .empty-state p {
-    font-size: var(--font-size-base);
-    margin-bottom: var(--spacing-list-sm);
-  }
-
-  /* Card pattern - performance cards, etc. */
-  .card {
-    background-color: var(--color-card);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-card);
-    transition: all var(--transition-normal) var(--transition-timing);
-  }
-
-  .card:hover {
-    box-shadow: var(--shadow-lg);
-    border-color: var(--color-primary);
   }
 
   /* Press quote/blockquote pattern */

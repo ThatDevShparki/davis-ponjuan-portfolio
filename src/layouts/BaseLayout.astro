@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface Props {
   title?: string;
@@ -13,8 +13,19 @@ const { title = 'Davis Ponjuan - Conductor', description = 'Conductor and musici
 // Get current path for active nav indication
 const currentPath = new URL(Astro.request.url).pathname;
 
-const navLinkClass =
-  'no-underline text-foreground hover:underline aria-[current=page]:font-semibold aria-[current=page]:text-primary';
+// Navigation items for cleaner rendering
+const navItems = [
+  { href: '/home', label: 'Home', match: (p: string) => p === '/home' },
+  { href: '/about', label: 'About', match: (p: string) => p === '/about' },
+  { href: '/concerts', label: 'Concerts', match: (p: string) => p.startsWith('/concerts') },
+  { href: '/repertoire', label: 'Repertoire', match: (p: string) => p === '/repertoire' },
+  { href: '/organizations', label: 'Organizations', match: (p: string) => p === '/organizations' },
+  { href: '/recordings', label: 'Recordings', match: (p: string) => p === '/recordings' },
+  { href: '/workshops', label: 'Workshops', match: (p: string) => p === '/workshops' },
+  { href: '/press', label: 'Press', match: (p: string) => p === '/press' },
+  { href: '/cv', label: 'CV', match: (p: string) => p === '/cv' },
+  { href: '/contact', label: 'Contact', match: (p: string) => p === '/contact' },
+];
 ---
 
 <!doctype html>
@@ -31,63 +42,49 @@ const navLinkClass =
   <body>
     <a
       href="#main-content"
-      id="scroll-button"
-      class="fixed bottom-6 right-6 bg-primary text-primary-foreground p-3 rounded-full no-underline z-50 opacity-0 pointer-events-none transition-all duration-300 shadow-lg hover:scale-110 print-hidden"
       aria-label="Skip to main content"
+      id="scroll-button"
+      class="fixed bottom-6 right-6 z-50 size-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center opacity-0 pointer-events-none shadow-lg hover:bg-primary/90 hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 print-hidden no-underline"
     >
-      <ChevronDown className="w-5 h-5" id="chevron-down" />
-      <ChevronUp className="w-5 h-5 hidden" id="chevron-up" />
+      <svg
+        id="chevron-down"
+        class="w-5 h-5"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="m6 9 6 6 6-6"></path>
+      </svg>
+      <svg
+        id="chevron-up"
+        class="w-5 h-5 hidden"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="m18 15-6-6-6 6"></path>
+      </svg>
     </a>
+
     <header class="py-4 px-8 border-b border-border print-hidden">
-      <nav aria-label="Main navigation" class="flex gap-8 flex-wrap">
-        <a
-          href="/home"
-          aria-current={currentPath === '/home' ? 'page' : undefined}
-          class={navLinkClass}>Home</a
-        >
-        <a
-          href="/about"
-          aria-current={currentPath === '/about' ? 'page' : undefined}
-          class={navLinkClass}>About</a
-        >
-        <a
-          href="/concerts"
-          aria-current={currentPath.startsWith('/concerts') ? 'page' : undefined}
-          class={navLinkClass}>Concerts</a
-        >
-        <a
-          href="/repertoire"
-          aria-current={currentPath === '/repertoire' ? 'page' : undefined}
-          class={navLinkClass}>Repertoire</a
-        >
-        <a
-          href="/organizations"
-          aria-current={currentPath === '/organizations' ? 'page' : undefined}
-          class={navLinkClass}>Organizations</a
-        >
-        <a
-          href="/recordings"
-          aria-current={currentPath === '/recordings' ? 'page' : undefined}
-          class={navLinkClass}>Recordings</a
-        >
-        <a
-          href="/workshops"
-          aria-current={currentPath === '/workshops' ? 'page' : undefined}
-          class={navLinkClass}>Workshops</a
-        >
-        <a
-          href="/press"
-          aria-current={currentPath === '/press' ? 'page' : undefined}
-          class={navLinkClass}>Press</a
-        >
-        <a href="/cv" aria-current={currentPath === '/cv' ? 'page' : undefined} class={navLinkClass}
-          >CV</a
-        >
-        <a
-          href="/contact"
-          aria-current={currentPath === '/contact' ? 'page' : undefined}
-          class={navLinkClass}>Contact</a
-        >
+      <nav aria-label="Main navigation" class="flex gap-6 flex-wrap items-center">
+        {
+          navItems.map((item) => (
+            <Button asChild variant="nav" size="default" className="h-auto">
+              <a href={item.href} aria-current={item.match(currentPath) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </Button>
+          ))
+        }
       </nav>
     </header>
 

@@ -1,6 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 
+import { Button } from '@/components/ui/button';
+
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 // Get featured concerts and upcoming performances
@@ -36,9 +38,9 @@ const featuredPress = allPress
         <ul class="list-none p-0">
           {upcomingConcerts.map((concert) => (
             <li class="list-divider">
-              <a href={`/concerts/${concert.id}`} class="link-primary">
-                <strong>{concert.data.title}</strong>
-              </a>
+              <Button asChild variant="link" className="font-semibold">
+                <a href={`/concerts/${concert.id}`}>{concert.data.title}</a>
+              </Button>
               <div class="metadata">
                 {concert.data.date.toLocaleDateString('en-US', {
                   year: 'numeric',
@@ -64,9 +66,9 @@ const featuredPress = allPress
         <ul class="list-none p-0">
           {featuredConcerts.map((concert) => (
             <li class="list-divider">
-              <a href={`/concerts/${concert.id}`} class="link-primary">
-                <strong>{concert.data.title}</strong>
-              </a>
+              <Button asChild variant="link" className="font-semibold">
+                <a href={`/concerts/${concert.id}`}>{concert.data.title}</a>
+              </Button>
               <div class="metadata">
                 {concert.data.date.toLocaleDateString('en-US', {
                   year: 'numeric',
@@ -81,9 +83,9 @@ const featuredPress = allPress
             </li>
           ))}
         </ul>
-        <a href="/concerts" class="link-primary">
-          View all concerts →
-        </a>
+        <Button asChild variant="link">
+          <a href="/concerts">View all concerts →</a>
+        </Button>
       </section>
     )
   }
@@ -103,9 +105,9 @@ const featuredPress = allPress
             </li>
           ))}
         </ul>
-        <a href="/press" class="link-primary">
-          View all press →
-        </a>
+        <Button asChild variant="link">
+          <a href="/press">View all press →</a>
+        </Button>
       </section>
     )
   }
@@ -117,6 +119,8 @@ const featuredPress = allPress
       Davis Ponjuan is a dynamic conductor known for combining technical precision with deep musical
       insight, bringing fresh perspectives to both standard repertoire and contemporary works.
     </p>
-    <a href="/about" class="link-primary">Read full biography →</a>
+    <Button asChild variant="link">
+      <a href="/about">Read full biography →</a>
+    </Button>
   </section>
 </BaseLayout>
