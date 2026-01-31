@@ -10,7 +10,7 @@ const sortedPress = allPress.sort((a, b) => b.data.date.getTime() - a.data.date.
 <BaseLayout title="Press - Davis Ponjuan" description="Press coverage and reviews">
   <h1 class="text-5xl mb-4">Press & Reviews</h1>
 
-  <p class="text-lg leading-relaxed mb-12 text-gray-600">
+  <p class="text-lg leading-relaxed mb-12 text-muted-foreground">
     Selected press coverage and critical reviews of performances throughout my career.
   </p>
 
@@ -19,13 +19,18 @@ const sortedPress = allPress.sort((a, b) => b.data.date.getTime() - a.data.date.
       sortedPress.map(async (item) => {
         const { Content } = await item.render();
         return (
-          <li class="mb-12 pb-12 border-b border-gray-200 last:border-b-0">
+          <li class="list-divider mb-12 pb-12">
             <article>
               <h2 class="text-2xl mb-3">{item.data.title}</h2>
-              <div class="text-gray-600 mb-4 text-[0.95rem]">
+              <div class="metadata mb-4">
                 <strong>{item.data.publication}</strong>
-                {item.data.author && ` • ${item.data.author}`}
-                {' • '}
+                {item.data.author && (
+                  <>
+                    <span class="metadata-separator" />
+                    {item.data.author}
+                  </>
+                )}
+                <span class="metadata-separator" />
                 <time datetime={item.data.date.toISOString()}>
                   {item.data.date.toLocaleDateString('en-US', {
                     year: 'numeric',
@@ -35,23 +40,20 @@ const sortedPress = allPress.sort((a, b) => b.data.date.getTime() - a.data.date.
                 </time>
                 {item.data.url && (
                   <>
-                    {' '}
-                    •{' '}
+                    <span class="metadata-separator" />
                     <a
                       href={item.data.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="text-[#2d7a3e] no-underline hover:underline"
+                      class="link-primary"
                     >
                       Read full article
                     </a>
                   </>
                 )}
               </div>
-              <blockquote class="text-xl italic my-6 pl-6 border-l-4 border-[#2d7a3e] leading-relaxed">
-                {item.data.excerpt}
-              </blockquote>
-              <div class="leading-relaxed text-gray-600">
+              <blockquote class="press-quote">{item.data.excerpt}</blockquote>
+              <div class="leading-relaxed text-muted-foreground">
                 <Content />
               </div>
             </article>

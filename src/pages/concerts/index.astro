@@ -41,12 +41,12 @@ const years = Object.keys(concertsByYear)
 
   {
     upcomingConcerts.length > 0 && (
-      <section class="mb-16">
-        <h2 class="text-3xl mb-6 border-b-2 border-gray-800 pb-2">Upcoming Performances</h2>
+      <section class="section">
+        <h2 class="section-heading">Upcoming Performances</h2>
         <ul class="list-none p-0">
           {upcomingConcerts.map((concert) => (
-            <li class="flex gap-8 mb-8 pb-8 border-b border-gray-200 last:border-b-0">
-              <div class="flex-shrink-0 w-30 font-semibold text-gray-600">
+            <li class="flex gap-8 list-divider">
+              <div class="flex-shrink-0 w-30 font-semibold metadata">
                 {concert.data.date.toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
@@ -55,18 +55,17 @@ const years = Object.keys(concertsByYear)
               </div>
               <div class="flex-1">
                 <h3 class="m-0 mb-2 text-xl">
-                  <a
-                    href={`/concerts/${concert.id}`}
-                    class="text-gray-800 no-underline hover:text-[#2d7a3e] hover:underline"
-                  >
+                  <a href={`/concerts/${concert.id}`} class="link-foreground">
                     {concert.data.title}
                   </a>
                 </h3>
-                <div class="text-gray-600 mb-2">
-                  {concert.data.orchestra} • {concert.data.venue}, {concert.data.location}
+                <div class="metadata mb-2">
+                  {concert.data.orchestra}
+                  <span class="metadata-separator" />
+                  {concert.data.venue}, {concert.data.location}
                 </div>
                 {concert.data.program && (
-                  <ul class="list-none p-0 text-[0.95rem] text-gray-600 mt-2">
+                  <ul class="list-none p-0 text-sm text-muted-foreground mt-2">
                     {concert.data.program.map((piece) => (
                       <li class="mb-1">
                         {piece.composer}: <em>{piece.work}</em>
@@ -83,8 +82,8 @@ const years = Object.keys(concertsByYear)
     )
   }
 
-  <section class="mb-16">
-    <h2 class="text-3xl mb-6 border-b-2 border-gray-800 pb-2">Past Performances</h2>
+  <section class="section">
+    <h2 class="section-heading">Past Performances</h2>
     {
       years.length === 0 && (
         <EmptyState
@@ -96,11 +95,11 @@ const years = Object.keys(concertsByYear)
     {
       years.map((year) => (
         <div class="mb-12">
-          <h3 class="text-2xl font-bold mb-4 text-[#2d7a3e]">{year}</h3>
+          <h3 class="text-2xl font-bold mb-4 text-primary">{year}</h3>
           <ul class="list-none p-0">
             {concertsByYear[year].map((concert) => (
-              <li class="flex gap-8 mb-8 pb-8 border-b border-gray-200 last:border-b-0">
-                <div class="flex-shrink-0 w-30 font-semibold text-gray-600">
+              <li class="flex gap-8 list-divider">
+                <div class="flex-shrink-0 w-30 font-semibold metadata">
                   {concert.data.date.toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
@@ -108,23 +107,18 @@ const years = Object.keys(concertsByYear)
                 </div>
                 <div class="flex-1">
                   <h4 class="m-0 mb-2 text-lg">
-                    <a
-                      href={`/concerts/${concert.id}`}
-                      class="text-gray-800 no-underline hover:text-[#2d7a3e] hover:underline"
-                    >
+                    <a href={`/concerts/${concert.id}`} class="link-foreground">
                       {concert.data.title}
                     </a>
-                    {concert.data.featured && (
-                      <span class="inline-block bg-[#2d7a3e] text-white py-0.5 px-2 text-xs rounded ml-2 font-normal">
-                        Featured
-                      </span>
-                    )}
+                    {concert.data.featured && <span class="badge ml-2">Featured</span>}
                   </h4>
-                  <div class="text-gray-600 mb-2">
-                    {concert.data.orchestra} • {concert.data.venue}, {concert.data.location}
+                  <div class="metadata mb-2">
+                    {concert.data.orchestra}
+                    <span class="metadata-separator" />
+                    {concert.data.venue}, {concert.data.location}
                   </div>
                   {concert.data.program && concert.data.program.length > 0 && (
-                    <div class="text-[0.95rem] text-gray-600 mt-2">
+                    <div class="text-sm text-muted-foreground mt-2">
                       {concert.data.program[0].composer}: <em>{concert.data.program[0].work}</em>
                       {concert.data.program.length > 1 &&
                         ` + ${concert.data.program.length - 1} more`}

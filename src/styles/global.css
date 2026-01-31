@@ -4,6 +4,11 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* ─────────────────────────────────────────────────────────
+     TAILWIND THEME - Design System Tokens
+     ───────────────────────────────────────────────────────── */
+
+  /* Border Radius Scale */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -11,6 +16,8 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
+  /* Color System - Map CSS variables to Tailwind */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -19,14 +26,18 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-accent-muted: var(--accent-muted);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-chart-1: var(--chart-1);
@@ -42,83 +53,229 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Typography Scale - Classical concert program feel */
+  /* Base: 18px (1.125rem) for comfortable reading */
+  --font-size-xs: 0.8125rem; /* 13px - small metadata */
+  --font-size-sm: 0.875rem; /* 14px - secondary text */
+  --font-size-base: 1rem; /* 16px - fallback body */
+  --font-size-md: 1.0625rem; /* 17px - comfortable body */
+  --font-size-lg: 1.125rem; /* 18px - primary body text */
+  --font-size-xl: 1.25rem; /* 20px - lead paragraphs */
+  --font-size-2xl: 1.5rem; /* 24px - h3 */
+  --font-size-3xl: 1.875rem; /* 30px - h2 */
+  --font-size-4xl: 2.25rem; /* 36px - h1 subsections */
+  --font-size-5xl: 3rem; /* 48px - h1 page titles */
+
+  /* Line Heights - Generous for readability */
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625; /* Body copy */
+  --line-height-loose: 1.75; /* Long-form content */
+
+  /* Spacing Scale - Consistent rhythm (multiples of 4px) */
+  --spacing-section: 4rem; /* 64px - between major sections */
+  --spacing-section-sm: 3rem; /* 48px - smaller section gaps */
+  --spacing-card: 2.5rem; /* 40px - internal card padding */
+  --spacing-list: 2rem; /* 32px - list item spacing */
+  --spacing-list-sm: 1.5rem; /* 24px - compact list spacing */
+  --spacing-gap: 2rem; /* 32px - grid/flex gaps */
+  --spacing-gap-sm: 1rem; /* 16px - compact gaps */
+
+  /* Border Widths */
+  --border-width-thin: 1px;
+  --border-width-normal: 2px;
+  --border-width-thick: 4px; /* For blockquote left border */
+
+  /* Transitions - Unhurried, elegant */
+  --transition-fast: 200ms;
+  --transition-normal: 400ms; /* Primary transition speed */
+  --transition-slow: 600ms;
+  --transition-timing: ease-out; /* Smooth deceleration */
+
+  /* Shadows - Subtle elevation */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 8px 24px rgb(0 0 0 / 0.08); /* Card hover */
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  /* ─────────────────────────────────────────────────────────
+     DESIGN TOKENS - Davis Ponjuan Portfolio
+     Based on CLAUDE.md specifications
+     ───────────────────────────────────────────────────────── */
+
+  /* Border Radius Scale */
+  --radius: 0.5rem; /* 8px base - subtle, refined */
+
+  /* Foundation Colors - Light Mode (Warm Classical Approach) */
+  /* Cream/off-white background for warmth, not stark white */
+  --background: oklch(0.985 0.005 85); /* #fefbf5 - ARSIS cream */
+  --foreground: oklch(0.22 0 0); /* #242424 - Deep charcoal, not harsh black */
+
+  /* Card & Elevated Surfaces */
+  --card: oklch(0.98 0.003 85); /* Subtle cream for elevated surfaces */
+  --card-foreground: oklch(0.22 0 0);
+
+  /* Popover & Overlays */
+  --popover: oklch(0.985 0.005 85);
+  --popover-foreground: oklch(0.22 0 0);
+
+  /* Primary Accent - Forest/Emerald Green (#2d7a3e) */
+  /* Sophisticated and unexpected, not typical classical blue */
+  --primary: oklch(0.48 0.12 145); /* #2d7a3e - Forest green for CTAs */
+  --primary-foreground: oklch(1 0 0); /* White text on green */
+  --primary-hover: oklch(0.4 0.14 145); /* #246330 - Darker green hover */
+
+  /* Secondary - Neutral Variations */
+  --secondary: oklch(0.94 0.005 85); /* Warm gray backgrounds */
+  --secondary-foreground: oklch(0.22 0 0);
+
+  /* Muted - For de-emphasized content */
+  --muted: oklch(0.94 0.005 85); /* Warm gray backgrounds */
+  --muted-foreground: oklch(0.5 0 0); /* Medium gray for secondary text */
+
+  /* Accent - Green highlights */
+  --accent: oklch(0.48 0.12 145); /* Same as primary - forest green */
+  --accent-foreground: oklch(1 0 0);
+  --accent-muted: oklch(0.92 0.05 145); /* Subtle green backgrounds */
+
+  /* Destructive - Error states */
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --destructive-foreground: oklch(0.985 0 0);
+
+  /* Borders & Inputs */
+  --border: oklch(0.88 0.005 85); /* Subtle warm border */
+  --border-strong: oklch(0.22 0 0); /* Strong borders (like underlines) */
+  --input: oklch(0.88 0.005 85);
+
+  /* Focus Rings */
+  --ring: oklch(0.48 0.12 145); /* Forest green focus outlines */
+
+  /* Sidebar (if needed) */
+  --sidebar: oklch(0.985 0.005 85);
+  --sidebar-foreground: oklch(0.22 0 0);
+  --sidebar-primary: oklch(0.48 0.12 145);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.94 0.005 85);
+  --sidebar-accent-foreground: oklch(0.22 0 0);
+  --sidebar-border: oklch(0.88 0.005 85);
+  --sidebar-ring: oklch(0.48 0.12 145);
+
+  /* Charts (if needed for data visualization) */
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  /* Dark Mode - Sophisticated Alternative */
+  /* Deep charcoal base, not pure black */
+  --background: oklch(0.18 0 0); /* Deep charcoal background */
+  --foreground: oklch(0.96 0.005 85); /* Warm off-white text */
+
+  /* Card & Elevated Surfaces */
+  --card: oklch(0.22 0 0); /* Slightly lighter than background */
+  --card-foreground: oklch(0.96 0.005 85);
+
+  /* Popover & Overlays */
+  --popover: oklch(0.22 0 0);
+  --popover-foreground: oklch(0.96 0.005 85);
+
+  /* Primary Accent - Forest green works in dark mode */
+  --primary: oklch(0.55 0.13 145); /* Slightly lighter green for contrast */
+  --primary-foreground: oklch(1 0 0); /* White text */
+  --primary-hover: oklch(0.45 0.15 145); /* Darker hover state */
+
+  /* Secondary */
+  --secondary: oklch(0.28 0 0); /* Dark gray backgrounds */
+  --secondary-foreground: oklch(0.96 0.005 85);
+
+  /* Muted */
+  --muted: oklch(0.28 0 0);
+  --muted-foreground: oklch(0.65 0 0); /* Medium gray for secondary text */
+
+  /* Accent */
+  --accent: oklch(0.55 0.13 145);
+  --accent-foreground: oklch(1 0 0);
+  --accent-muted: oklch(0.25 0.05 145); /* Subtle dark green background */
+
+  /* Destructive */
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
+  --destructive-foreground: oklch(0.96 0.005 85);
+
+  /* Borders & Inputs */
+  --border: oklch(1 0 0 / 8%); /* Subtle transparent border */
+  --border-strong: oklch(0.96 0.005 85); /* Strong borders in dark mode */
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+
+  /* Focus Rings */
+  --ring: oklch(0.55 0.13 145); /* Forest green focus */
+
+  /* Sidebar */
+  --sidebar: oklch(0.22 0 0);
+  --sidebar-foreground: oklch(0.96 0.005 85);
+  --sidebar-primary: oklch(0.55 0.13 145);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.28 0 0);
+  --sidebar-accent-foreground: oklch(0.96 0.005 85);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.55 0.13 145);
+
+  /* Charts */
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-size: var(--font-size-lg); /* 18px base for comfortable reading */
+    line-height: var(--line-height-relaxed); /* 1.625 for body text */
+  }
+
+  /* Typography Hierarchy - Classical Sophistication */
+  h1 {
+    font-size: var(--font-size-5xl); /* 48px */
+    line-height: var(--line-height-tight); /* 1.25 */
+    font-weight: 400; /* Regular weight, let size create hierarchy */
+    letter-spacing: -0.02em; /* Slight tightening for large sizes */
+  }
+
+  h2 {
+    font-size: var(--font-size-3xl); /* 30px */
+    line-height: var(--line-height-snug); /* 1.375 */
+    font-weight: 400;
+  }
+
+  h3 {
+    font-size: var(--font-size-2xl); /* 24px */
+    line-height: var(--line-height-normal); /* 1.5 */
+    font-weight: 600; /* Semi-bold for h3 */
+  }
+
+  h4 {
+    font-size: var(--font-size-xl); /* 20px */
+    line-height: var(--line-height-normal);
+    font-weight: 600;
+  }
+
+  h5,
+  h6 {
+    font-size: var(--font-size-md); /* 17px */
+    line-height: var(--line-height-normal);
+    font-weight: 600;
   }
 
   /* Text overflow protection */
@@ -132,9 +289,60 @@
     overflow-wrap: break-word;
     word-wrap: break-word;
   }
+
+  /* Link Styles - Forest green accent */
+  a {
+    transition-property: color, text-decoration-color, background-color;
+    transition-duration: var(--transition-normal);
+    transition-timing-function: var(--transition-timing);
+  }
+
+  /* Comfortable reading measure (60-75 characters) */
+  p {
+    max-width: 75ch;
+  }
+
+  /* Strong emphasis */
+  strong,
+  b {
+    font-weight: 600;
+  }
+
+  /* Italic emphasis */
+  em,
+  i {
+    font-style: italic;
+  }
+
+  /* Blockquotes - Press quotes style */
+  blockquote {
+    font-style: italic;
+    border-left: var(--border-width-thick) solid var(--color-primary);
+    padding-left: 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  /* Lists - Better spacing */
+  ul,
+  ol {
+    padding-left: 2rem;
+  }
+
+  li {
+    margin-bottom: 0.5rem;
+  }
+
+  /* Time elements */
+  time {
+    font-variant-numeric: tabular-nums;
+  }
 }
 
 @layer utilities {
+  /* ─────────────────────────────────────────────────────────
+     COMPONENT UTILITIES - Reusable patterns
+     ───────────────────────────────────────────────────────── */
+
   /* Text truncation utilities */
   .truncate {
     overflow: hidden;
@@ -156,22 +364,157 @@
     overflow: hidden;
   }
 
+  /* Section spacing pattern */
+  .section {
+    margin-bottom: var(--spacing-section);
+  }
+
+  .section-sm {
+    margin-bottom: var(--spacing-section-sm);
+  }
+
+  /* Link styles - Primary (forest green) */
+  .link-primary {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: all var(--transition-normal) var(--transition-timing);
+  }
+
+  .link-primary:hover {
+    text-decoration: underline;
+    color: var(--color-primary-hover);
+  }
+
+  /* Link styles - Foreground (default text color) */
+  .link-foreground {
+    color: var(--color-foreground);
+    text-decoration: none;
+    transition: all var(--transition-normal) var(--transition-timing);
+  }
+
+  .link-foreground:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  /* Section heading with underline */
+  .section-heading {
+    font-size: var(--font-size-3xl);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--color-border-strong);
+  }
+
+  .section-heading-sm {
+    font-size: var(--font-size-2xl);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  /* List item divider pattern */
+  .list-divider {
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--spacing-list-sm);
+    margin-bottom: var(--spacing-list-sm);
+  }
+
+  .list-divider:last-child {
+    border-bottom: none;
+  }
+
+  /* Button primary pattern */
+  .btn-primary {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--color-primary);
+    color: var(--color-primary-foreground);
+    text-decoration: none;
+    border-radius: var(--radius-lg);
+    font-weight: 500;
+    transition: all var(--transition-normal) var(--transition-timing);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--color-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Badge pattern - Featured/status indicators */
+  .badge {
+    display: inline-block;
+    padding: 0.125rem 0.5rem;
+    background-color: var(--color-primary);
+    color: var(--color-primary-foreground);
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Metadata text pattern - dates, venues, etc. */
+  .metadata {
+    color: var(--color-muted-foreground);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+  }
+
+  /* Metadata separator (middle dot) */
+  .metadata-separator::before {
+    content: ' • ';
+    margin: 0 0.25rem;
+  }
+
   /* Empty state component */
   .empty-state {
     text-align: center;
-    padding: 4rem 2rem;
-    color: #666;
+    padding: var(--spacing-section) var(--spacing-gap);
+    color: var(--color-muted-foreground);
   }
 
   .empty-state h3 {
-    font-size: 1.25rem;
+    font-size: var(--font-size-xl);
     margin-bottom: 0.5rem;
-    color: #333;
+    color: var(--color-foreground);
   }
 
   .empty-state p {
-    font-size: 1rem;
-    margin-bottom: 1.5rem;
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-list-sm);
+  }
+
+  /* Card pattern - performance cards, etc. */
+  .card {
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-card);
+    transition: all var(--transition-normal) var(--transition-timing);
+  }
+
+  .card:hover {
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-primary);
+  }
+
+  /* Press quote/blockquote pattern */
+  .press-quote {
+    font-size: var(--font-size-xl);
+    font-style: italic;
+    margin: 1.5rem 0;
+    padding-left: 1.5rem;
+    border-left: var(--border-width-thick) solid var(--color-primary);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .press-quote-cite {
+    font-style: normal;
+    color: var(--color-muted-foreground);
+    font-size: var(--font-size-sm);
+    display: block;
+    margin-top: 0.5rem;
   }
 
   /* Screen reader only */
@@ -186,12 +529,41 @@
     white-space: nowrap;
     border-width: 0;
   }
+
+  /* Print utilities */
+  @media print {
+    .print-hidden {
+      display: none !important;
+    }
+
+    .print-full-width {
+      max-width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+  }
 }
 
-/* External link indicator */
+/* ─────────────────────────────────────────────────────────
+   GLOBAL PATTERNS
+   ───────────────────────────────────────────────────────── */
+
+/* External link indicator - accessible and on-brand */
 a[target='_blank']:not(.no-external-icon)::after {
   content: ' ↗';
   font-size: 0.85em;
   opacity: 0.7;
   margin-left: 0.15em;
+}
+
+/* Reduced motion support - respect user preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -1,6 +1,8 @@
 ---
 import '../styles/global.css';
 
+import { ChevronDown, ChevronUp } from 'lucide-react';
+
 interface Props {
   title?: string;
   description?: string;
@@ -12,7 +14,7 @@ const { title = 'Davis Ponjuan - Conductor', description = 'Conductor and musici
 const currentPath = new URL(Astro.request.url).pathname;
 
 const navLinkClass =
-  'no-underline text-gray-800 hover:underline aria-[current=page]:font-semibold aria-[current=page]:text-[#2d7a3e]';
+  'no-underline text-foreground hover:underline aria-[current=page]:font-semibold aria-[current=page]:text-primary';
 ---
 
 <!doctype html>
@@ -29,10 +31,14 @@ const navLinkClass =
   <body>
     <a
       href="#main-content"
-      class="absolute -top-10 left-0 bg-[#2d7a3e] text-white py-2 px-4 no-underline z-[100] focus:top-0"
-      >Skip to main content</a
+      id="scroll-button"
+      class="fixed bottom-6 right-6 bg-primary text-primary-foreground p-3 rounded-full no-underline z-50 opacity-0 pointer-events-none transition-all duration-300 shadow-lg hover:scale-110 print-hidden"
+      aria-label="Skip to main content"
     >
-    <header class="py-4 px-8 border-b border-gray-300 print:hidden">
+      <ChevronDown className="w-5 h-5" id="chevron-down" />
+      <ChevronUp className="w-5 h-5 hidden" id="chevron-up" />
+    </a>
+    <header class="py-4 px-8 border-b border-border print-hidden">
       <nav aria-label="Main navigation" class="flex gap-8 flex-wrap">
         <a
           href="/home"
@@ -88,13 +94,118 @@ const navLinkClass =
     <main
       id="main-content"
       tabindex="-1"
-      class="max-w-6xl mx-auto p-8 min-h-[calc(100vh-200px)] print:max-w-full print:m-0 print:p-0 print:min-h-0"
+      class="max-w-6xl mx-auto p-8 min-h-[calc(100vh-200px)] print-full-width"
     >
       <slot />
     </main>
 
-    <footer class="p-8 text-center border-t border-gray-300 text-gray-600 print:hidden">
+    <footer class="p-8 text-center border-t border-border text-muted-foreground print-hidden">
       <p>&copy; {new Date().getFullYear()} Davis Ponjuan. All rights reserved.</p>
     </footer>
+
+    <script>
+      const scrollButton = document.getElementById('scroll-button');
+      const chevronDown = document.getElementById('chevron-down');
+      const chevronUp = document.getElementById('chevron-up');
+      const mainContent = document.getElementById('main-content');
+
+      let isHoveringNearButton = false;
+      let isActivelyScrolling = false;
+      let scrollTimeout: number;
+      const scrollThreshold = 100; // Header height
+
+      function updateButtonState() {
+        if (!scrollButton || !chevronDown || !chevronUp) return;
+
+        const scrollPosition = window.scrollY;
+        const isAtTop = scrollPosition <= scrollThreshold;
+
+        // Determine if button should be visible
+        let shouldShow = false;
+        let useDownChevron = true;
+
+        if (isAtTop) {
+          // At top: show down chevron to skip to content
+          shouldShow = true;
+          useDownChevron = true;
+          scrollButton.setAttribute('href', '#main-content');
+          scrollButton.setAttribute('aria-label', 'Skip to main content');
+        } else if (isActivelyScrolling) {
+          // Actively scrolling: show up chevron to go back to top
+          shouldShow = true;
+          useDownChevron = false;
+          scrollButton.setAttribute('href', '#');
+          scrollButton.setAttribute('aria-label', 'Back to top');
+        } else if (isHoveringNearButton) {
+          // Hovering: show up chevron (since we're scrolled down)
+          shouldShow = true;
+          useDownChevron = false;
+          scrollButton.setAttribute('href', '#');
+          scrollButton.setAttribute('aria-label', 'Back to top');
+        } else {
+          // Default: hide
+          shouldShow = false;
+        }
+
+        // Update visibility
+        if (shouldShow) {
+          scrollButton.classList.remove('opacity-0', 'pointer-events-none');
+          scrollButton.classList.add('opacity-100', 'pointer-events-auto');
+        } else {
+          scrollButton.classList.add('opacity-0', 'pointer-events-none');
+          scrollButton.classList.remove('opacity-100', 'pointer-events-auto');
+        }
+
+        // Update icon
+        if (useDownChevron) {
+          chevronDown.classList.remove('hidden');
+          chevronUp.classList.add('hidden');
+        } else {
+          chevronDown.classList.add('hidden');
+          chevronUp.classList.remove('hidden');
+        }
+      }
+
+      function handleScroll() {
+        // Mark as actively scrolling
+        isActivelyScrolling = true;
+        updateButtonState();
+
+        // Clear previous timeout
+        clearTimeout(scrollTimeout);
+
+        // Hide button 1 second after scrolling stops
+        scrollTimeout = window.setTimeout(() => {
+          isActivelyScrolling = false;
+          updateButtonState();
+        }, 1000);
+      }
+
+      function handleMouseMove(e: MouseEvent) {
+        const hoverRegionSize = 200; // pixels from edge
+        const isNearBottom = window.innerHeight - e.clientY < hoverRegionSize;
+        const isNearRight = window.innerWidth - e.clientX < hoverRegionSize;
+
+        const wasHovering = isHoveringNearButton;
+        isHoveringNearButton = isNearBottom && isNearRight;
+
+        // Only update if hover state changed
+        if (wasHovering !== isHoveringNearButton) {
+          updateButtonState();
+        }
+      }
+
+      // Smooth scroll to top when clicking the back-to-top button
+      scrollButton?.addEventListener('click', (e) => {
+        if (scrollButton.getAttribute('href') === '#') {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+
+      window.addEventListener('scroll', handleScroll);
+      window.addEventListener('mousemove', handleMouseMove);
+      updateButtonState();
+    </script>
   </body>
 </html>

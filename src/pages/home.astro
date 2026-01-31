@@ -31,28 +31,25 @@ const featuredPress = allPress
 
   {
     upcomingConcerts.length > 0 && (
-      <section class="mb-16">
-        <h2 class="text-3xl mb-6 border-b-2 border-gray-800 pb-2">Upcoming Performances</h2>
+      <section class="section">
+        <h2 class="section-heading">Upcoming Performances</h2>
         <ul class="list-none p-0">
           {upcomingConcerts.map((concert) => (
-            <li class="mb-8 pb-8 border-b border-gray-200 last:border-b-0">
-              <a
-                href={`/concerts/${concert.id}`}
-                class="text-[#2d7a3e] no-underline hover:underline"
-              >
+            <li class="list-divider">
+              <a href={`/concerts/${concert.id}`} class="link-primary">
                 <strong>{concert.data.title}</strong>
               </a>
-              <div>
+              <div class="metadata">
                 {concert.data.date.toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric',
                 })}
               </div>
-              <div>
+              <div class="metadata">
                 {concert.data.venue}, {concert.data.location}
               </div>
-              <div>{concert.data.orchestra}</div>
+              <div class="metadata">{concert.data.orchestra}</div>
             </li>
           ))}
         </ul>
@@ -62,32 +59,29 @@ const featuredPress = allPress
 
   {
     featuredConcerts.length > 0 && (
-      <section class="mb-16">
-        <h2 class="text-3xl mb-6 border-b-2 border-gray-800 pb-2">Featured Performances</h2>
+      <section class="section">
+        <h2 class="section-heading">Featured Performances</h2>
         <ul class="list-none p-0">
           {featuredConcerts.map((concert) => (
-            <li class="mb-8 pb-8 border-b border-gray-200 last:border-b-0">
-              <a
-                href={`/concerts/${concert.id}`}
-                class="text-[#2d7a3e] no-underline hover:underline"
-              >
+            <li class="list-divider">
+              <a href={`/concerts/${concert.id}`} class="link-primary">
                 <strong>{concert.data.title}</strong>
               </a>
-              <div>
+              <div class="metadata">
                 {concert.data.date.toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric',
                 })}
               </div>
-              <div>
+              <div class="metadata">
                 {concert.data.venue}, {concert.data.location}
               </div>
-              <div>{concert.data.orchestra}</div>
+              <div class="metadata">{concert.data.orchestra}</div>
             </li>
           ))}
         </ul>
-        <a href="/concerts" class="text-[#2d7a3e] no-underline hover:underline">
+        <a href="/concerts" class="link-primary">
           View all concerts →
         </a>
       </section>
@@ -96,20 +90,20 @@ const featuredPress = allPress
 
   {
     featuredPress.length > 0 && (
-      <section class="mb-16">
-        <h2 class="text-3xl mb-6 border-b-2 border-gray-800 pb-2">Press</h2>
+      <section class="section">
+        <h2 class="section-heading">Press</h2>
         <ul class="list-none p-0">
           {featuredPress.map((item) => (
-            <li class="mb-8 pb-8 border-b border-gray-200 last:border-b-0">
-              <blockquote class="italic mb-2 text-lg">{item.data.excerpt}</blockquote>
-              <cite class="not-italic text-gray-600 text-sm">
+            <li class="list-divider">
+              <blockquote class="press-quote">{item.data.excerpt}</blockquote>
+              <cite class="press-quote-cite">
                 — {item.data.publication}
                 {item.data.author && `, ${item.data.author}`}
               </cite>
             </li>
           ))}
         </ul>
-        <a href="/press" class="text-[#2d7a3e] no-underline hover:underline">
+        <a href="/press" class="link-primary">
           View all press →
         </a>
       </section>
@@ -117,12 +111,12 @@ const featuredPress = allPress
   }
 
   <!-- TODO: Customize this bio excerpt before going live -->
-  <section class="mb-16">
-    <h2 class="text-3xl mb-6 border-b-2 border-gray-800 pb-2">About</h2>
+  <section class="section">
+    <h2 class="section-heading">About</h2>
     <p>
       Davis Ponjuan is a dynamic conductor known for combining technical precision with deep musical
       insight, bringing fresh perspectives to both standard repertoire and contemporary works.
     </p>
-    <a href="/about" class="text-[#2d7a3e] no-underline hover:underline">Read full biography →</a>
+    <a href="/about" class="link-primary">Read full biography →</a>
   </section>
 </BaseLayout>

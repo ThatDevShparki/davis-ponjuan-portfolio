@@ -23,8 +23,8 @@ const featuredAwards = allAwards
   <h1 class="text-5xl mb-8">About Davis Ponjuan</h1>
 
   <!-- TODO: Add your biography content here before going live -->
-  <section class="mb-12">
-    <h2 class="text-2xl mt-12 mb-4 border-b border-gray-300 pb-2">Biography</h2>
+  <section class="section-sm">
+    <h2 class="section-heading-sm">Biography</h2>
     <p>
       Davis Ponjuan is a dynamic conductor known for combining technical precision with deep musical
       insight. Currently serving as Music Director of the Metro City Symphony Orchestra, he has
@@ -39,8 +39,8 @@ const featuredAwards = allAwards
     </p>
   </section>
 
-  <section class="mb-12">
-    <h2 class="text-2xl mt-12 mb-4 border-b border-gray-300 pb-2">Current Positions</h2>
+  <section class="section-sm">
+    <h2 class="section-heading-sm">Current Positions</h2>
     <ul class="list-disc pl-8">
       {
         currentPositions.map((org) => (
@@ -52,8 +52,8 @@ const featuredAwards = allAwards
     </ul>
   </section>
 
-  <section class="mb-12">
-    <h2 class="text-2xl mt-12 mb-4 border-b border-gray-300 pb-2">Education</h2>
+  <section class="section-sm">
+    <h2 class="section-heading-sm">Education</h2>
     <ul class="list-disc pl-8">
       {
         sortedEducation.map((edu) => (
@@ -69,8 +69,8 @@ const featuredAwards = allAwards
     </ul>
   </section>
 
-  <section class="mb-12">
-    <h2 class="text-2xl mt-12 mb-4 border-b border-gray-300 pb-2">Awards & Honors</h2>
+  <section class="section-sm">
+    <h2 class="section-heading-sm">Awards & Honors</h2>
     <ul class="list-disc pl-8">
       {
         featuredAwards.map((award) => (
@@ -81,20 +81,11 @@ const featuredAwards = allAwards
         ))
       }
     </ul>
-    <a href="/cv" class="text-[#2d7a3e] no-underline hover:underline">View complete awards list →</a
-    >
+    <a href="/cv" class="link-primary">View complete awards list →</a>
   </section>
 
   <nav class="mt-12 flex gap-8">
-    <a
-      href="/cv"
-      class="inline-block py-3 px-6 bg-[#2d7a3e] text-white no-underline rounded hover:bg-[#246330]"
-      >View Full CV →</a
-    >
-    <a
-      href="/concerts"
-      class="inline-block py-3 px-6 bg-[#2d7a3e] text-white no-underline rounded hover:bg-[#246330]"
-      >View Performances →</a
-    >
+    <a href="/cv" class="btn-primary">View Full CV →</a>
+    <a href="/concerts" class="btn-primary">View Performances →</a>
   </nav>
 </BaseLayout>
