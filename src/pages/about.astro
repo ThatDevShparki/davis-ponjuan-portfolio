@@ -20,11 +20,11 @@ const featuredAwards = allAwards
 ---
 
 <BaseLayout title="About - Davis Ponjuan" description="Biography of conductor Davis Ponjuan">
-  <h1>About Davis Ponjuan</h1>
+  <h1 class="text-5xl mb-8">About Davis Ponjuan</h1>
 
   <!-- TODO: Add your biography content here before going live -->
-  <section>
-    <h2>Biography</h2>
+  <section class="mb-12">
+    <h2 class="text-2xl mt-12 mb-4 border-b border-gray-300 pb-2">Biography</h2>
     <p>
       Davis Ponjuan is a dynamic conductor known for combining technical precision with deep musical
       insight. Currently serving as Music Director of the Metro City Symphony Orchestra, he has
@@ -39,12 +39,12 @@ const featuredAwards = allAwards
     </p>
   </section>
 
-  <section>
-    <h2>Current Positions</h2>
-    <ul>
+  <section class="mb-12">
+    <h2 class="text-2xl mt-12 mb-4 border-b border-gray-300 pb-2">Current Positions</h2>
+    <ul class="list-disc pl-8">
       {
         currentPositions.map((org) => (
-          <li>
+          <li class="mb-2">
             <strong>{org.data.role}</strong>, {org.data.name}
           </li>
         ))
@@ -52,12 +52,12 @@ const featuredAwards = allAwards
     </ul>
   </section>
 
-  <section>
-    <h2>Education</h2>
-    <ul>
+  <section class="mb-12">
+    <h2 class="text-2xl mt-12 mb-4 border-b border-gray-300 pb-2">Education</h2>
+    <ul class="list-disc pl-8">
       {
         sortedEducation.map((edu) => (
-          <li>
+          <li class="mb-2">
             <strong>{edu.data.degree}</strong> in {edu.data.field}, {edu.data.institution} (
             {edu.data.endDate
               ? edu.data.endDate.toLocaleDateString('en-US', { year: 'numeric' })
@@ -69,70 +69,32 @@ const featuredAwards = allAwards
     </ul>
   </section>
 
-  <section>
-    <h2>Awards & Honors</h2>
-    <ul>
+  <section class="mb-12">
+    <h2 class="text-2xl mt-12 mb-4 border-b border-gray-300 pb-2">Awards & Honors</h2>
+    <ul class="list-disc pl-8">
       {
         featuredAwards.map((award) => (
-          <li>
+          <li class="mb-2">
             <strong>{award.data.title}</strong>, {award.data.organization} (
             {award.data.date.toLocaleDateString('en-US', { year: 'numeric' })})
           </li>
         ))
       }
     </ul>
-    <a href="/cv">View complete awards list →</a>
+    <a href="/cv" class="text-[#2d7a3e] no-underline hover:underline">View complete awards list →</a
+    >
   </section>
 
-  <nav>
-    <a href="/cv">View Full CV →</a>
-    <a href="/concerts">View Performances →</a>
+  <nav class="mt-12 flex gap-8">
+    <a
+      href="/cv"
+      class="inline-block py-3 px-6 bg-[#2d7a3e] text-white no-underline rounded hover:bg-[#246330]"
+      >View Full CV →</a
+    >
+    <a
+      href="/concerts"
+      class="inline-block py-3 px-6 bg-[#2d7a3e] text-white no-underline rounded hover:bg-[#246330]"
+      >View Performances →</a
+    >
   </nav>
 </BaseLayout>
-
-<style>
-  h1 {
-    font-size: 3rem;
-    margin-bottom: 2rem;
-  }
-
-  h2 {
-    font-size: 1.5rem;
-    margin-top: 3rem;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 0.5rem;
-  }
-
-  section {
-    margin-bottom: 3rem;
-  }
-
-  ul {
-    list-style: disc;
-    padding-left: 2rem;
-  }
-
-  li {
-    margin-bottom: 0.5rem;
-  }
-
-  nav {
-    margin-top: 3rem;
-    display: flex;
-    gap: 2rem;
-  }
-
-  nav a {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    background: #2d7a3e;
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-  }
-
-  nav a:hover {
-    background: #246330;
-  }
-</style>

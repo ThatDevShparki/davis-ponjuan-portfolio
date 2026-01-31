@@ -10,73 +10,83 @@ const sortedRecordings = allRecordings.sort(
 ---
 
 <BaseLayout title="Recordings - Davis Ponjuan" description="Discography and recordings">
-  <h1>Recordings</h1>
+  <h1 class="text-5xl mb-8">Recordings</h1>
 
-  <section class="recordings-grid">
+  <section class="grid gap-12">
     {
       sortedRecordings.map(async (recording) => {
         const { Content } = await recording.render();
         return (
-          <article class="recording-card">
-            <div class="recording-header">
-              <h2>{recording.data.title}</h2>
-              {recording.data.featured && <span class="badge">Featured</span>}
+          <article class="border border-gray-300 rounded-lg p-8 bg-gray-50">
+            <div class="flex items-center gap-4 mb-6 pb-4 border-b-2 border-[#2d7a3e]">
+              <h2 class="text-3xl m-0 flex-1">{recording.data.title}</h2>
+              {recording.data.featured && (
+                <span class="inline-block bg-[#2d7a3e] text-white py-1 px-3 text-xs rounded font-normal">
+                  Featured
+                </span>
+              )}
             </div>
 
-            <div class="recording-details">
-              <div class="detail-row">
-                <strong>Orchestra:</strong> {recording.data.orchestra}
+            <div class="mb-6">
+              <div class="mb-2 text-gray-800">
+                <strong class="text-gray-600 mr-2">Orchestra:</strong> {recording.data.orchestra}
               </div>
-              <div class="detail-row">
-                <strong>Label:</strong> {recording.data.label}
+              <div class="mb-2 text-gray-800">
+                <strong class="text-gray-600 mr-2">Label:</strong> {recording.data.label}
               </div>
-              <div class="detail-row">
-                <strong>Released:</strong>{' '}
+              <div class="mb-2 text-gray-800">
+                <strong class="text-gray-600 mr-2">Released:</strong>{' '}
                 {recording.data.releaseDate.toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
                 })}
               </div>
-              <div class="detail-row">
-                <strong>Format:</strong> {recording.data.format.join(', ')}
+              <div class="mb-2 text-gray-800">
+                <strong class="text-gray-600 mr-2">Format:</strong>{' '}
+                {recording.data.format.join(', ')}
               </div>
               {recording.data.catalogNumber && (
-                <div class="detail-row">
-                  <strong>Catalog:</strong> {recording.data.catalogNumber}
+                <div class="mb-2 text-gray-800">
+                  <strong class="text-gray-600 mr-2">Catalog:</strong>{' '}
+                  {recording.data.catalogNumber}
                 </div>
               )}
             </div>
 
             {recording.data.works && recording.data.works.length > 0 && (
-              <div class="works-list">
+              <div class="mb-6">
                 <strong>Works:</strong>
-                <ul>
+                <ul class="list-none p-0 mt-2">
                   {recording.data.works.map((work) => (
-                    <li>{work}</li>
+                    <li class="pl-4 mb-1 relative before:content-['•'] before:absolute before:left-0 before:text-[#2d7a3e]">
+                      {work}
+                    </li>
                   ))}
                 </ul>
               </div>
             )}
 
             {recording.data.awards && recording.data.awards.length > 0 && (
-              <div class="awards-box">
+              <div class="mb-6 p-4 bg-white border-l-[3px] border-[#2d7a3e]">
                 {recording.data.awards.map((award) => (
-                  <div class="award-badge">{award}</div>
+                  <div class="text-[#2d7a3e] font-semibold text-[0.95rem] mb-2 last:mb-0">
+                    {award}
+                  </div>
                 ))}
               </div>
             )}
 
-            <div class="recording-content">
+            <div class="leading-relaxed mb-6">
               <Content />
             </div>
 
-            <div class="recording-links">
+            <div class="flex gap-4 flex-wrap">
               {recording.data.purchaseUrl && (
                 <a
                   href={recording.data.purchaseUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="btn-primary"
+                  class="inline-block py-3 px-6 no-underline rounded font-semibold transition-colors bg-[#2d7a3e] text-white hover:bg-[#246330]"
                 >
                   Purchase
                 </a>
@@ -86,7 +96,7 @@ const sortedRecordings = allRecordings.sort(
                   href={recording.data.streamingUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="btn-secondary"
+                  class="inline-block py-3 px-6 no-underline rounded font-semibold transition-colors bg-white text-[#2d7a3e] border-2 border-[#2d7a3e] hover:bg-gray-100"
                 >
                   Listen
                 </a>
@@ -98,142 +108,3 @@ const sortedRecordings = allRecordings.sort(
     }
   </section>
 </BaseLayout>
-
-<style>
-  h1 {
-    font-size: 3rem;
-    margin-bottom: 2rem;
-  }
-
-  .recordings-grid {
-    display: grid;
-    gap: 3rem;
-  }
-
-  .recording-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 2rem;
-    background: #fafafa;
-  }
-
-  .recording-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid #2d7a3e;
-  }
-
-  h2 {
-    font-size: 1.75rem;
-    margin: 0;
-    flex: 1;
-  }
-
-  .badge {
-    display: inline-block;
-    background: #2d7a3e;
-    color: white;
-    padding: 0.25rem 0.75rem;
-    font-size: 0.75rem;
-    border-radius: 3px;
-    font-weight: normal;
-  }
-
-  .recording-details {
-    margin-bottom: 1.5rem;
-  }
-
-  .detail-row {
-    margin-bottom: 0.5rem;
-    color: #333;
-  }
-
-  .detail-row strong {
-    color: #666;
-    margin-right: 0.5rem;
-  }
-
-  .works-list {
-    margin-bottom: 1.5rem;
-  }
-
-  .works-list ul {
-    list-style: none;
-    padding: 0;
-    margin-top: 0.5rem;
-  }
-
-  .works-list li {
-    padding-left: 1rem;
-    margin-bottom: 0.25rem;
-    position: relative;
-  }
-
-  .works-list li::before {
-    content: '•';
-    position: absolute;
-    left: 0;
-    color: #2d7a3e;
-  }
-
-  .awards-box {
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    background: #fff;
-    border-left: 3px solid #2d7a3e;
-  }
-
-  .award-badge {
-    color: #2d7a3e;
-    font-weight: 600;
-    font-size: 0.95rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .award-badge:last-child {
-    margin-bottom: 0;
-  }
-
-  .recording-content {
-    line-height: 1.7;
-    margin-bottom: 1.5rem;
-  }
-
-  .recording-links {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .btn-primary,
-  .btn-secondary {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    text-decoration: none;
-    border-radius: 4px;
-    font-weight: 600;
-    transition: background-color 0.2s;
-  }
-
-  .btn-primary {
-    background: #2d7a3e;
-    color: white;
-  }
-
-  .btn-primary:hover {
-    background: #246330;
-  }
-
-  .btn-secondary {
-    background: white;
-    color: #2d7a3e;
-    border: 2px solid #2d7a3e;
-  }
-
-  .btn-secondary:hover {
-    background: #f0f0f0;
-  }
-</style>

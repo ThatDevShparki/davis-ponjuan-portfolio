@@ -8,21 +8,21 @@ const sortedPress = allPress.sort((a, b) => b.data.date.getTime() - a.data.date.
 ---
 
 <BaseLayout title="Press - Davis Ponjuan" description="Press coverage and reviews">
-  <h1>Press & Reviews</h1>
+  <h1 class="text-5xl mb-4">Press & Reviews</h1>
 
-  <p class="intro">
+  <p class="text-lg leading-relaxed mb-12 text-gray-600">
     Selected press coverage and critical reviews of performances throughout my career.
   </p>
 
-  <ul class="press-list">
+  <ul class="list-none p-0">
     {
       sortedPress.map(async (item) => {
         const { Content } = await item.render();
         return (
-          <li>
+          <li class="mb-12 pb-12 border-b border-gray-200 last:border-b-0">
             <article>
-              <h2>{item.data.title}</h2>
-              <div class="press-meta">
+              <h2 class="text-2xl mb-3">{item.data.title}</h2>
+              <div class="text-gray-600 mb-4 text-[0.95rem]">
                 <strong>{item.data.publication}</strong>
                 {item.data.author && ` • ${item.data.author}`}
                 {' • '}
@@ -37,14 +37,21 @@ const sortedPress = allPress.sort((a, b) => b.data.date.getTime() - a.data.date.
                   <>
                     {' '}
                     •{' '}
-                    <a href={item.data.url} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={item.data.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-[#2d7a3e] no-underline hover:underline"
+                    >
                       Read full article
                     </a>
                   </>
                 )}
               </div>
-              <blockquote>{item.data.excerpt}</blockquote>
-              <div class="press-content">
+              <blockquote class="text-xl italic my-6 pl-6 border-l-4 border-[#2d7a3e] leading-relaxed">
+                {item.data.excerpt}
+              </blockquote>
+              <div class="leading-relaxed text-gray-600">
                 <Content />
               </div>
             </article>
@@ -54,66 +61,3 @@ const sortedPress = allPress.sort((a, b) => b.data.date.getTime() - a.data.date.
     }
   </ul>
 </BaseLayout>
-
-<style>
-  h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-  }
-
-  .intro {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 3rem;
-    color: #555;
-  }
-
-  .press-list {
-    list-style: none;
-    padding: 0;
-  }
-
-  .press-list > li {
-    margin-bottom: 3rem;
-    padding-bottom: 3rem;
-    border-bottom: 1px solid #eee;
-  }
-
-  .press-list > li:last-child {
-    border-bottom: none;
-  }
-
-  article h2 {
-    font-size: 1.5rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .press-meta {
-    color: #666;
-    margin-bottom: 1rem;
-    font-size: 0.95rem;
-  }
-
-  .press-meta a {
-    color: #2d7a3e;
-    text-decoration: none;
-  }
-
-  .press-meta a:hover {
-    text-decoration: underline;
-  }
-
-  blockquote {
-    font-size: 1.2rem;
-    font-style: italic;
-    margin: 1.5rem 0;
-    padding-left: 1.5rem;
-    border-left: 4px solid #2d7a3e;
-    line-height: 1.6;
-  }
-
-  .press-content {
-    line-height: 1.7;
-    color: #555;
-  }
-</style>

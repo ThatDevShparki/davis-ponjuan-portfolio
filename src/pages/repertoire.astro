@@ -49,28 +49,32 @@ const genreLabels: Record<string, string> = {
 ---
 
 <BaseLayout title="Repertoire - Davis Ponjuan" description="Complete list of works conducted">
-  <h1>Repertoire</h1>
+  <h1 class="text-5xl mb-4">Repertoire</h1>
 
-  <p class="intro">
+  <p class="text-lg leading-relaxed mb-12 text-gray-600">
     A selection of works I have conducted throughout my career, organized by genre. Each entry
     includes the number of times performed and, where applicable, notes on significant performances
     or interpretative approach.
   </p>
 
   {
-    genres.map((genre) => (
+    genres.map((genre, index) => (
       <section>
-        <h2>{genreLabels[genre]}</h2>
-        <ul class="repertoire-list">
+        <h2
+          class={`text-3xl mt-12 mb-6 text-[#2d7a3e] border-b-2 border-[#2d7a3e] pb-2 ${index === 0 ? 'first:mt-0' : ''}`}
+        >
+          {genreLabels[genre]}
+        </h2>
+        <ul class="list-none p-0">
           {byGenre[genre].map((work) => (
-            <li>
-              <div class="work-header">
+            <li class="mb-6 pb-6 border-b border-gray-200 last:border-b-0">
+              <div class="text-lg">
                 <strong>{work.data.composer}</strong>
               </div>
-              <div class="work-title">
+              <div class="mt-1 text-base text-gray-800">
                 <em>{work.data.work}</em>
               </div>
-              <div class="work-meta">
+              <div class="mt-2 text-sm text-gray-600">
                 Performed {work.data.timesPerformed}{' '}
                 {work.data.timesPerformed === 1 ? 'time' : 'times'}
                 {work.data.firstPerformed && (
@@ -94,7 +98,9 @@ const genreLabels: Record<string, string> = {
                   </>
                 )}
               </div>
-              {work.data.notes && <div class="work-notes">{work.data.notes}</div>}
+              {work.data.notes && (
+                <div class="mt-2 text-[0.95rem] text-gray-600 italic">{work.data.notes}</div>
+              )}
             </li>
           ))}
         </ul>
@@ -102,68 +108,3 @@ const genreLabels: Record<string, string> = {
     ))
   }
 </BaseLayout>
-
-<style>
-  h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-  }
-
-  .intro {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 3rem;
-    color: #555;
-  }
-
-  h2 {
-    font-size: 1.75rem;
-    margin-top: 3rem;
-    margin-bottom: 1.5rem;
-    color: #2d7a3e;
-    border-bottom: 2px solid #2d7a3e;
-    padding-bottom: 0.5rem;
-  }
-
-  section:first-of-type h2 {
-    margin-top: 0;
-  }
-
-  .repertoire-list {
-    list-style: none;
-    padding: 0;
-  }
-
-  .repertoire-list > li {
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #eee;
-  }
-
-  .repertoire-list > li:last-child {
-    border-bottom: none;
-  }
-
-  .work-header {
-    font-size: 1.1rem;
-  }
-
-  .work-title {
-    margin-top: 0.25rem;
-    font-size: 1rem;
-    color: #333;
-  }
-
-  .work-meta {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    color: #666;
-  }
-
-  .work-notes {
-    margin-top: 0.5rem;
-    font-size: 0.95rem;
-    color: #555;
-    font-style: italic;
-  }
-</style>

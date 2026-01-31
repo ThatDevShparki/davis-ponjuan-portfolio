@@ -10,6 +10,9 @@ const { title = 'Davis Ponjuan - Conductor', description = 'Conductor and musici
 
 // Get current path for active nav indication
 const currentPath = new URL(Astro.request.url).pathname;
+
+const navLinkClass =
+  'no-underline text-gray-800 hover:underline aria-[current=page]:font-semibold aria-[current=page]:text-[#2d7a3e]';
 ---
 
 <!doctype html>
@@ -24,110 +27,74 @@ const currentPath = new URL(Astro.request.url).pathname;
     <title>{title}</title>
   </head>
   <body>
-    <a href="#main-content" class="skip-link">Skip to main content</a>
-    <header>
-      <nav aria-label="Main navigation">
-        <a href="/home" aria-current={currentPath === '/home' ? 'page' : undefined}>Home</a>
-        <a href="/about" aria-current={currentPath === '/about' ? 'page' : undefined}>About</a>
-        <a href="/concerts" aria-current={currentPath.startsWith('/concerts') ? 'page' : undefined}
-          >Concerts</a
+    <a
+      href="#main-content"
+      class="absolute -top-10 left-0 bg-[#2d7a3e] text-white py-2 px-4 no-underline z-[100] focus:top-0"
+      >Skip to main content</a
+    >
+    <header class="py-4 px-8 border-b border-gray-300 print:hidden">
+      <nav aria-label="Main navigation" class="flex gap-8 flex-wrap">
+        <a
+          href="/home"
+          aria-current={currentPath === '/home' ? 'page' : undefined}
+          class={navLinkClass}>Home</a
         >
-        <a href="/repertoire" aria-current={currentPath === '/repertoire' ? 'page' : undefined}
-          >Repertoire</a
+        <a
+          href="/about"
+          aria-current={currentPath === '/about' ? 'page' : undefined}
+          class={navLinkClass}>About</a
+        >
+        <a
+          href="/concerts"
+          aria-current={currentPath.startsWith('/concerts') ? 'page' : undefined}
+          class={navLinkClass}>Concerts</a
+        >
+        <a
+          href="/repertoire"
+          aria-current={currentPath === '/repertoire' ? 'page' : undefined}
+          class={navLinkClass}>Repertoire</a
         >
         <a
           href="/organizations"
-          aria-current={currentPath === '/organizations' ? 'page' : undefined}>Organizations</a
+          aria-current={currentPath === '/organizations' ? 'page' : undefined}
+          class={navLinkClass}>Organizations</a
         >
-        <a href="/recordings" aria-current={currentPath === '/recordings' ? 'page' : undefined}
-          >Recordings</a
+        <a
+          href="/recordings"
+          aria-current={currentPath === '/recordings' ? 'page' : undefined}
+          class={navLinkClass}>Recordings</a
         >
-        <a href="/workshops" aria-current={currentPath === '/workshops' ? 'page' : undefined}
-          >Workshops</a
+        <a
+          href="/workshops"
+          aria-current={currentPath === '/workshops' ? 'page' : undefined}
+          class={navLinkClass}>Workshops</a
         >
-        <a href="/press" aria-current={currentPath === '/press' ? 'page' : undefined}>Press</a>
-        <a href="/cv" aria-current={currentPath === '/cv' ? 'page' : undefined}>CV</a>
-        <a href="/contact" aria-current={currentPath === '/contact' ? 'page' : undefined}>Contact</a
+        <a
+          href="/press"
+          aria-current={currentPath === '/press' ? 'page' : undefined}
+          class={navLinkClass}>Press</a
+        >
+        <a href="/cv" aria-current={currentPath === '/cv' ? 'page' : undefined} class={navLinkClass}
+          >CV</a
+        >
+        <a
+          href="/contact"
+          aria-current={currentPath === '/contact' ? 'page' : undefined}
+          class={navLinkClass}>Contact</a
         >
       </nav>
     </header>
 
-    <main id="main-content" tabindex="-1">
+    <main
+      id="main-content"
+      tabindex="-1"
+      class="max-w-6xl mx-auto p-8 min-h-[calc(100vh-200px)] print:max-w-full print:m-0 print:p-0 print:min-h-0"
+    >
       <slot />
     </main>
 
-    <footer>
+    <footer class="p-8 text-center border-t border-gray-300 text-gray-600 print:hidden">
       <p>&copy; {new Date().getFullYear()} Davis Ponjuan. All rights reserved.</p>
     </footer>
   </body>
 </html>
-
-<style>
-  .skip-link {
-    position: absolute;
-    top: -40px;
-    left: 0;
-    background: #2d7a3e;
-    color: white;
-    padding: 0.5rem 1rem;
-    text-decoration: none;
-    z-index: 100;
-  }
-
-  .skip-link:focus {
-    top: 0;
-  }
-
-  header {
-    padding: 1rem 2rem;
-    border-bottom: 1px solid #ddd;
-  }
-
-  nav {
-    display: flex;
-    gap: 2rem;
-    flex-wrap: wrap;
-  }
-
-  nav a {
-    text-decoration: none;
-    color: #333;
-  }
-
-  nav a:hover {
-    text-decoration: underline;
-  }
-
-  nav a[aria-current='page'] {
-    font-weight: 600;
-    color: #2d7a3e;
-  }
-
-  main {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-    min-height: calc(100vh - 200px);
-  }
-
-  footer {
-    padding: 2rem;
-    text-align: center;
-    border-top: 1px solid #ddd;
-    color: #666;
-  }
-
-  @media print {
-    header,
-    footer {
-      display: none;
-    }
-
-    main {
-      max-width: 100%;
-      margin: 0;
-      padding: 0;
-      min-height: auto;
-    }
-  }
-</style>

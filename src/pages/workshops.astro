@@ -32,31 +32,36 @@ const years = Object.keys(workshopsByYear)
   title="Workshops & Masterclasses - Davis Ponjuan"
   description="Educational activities and teaching engagements"
 >
-  <h1>Workshops & Masterclasses</h1>
+  <h1 class="text-5xl mb-12">Workshops & Masterclasses</h1>
 
   {
     years.map((year) => (
-      <section class="year-section">
-        <h2 class="year-heading">{year}</h2>
-        <div class="workshops-list">
+      <section class="mb-16">
+        <h2 class="text-3xl font-bold mb-8 text-[#2d7a3e] border-b-2 border-[#2d7a3e] pb-2">
+          {year}
+        </h2>
+        <div class="grid gap-8">
           {workshopsByYear[year].map(async (workshop) => {
             const { Content } = await workshop.render();
             return (
-              <article class="workshop-card">
-                <div class="workshop-header">
-                  <h3>{workshop.data.title}</h3>
-                  <span class="type-badge">{workshop.data.type}</span>
+              <article class="border border-gray-300 rounded-lg p-8 bg-gray-50">
+                <div class="flex items-start gap-4 mb-6 pb-4 border-b border-gray-300">
+                  <h3 class="text-2xl m-0 flex-1">{workshop.data.title}</h3>
+                  <span class="inline-block bg-[#2d7a3e] text-white py-1 px-3 text-xs rounded font-semibold uppercase tracking-wide flex-shrink-0">
+                    {workshop.data.type}
+                  </span>
                 </div>
 
-                <div class="workshop-meta">
-                  <div class="meta-item">
-                    <strong>Institution:</strong> {workshop.data.institution}
+                <div class="mb-6">
+                  <div class="mb-3 text-gray-800">
+                    <strong class="text-gray-600 mr-2">Institution:</strong>{' '}
+                    {workshop.data.institution}
                   </div>
-                  <div class="meta-item">
-                    <strong>Location:</strong> {workshop.data.location}
+                  <div class="mb-3 text-gray-800">
+                    <strong class="text-gray-600 mr-2">Location:</strong> {workshop.data.location}
                   </div>
-                  <div class="meta-item">
-                    <strong>Date:</strong>{' '}
+                  <div class="mb-3 text-gray-800">
+                    <strong class="text-gray-600 mr-2">Date:</strong>{' '}
                     {workshop.data.date.toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
@@ -70,18 +75,19 @@ const years = Object.keys(workshopsByYear)
                       })}`}
                   </div>
                   {workshop.data.topic && (
-                    <div class="meta-item topic">
-                      <strong>Topic:</strong> {workshop.data.topic}
+                    <div class="mb-3 text-gray-800 italic text-gray-600">
+                      <strong class="text-gray-600 mr-2">Topic:</strong> {workshop.data.topic}
                     </div>
                   )}
                   {workshop.data.participants && (
-                    <div class="meta-item">
-                      <strong>Participants:</strong> {workshop.data.participants}
+                    <div class="mb-3 text-gray-800">
+                      <strong class="text-gray-600 mr-2">Participants:</strong>{' '}
+                      {workshop.data.participants}
                     </div>
                   )}
                 </div>
 
-                <div class="workshop-content">
+                <div class="leading-relaxed [&_p]:mb-4 [&_p:last-child]:mb-0">
                   <Content />
                 </div>
               </article>
@@ -92,94 +98,3 @@ const years = Object.keys(workshopsByYear)
     ))
   }
 </BaseLayout>
-
-<style>
-  h1 {
-    font-size: 3rem;
-    margin-bottom: 3rem;
-  }
-
-  .year-section {
-    margin-bottom: 4rem;
-  }
-
-  .year-heading {
-    font-size: 1.75rem;
-    font-weight: bold;
-    margin-bottom: 2rem;
-    color: #2d7a3e;
-    border-bottom: 2px solid #2d7a3e;
-    padding-bottom: 0.5rem;
-  }
-
-  .workshops-list {
-    display: grid;
-    gap: 2rem;
-  }
-
-  .workshop-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 2rem;
-    background: #fafafa;
-  }
-
-  .workshop-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #ddd;
-  }
-
-  h3 {
-    font-size: 1.5rem;
-    margin: 0;
-    flex: 1;
-  }
-
-  .type-badge {
-    display: inline-block;
-    background: #2d7a3e;
-    color: white;
-    padding: 0.25rem 0.75rem;
-    font-size: 0.75rem;
-    border-radius: 3px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    flex-shrink: 0;
-  }
-
-  .workshop-meta {
-    margin-bottom: 1.5rem;
-  }
-
-  .meta-item {
-    margin-bottom: 0.75rem;
-    color: #333;
-  }
-
-  .meta-item strong {
-    color: #666;
-    margin-right: 0.5rem;
-  }
-
-  .meta-item.topic {
-    font-style: italic;
-    color: #555;
-  }
-
-  .workshop-content {
-    line-height: 1.7;
-  }
-
-  .workshop-content p {
-    margin-bottom: 1rem;
-  }
-
-  .workshop-content p:last-child {
-    margin-bottom: 0;
-  }
-</style>

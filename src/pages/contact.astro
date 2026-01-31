@@ -3,163 +3,88 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Contact - Davis Ponjuan" description="Get in touch for bookings and inquiries">
-  <h1>Contact</h1>
+  <h1 class="text-5xl mb-8">Contact</h1>
 
-  <section>
-    <h2>Booking Inquiries</h2>
+  <section class="mb-16">
+    <h2 class="text-3xl mb-6 border-b-2 border-gray-800 pb-2">Booking Inquiries</h2>
     <p>For conducting engagements, guest appearances, and masterclass inquiries, please contact:</p>
 
-    <div class="contact-info">
-      <p><strong>Email:</strong> [your.email@example.com]</p>
-      <p><strong>Phone:</strong> [Your phone number]</p>
-      <p><strong>Management:</strong> [Management company name, if applicable]</p>
+    <div class="bg-gray-100 p-8 rounded mt-4">
+      <p class="mb-3"><strong>Email:</strong> [your.email@example.com]</p>
+      <p class="mb-3"><strong>Phone:</strong> [Your phone number]</p>
+      <p class="mb-3"><strong>Management:</strong> [Management company name, if applicable]</p>
     </div>
   </section>
 
-  <section>
-    <h2>General Contact</h2>
-    <form class="contact-form">
-      <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" required />
+  <section class="mb-16">
+    <h2 class="text-3xl mb-6 border-b-2 border-gray-800 pb-2">General Contact</h2>
+    <form class="max-w-xl">
+      <div class="mb-6">
+        <label for="name" class="block mb-2 font-semibold">Name</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          required
+          class="w-full p-3 border border-gray-300 rounded text-base font-[inherit] outline-none focus:border-[#2d7a3e] focus:shadow-[0_0_0_3px_rgba(45,122,62,0.1)]"
+        />
       </div>
 
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required />
+      <div class="mb-6">
+        <label for="email" class="block mb-2 font-semibold">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          class="w-full p-3 border border-gray-300 rounded text-base font-[inherit] outline-none focus:border-[#2d7a3e] focus:shadow-[0_0_0_3px_rgba(45,122,62,0.1)]"
+        />
       </div>
 
-      <div class="form-group">
-        <label for="subject">Subject</label>
-        <input type="text" id="subject" name="subject" required />
+      <div class="mb-6">
+        <label for="subject" class="block mb-2 font-semibold">Subject</label>
+        <input
+          type="text"
+          id="subject"
+          name="subject"
+          required
+          class="w-full p-3 border border-gray-300 rounded text-base font-[inherit] outline-none focus:border-[#2d7a3e] focus:shadow-[0_0_0_3px_rgba(45,122,62,0.1)]"
+        />
       </div>
 
-      <div class="form-group">
-        <label for="message">Message</label>
-        <textarea id="message" name="message" rows="6" required></textarea>
+      <div class="mb-6">
+        <label for="message" class="block mb-2 font-semibold">Message</label>
+        <textarea
+          id="message"
+          name="message"
+          rows="6"
+          required
+          class="w-full p-3 border border-gray-300 rounded text-base font-[inherit] outline-none focus:border-[#2d7a3e] focus:shadow-[0_0_0_3px_rgba(45,122,62,0.1)] resize-y"
+        ></textarea>
       </div>
 
-      <button type="submit">Send Message</button>
+      <button
+        type="submit"
+        class="bg-[#2d7a3e] text-white py-3 px-8 border-none rounded text-base font-semibold cursor-pointer hover:bg-[#246330]"
+        >Send Message</button
+      >
     </form>
 
     <!-- TODO: Connect form to backend (Formspree, Netlify Forms, etc.) before going live -->
-    <!-- <p class="form-note">
+    <!-- <p class="mt-4 text-sm text-gray-600 italic">
       Note: This is a placeholder form. You'll need to connect it to a backend service (Formspree,
       Netlify Forms, etc.) to actually receive messages.
     </p> -->
   </section>
 
   <!-- TODO: Add your actual social media URLs before going live -->
-  <!-- <section>
-    <h2>Social Media</h2>
-    <ul class="social-links">
-      <li><a href="https://instagram.com/yourusername" target="_blank" rel="noopener noreferrer">Instagram</a></li>
-      <li><a href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer">Twitter/X</a></li>
-      <li><a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-      <li><a href="https://youtube.com/@yourusername" target="_blank" rel="noopener noreferrer">YouTube</a></li>
+  <!-- <section class="mb-16">
+    <h2 class="text-3xl mb-6 border-b-2 border-gray-800 pb-2">Social Media</h2>
+    <ul class="list-none p-0 flex gap-8">
+      <li><a href="https://instagram.com/yourusername" target="_blank" rel="noopener noreferrer" class="text-[#2d7a3e] no-underline text-lg hover:underline">Instagram</a></li>
+      <li><a href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer" class="text-[#2d7a3e] no-underline text-lg hover:underline">Twitter/X</a></li>
+      <li><a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer" class="text-[#2d7a3e] no-underline text-lg hover:underline">LinkedIn</a></li>
+      <li><a href="https://youtube.com/@yourusername" target="_blank" rel="noopener noreferrer" class="text-[#2d7a3e] no-underline text-lg hover:underline">YouTube</a></li>
     </ul>
   </section> -->
 </BaseLayout>
-
-<style>
-  h1 {
-    font-size: 3rem;
-    margin-bottom: 2rem;
-  }
-
-  section {
-    margin-bottom: 4rem;
-  }
-
-  h2 {
-    font-size: 1.75rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 2px solid #333;
-    padding-bottom: 0.5rem;
-  }
-
-  .contact-info {
-    background: #f8f8f8;
-    padding: 2rem;
-    border-radius: 4px;
-    margin-top: 1rem;
-  }
-
-  .contact-info p {
-    margin-bottom: 0.75rem;
-  }
-
-  .contact-form {
-    max-width: 600px;
-  }
-
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-  }
-
-  input,
-  textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-family: inherit;
-  }
-
-  input:focus,
-  textarea:focus {
-    outline: none;
-    border-color: #2d7a3e;
-    box-shadow: 0 0 0 3px rgba(45, 122, 62, 0.1);
-  }
-
-  textarea {
-    resize: vertical;
-  }
-
-  button {
-    background: #2d7a3e;
-    color: white;
-    padding: 0.75rem 2rem;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-  }
-
-  button:hover {
-    background: #246330;
-  }
-
-  .form-note {
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    color: #666;
-    font-style: italic;
-  }
-
-  .social-links {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    gap: 2rem;
-  }
-
-  .social-links a {
-    color: #2d7a3e;
-    text-decoration: none;
-    font-size: 1.1rem;
-  }
-
-  .social-links a:hover {
-    text-decoration: underline;
-  }
-</style>
