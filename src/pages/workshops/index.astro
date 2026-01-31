@@ -3,10 +3,7 @@ import { getCollection } from 'astro:content';
 
 import { Badge } from '@/components/ui/badge';
 
-import MediaGallery from '../components/media/MediaGallery.astro';
-import MediaLinks from '../components/media/MediaLinks.astro';
-import MediaVideo from '../components/media/MediaVideo.astro';
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const allWorkshops = await getCollection('workshops');
 
@@ -56,43 +53,35 @@ const years = Object.keys(workshopsByYear)
           {workshopsByYear[year].map(async (workshop) => {
             const { Content } = await workshop.render();
             const hasGallery = workshop.data.gallery && workshop.data.gallery.length > 0;
-            const hasVideos = workshop.data.videos && workshop.data.videos.length > 0;
-            const hasLinks = workshop.data.externalLinks && workshop.data.externalLinks.length > 0;
-            const hasMedia = hasGallery || hasVideos || hasLinks;
-
-            // Get first gallery image as hero
             const heroImage = hasGallery ? workshop.data.gallery![0] : null;
 
             return (
-              <article class="border border-border rounded-md overflow-hidden bg-card">
+              <article class="group border border-border rounded-md overflow-hidden bg-card hover:border-primary transition-colors duration-300">
                 {/* Hero image from gallery */}
                 {heroImage && (
-                  <div class="relative h-48 md:h-56 overflow-hidden">
+                  <a
+                    href={`/workshops/${workshop.id}`}
+                    class="block relative h-48 md:h-56 overflow-hidden"
+                  >
                     <img
                       src={heroImage.src}
                       alt={heroImage.alt}
-                      class="w-full h-full object-cover"
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                     />
-                    <div class="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
-                    <Badge
-                      variant="featured"
-                      className="absolute bottom-4 left-4 text-[10px] bg-background/90"
-                    >
-                      {workshop.data.type}
-                    </Badge>
-                  </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-card/60 to-transparent" />
+                  </a>
                 )}
 
                 <div class="p-4 md:p-5">
                   {/* Header */}
                   <div class="flex items-start gap-3 mb-3">
-                    <h3 class="text-lg font-serif flex-1">{workshop.data.title}</h3>
-                    {!heroImage && (
-                      <Badge variant="featured" className="flex-shrink-0 text-[10px]">
-                        {workshop.data.type}
-                      </Badge>
-                    )}
+                    <h3 class="text-lg font-serif flex-1 group-hover:text-primary transition-colors duration-300">
+                      <a href={`/workshops/${workshop.id}`}>{workshop.data.title}</a>
+                    </h3>
+                    <Badge variant="featured" className="flex-shrink-0 text-[10px]">
+                      {workshop.data.type}
+                    </Badge>
                   </div>
 
                   {/* Details */}
@@ -136,38 +125,21 @@ const years = Object.keys(workshopsByYear)
                     <Content />
                   </div>
 
-                  {/* Media Section */}
-                  {hasMedia && (
-                    <div class="mt-4 pt-4 border-t border-border">
-                      {/* Videos */}
-                      {hasVideos && (
-                        <div class="mb-4">
-                          <h4 class="text-nav text-muted-foreground mb-3">Videos</h4>
-                          <div class="grid md:grid-cols-2 gap-4">
-                            {workshop.data.videos!.slice(0, 2).map((video) => (
-                              <MediaVideo video={video} />
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Gallery (show additional images beyond hero) */}
-                      {hasGallery && workshop.data.gallery!.length > 1 && (
-                        <div class="mb-4">
-                          <h4 class="text-nav text-muted-foreground mb-3">Gallery</h4>
-                          <MediaGallery images={workshop.data.gallery!.slice(1)} columns={3} />
-                        </div>
-                      )}
-
-                      {/* External Links */}
-                      {hasLinks && (
-                        <div>
-                          <h4 class="text-nav text-muted-foreground mb-3">Resources</h4>
-                          <MediaLinks links={workshop.data.externalLinks!} variant="inline" />
-                        </div>
-                      )}
-                    </div>
-                  )}
+                  {/* View details link */}
+                  <a
+                    href={`/workshops/${workshop.id}`}
+                    class="inline-flex items-center gap-1 mt-4 text-sm text-primary hover:underline underline-offset-4 transition-all duration-300"
+                  >
+                    View details
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </a>
                 </div>
               </article>
             );
