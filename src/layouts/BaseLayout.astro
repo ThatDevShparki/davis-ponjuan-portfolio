@@ -72,8 +72,11 @@ const navItems = [
       </svg>
     </a>
 
-    <header class="py-4 px-6 md:px-12 lg:px-24 border-b border-border print-hidden">
-      <nav aria-label="Main navigation" class="flex gap-5 md:gap-6 flex-wrap items-center">
+    <header class="border-b border-border print-hidden">
+      <nav
+        aria-label="Main navigation"
+        class="max-w-6xl mx-auto px-6 md:px-10 lg:px-16 py-4 flex gap-5 md:gap-6 flex-wrap items-center justify-start"
+      >
         {
           navItems.map((item) => (
             <a
@@ -91,12 +94,12 @@ const navItems = [
     <main
       id="main-content"
       tabindex="-1"
-      class="max-w-5xl mx-auto px-6 md:px-12 lg:px-24 py-10 md:py-14 min-h-[calc(100vh-160px)] print-full-width"
+      class="max-w-6xl mx-auto px-6 md:px-10 lg:px-16 py-10 md:py-14 min-h-[calc(100vh-160px)] print-full-width"
     >
       <slot />
     </main>
 
-    <footer class="py-8 px-6 md:px-12 lg:px-24 text-center border-t border-border print-hidden">
+    <footer class="py-8 px-6 md:px-10 lg:px-16 text-center border-t border-border print-hidden">
       <p class="text-nav text-muted-foreground">
         &copy; {new Date().getFullYear()} Davis Ponjuan. All rights reserved.
       </p>
