@@ -103,19 +103,13 @@ function getCoverImageSrc(coverImage: string | { src: string } | undefined): str
                     class={`p-5 md:p-6 ${coverSrc ? 'md:col-span-8 lg:col-span-9' : 'md:col-span-12'}`}
                   >
                     <div class="flex flex-wrap items-center gap-2 mb-3">
-                      <Badge variant="featured" className="text-[10px]">
-                        Featured
-                      </Badge>
-                      <span
-                        class:list={[
-                          'px-2 py-0.5 rounded text-[10px] font-medium capitalize',
-                          recording.data.role === 'conductor'
-                            ? 'bg-primary/10 text-primary'
-                            : 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
-                        ]}
+                      <Badge variant="featured">Featured</Badge>
+                      <Badge
+                        variant={recording.data.role === 'conductor' ? 'conductor' : 'performer'}
+                        textCase="capitalize"
                       >
                         {recording.data.role || 'Conductor'}
-                      </span>
+                      </Badge>
                     </div>
 
                     <h3 class="text-xl font-serif mb-3">{recording.data.title}</h3>
@@ -227,16 +221,13 @@ function getCoverImageSrc(coverImage: string | { src: string } | undefined): str
                       <h3 class="text-lg font-serif group-hover:text-primary transition-colors duration-300">
                         {recording.data.title}
                       </h3>
-                      <span
-                        class:list={[
-                          'px-1.5 py-0.5 rounded text-[10px] font-medium capitalize flex-shrink-0',
-                          recording.data.role === 'conductor'
-                            ? 'bg-primary/10 text-primary'
-                            : 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
-                        ]}
+                      <Badge
+                        variant={recording.data.role === 'conductor' ? 'conductor' : 'performer'}
+                        textCase="capitalize"
+                        size="sm"
                       >
                         {recording.data.role || 'Conductor'}
-                      </span>
+                      </Badge>
                     </div>
 
                     <div class="text-xs text-muted-foreground mb-2">
@@ -256,12 +247,7 @@ function getCoverImageSrc(coverImage: string | { src: string } | undefined): str
                     {recording.data.awards && recording.data.awards.length > 0 && (
                       <div class="flex flex-wrap gap-1 mb-2">
                         {recording.data.awards.map((award: string) => (
-                          <Badge
-                            variant="outline"
-                            className="text-[10px] text-primary border-primary"
-                          >
-                            {award}
-                          </Badge>
+                          <Badge variant="outline">{award}</Badge>
                         ))}
                       </div>
                     )}

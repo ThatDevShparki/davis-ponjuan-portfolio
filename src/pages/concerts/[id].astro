@@ -2,6 +2,8 @@
 import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 
+import { Badge } from '@/components/ui/badge';
+
 import MediaAudio from '../../components/media/MediaAudio.astro';
 import MediaGallery from '../../components/media/MediaGallery.astro';
 import MediaLinks from '../../components/media/MediaLinks.astro';
@@ -83,27 +85,16 @@ const hasMedia = hasVideos || hasAudio || hasGallery || hasLinks;
           }
         </time>
         <span>·</span>
-        <span
-          class:list={[
-            'px-2 py-0.5 rounded text-xs font-medium capitalize',
-            concert.data.role === 'conductor'
-              ? 'bg-primary/10 text-primary'
-              : 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
-          ]}
+        <Badge
+          variant={concert.data.role === 'conductor' ? 'conductor' : 'performer'}
+          textCase="capitalize"
         >
           {concert.data.role || 'Conductor'}
-        </span>
+        </Badge>
         <span>·</span>
-        <span
-          class:list={[
-            'px-2 py-0.5 rounded text-xs font-medium',
-            concert.data.status === 'upcoming'
-              ? 'bg-primary/10 text-primary'
-              : 'bg-muted text-muted-foreground',
-          ]}
-        >
+        <Badge variant={concert.data.status === 'upcoming' ? 'upcoming' : 'past'}>
           {concert.data.status === 'upcoming' ? 'Upcoming' : 'Past Performance'}
-        </span>
+        </Badge>
       </div>
 
       <h1 class="text-3xl md:text-4xl font-serif mb-4">{concert.data.title}</h1>

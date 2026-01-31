@@ -4,34 +4,46 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
+/**
+ * Button Component - Editorial Design System
+ *
+ * Follows the portfolio's design principles:
+ * - Primary buttons: forest green, subtle hover lift
+ * - Secondary/outline: editorial border treatment
+ * - Transitions: 300ms ease-out (unhurried)
+ * - Rounded-md (subtle, not too rounded)
+ */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-300 ease-out disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  // Base: editorial feel with proper transitions
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-300 ease-out disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
   {
     variants: {
       variant: {
-        default:
-          'bg-primary text-primary-foreground hover:bg-primary/90 hover:-translate-y-0.5 hover:shadow-lg',
-        destructive:
-          'bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
+        // Primary: forest green with subtle lift on hover
+        default: 'bg-primary text-primary-foreground hover:bg-primary-hover active:scale-[0.98]',
+        // Outline: editorial border style (like the mobile menu CTA)
         outline:
-          'border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50',
-        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-        ghost: 'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
-        link: 'text-primary underline-offset-4 hover:underline p-0 h-auto',
-        // Nav link - text that changes color on hover
-        nav: 'text-foreground hover:text-primary hover:underline p-0 h-auto font-normal aria-[current=page]:font-semibold aria-[current=page]:text-primary',
+          'border border-border bg-transparent text-foreground hover:border-primary hover:text-primary',
+        // Secondary: subtle filled background
+        secondary: 'bg-muted text-foreground hover:bg-muted/80',
+        // Ghost: minimal, just hover state
+        ghost: 'text-foreground hover:bg-muted/50 hover:text-foreground',
+        // Link: inline text link style
+        link: 'text-primary underline-offset-4 hover:underline p-0 h-auto font-normal',
+        // Nav: navigation style with active state
+        nav: 'text-muted-foreground hover:text-foreground p-0 h-auto font-normal aria-[current=page]:text-foreground aria-[current=page]:border-b aria-[current=page]:border-primary',
+        // Destructive: error/delete actions
+        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
       },
       size: {
-        default: 'h-9 px-4 py-2 has-[>svg]:px-3',
-        xs: "h-6 gap-1 rounded-md px-2 text-xs has-[>svg]:px-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: 'h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5',
-        lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
-        xl: 'h-12 rounded-lg px-8 text-base has-[>svg]:px-6',
-        icon: 'size-9 rounded-full',
-        'icon-xs': "size-6 rounded-full [&_svg:not([class*='size-'])]:size-3",
-        'icon-sm': 'size-8 rounded-full',
-        'icon-lg': 'size-10 rounded-full',
-        'icon-xl': 'size-12 rounded-full [&_svg]:size-5',
+        default: 'h-10 px-4 py-2',
+        sm: 'h-8 rounded-md px-3 text-xs',
+        lg: 'h-11 rounded-md px-6',
+        xl: 'h-12 rounded-md px-8 text-base',
+        // Icon buttons: circular
+        icon: 'size-10 rounded-full p-0',
+        'icon-sm': 'size-8 rounded-full p-0',
+        'icon-lg': 'size-11 rounded-full p-0',
       },
     },
     defaultVariants: {

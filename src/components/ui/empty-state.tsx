@@ -14,20 +14,26 @@ interface EmptyStateProps extends React.ComponentProps<'div'> {
   };
 }
 
+/**
+ * EmptyState Component - Editorial Design System
+ *
+ * Subtle, understated empty states that don't distract:
+ * - Serif title for consistency
+ * - Generous but not excessive padding
+ * - Optional subtle border treatment
+ */
 function EmptyState({ title, description, icon, action, className, ...props }: EmptyStateProps) {
   return (
     <div
       data-slot="empty-state"
-      className={cn('flex flex-col items-center justify-center py-16 px-8 text-center', className)}
+      className={cn('flex flex-col items-center justify-center py-12 px-6 text-center', className)}
       {...props}
     >
-      {icon && <div className="mb-4 text-muted-foreground">{icon}</div>}
-      <h3 className="text-xl font-semibold text-foreground mb-2">{title}</h3>
-      {description && (
-        <p className="text-base text-muted-foreground mb-6 max-w-md">{description}</p>
-      )}
+      {icon && <div className="mb-4 text-muted-foreground opacity-60">{icon}</div>}
+      <h3 className="font-serif text-lg text-foreground mb-2">{title}</h3>
+      {description && <p className="text-sm text-muted-foreground mb-5 max-w-sm">{description}</p>}
       {action && (
-        <Button asChild>
+        <Button variant="outline" asChild>
           <a href={action.href}>{action.label}</a>
         </Button>
       )}
