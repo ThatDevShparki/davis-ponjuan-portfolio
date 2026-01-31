@@ -1,0 +1,133 @@
+---
+import { getCollection } from 'astro:content';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const allOrganizations = await getCollection('organizations');
+const currentPositions = allOrganizations
+  .filter((org) => org.data.type === 'current')
+  .sort((a, b) => a.data.order - b.data.order);
+
+const allEducation = await getCollection('education');
+const sortedEducation = allEducation.sort(
+  (a, b) => b.data.startDate.getTime() - a.data.startDate.getTime()
+);
+
+const allAwards = await getCollection('awards');
+const featuredAwards = allAwards
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 5);
+---
+
+<BaseLayout title="About - Davis Ponjuan" description="Biography of conductor Davis Ponjuan">
+  <h1>About Davis Ponjuan</h1>
+
+  <section>
+    <h2>Biography</h2>
+    <p>
+      [Your personal narrative biography goes here. This should be written in first person, telling
+      your story as a conductor, your musical philosophy, and what drives your artistry.]
+    </p>
+    <p>
+      [Use multiple paragraphs to tell your story: how you became a conductor, your approach to
+      music, your current work and vision.]
+    </p>
+  </section>
+
+  <section>
+    <h2>Current Positions</h2>
+    <ul>
+      {
+        currentPositions.map((org) => (
+          <li>
+            <strong>{org.data.role}</strong>, {org.data.name}
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section>
+    <h2>Education</h2>
+    <ul>
+      {
+        sortedEducation.map((edu) => (
+          <li>
+            <strong>{edu.data.degree}</strong> in {edu.data.field}, {edu.data.institution} (
+            {edu.data.endDate
+              ? edu.data.endDate.toLocaleDateString('en-US', { year: 'numeric' })
+              : 'In Progress'}
+            )
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section>
+    <h2>Awards & Honors</h2>
+    <ul>
+      {
+        featuredAwards.map((award) => (
+          <li>
+            <strong>{award.data.title}</strong>, {award.data.organization} (
+            {award.data.date.toLocaleDateString('en-US', { year: 'numeric' })})
+          </li>
+        ))
+      }
+    </ul>
+    <a href="/cv">View complete awards list →</a>
+  </section>
+
+  <nav>
+    <a href="/cv">View Full CV →</a>
+    <a href="/concerts">View Performances →</a>
+  </nav>
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.5rem;
+  }
+
+  section {
+    margin-bottom: 3rem;
+  }
+
+  ul {
+    list-style: disc;
+    padding-left: 2rem;
+  }
+
+  li {
+    margin-bottom: 0.5rem;
+  }
+
+  nav {
+    margin-top: 3rem;
+    display: flex;
+    gap: 2rem;
+  }
+
+  nav a {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: #2d7a3e;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+  }
+
+  nav a:hover {
+    background: #246330;
+  }
+</style>

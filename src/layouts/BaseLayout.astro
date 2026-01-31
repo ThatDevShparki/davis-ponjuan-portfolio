@@ -1,0 +1,97 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = 'Davis Ponjuan - Conductor', description = 'Conductor and musician' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/concerts">Concerts</a>
+        <a href="/repertoire">Repertoire</a>
+        <a href="/organizations">Organizations</a>
+        <a href="/recordings">Recordings</a>
+        <a href="/workshops">Workshops</a>
+        <a href="/press">Press</a>
+        <a href="/cv">CV</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer>
+      <p>&copy; {new Date().getFullYear()} Davis Ponjuan. All rights reserved.</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  header {
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #ddd;
+  }
+
+  nav {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  nav a {
+    text-decoration: none;
+    color: #333;
+  }
+
+  nav a:hover {
+    text-decoration: underline;
+  }
+
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: calc(100vh - 200px);
+  }
+
+  footer {
+    padding: 2rem;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    color: #666;
+  }
+
+  @media print {
+    header,
+    footer {
+      display: none;
+    }
+
+    main {
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+      min-height: auto;
+    }
+  }
+</style>

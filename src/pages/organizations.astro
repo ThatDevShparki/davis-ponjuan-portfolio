@@ -1,0 +1,236 @@
+---
+import { getCollection } from 'astro:content';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const allOrganizations = await getCollection('organizations');
+
+// Group by type
+const current = allOrganizations
+  .filter((org) => org.data.type === 'current')
+  .sort((a, b) => a.data.order - b.data.order);
+
+const past = allOrganizations
+  .filter((org) => org.data.type === 'past')
+  .sort((a, b) => b.data.startDate.getTime() - a.data.startDate.getTime());
+
+const guest = allOrganizations
+  .filter((org) => org.data.type === 'guest')
+  .sort((a, b) => b.data.startDate.getTime() - a.data.startDate.getTime());
+
+const educational = allOrganizations
+  .filter((org) => org.data.type === 'educational')
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout
+  title="Organizations - Davis Ponjuan"
+  description="Current and past musical positions and affiliations"
+>
+  <h1>Organizations</h1>
+
+  {
+    current.length > 0 && (
+      <section>
+        <h2>Current Positions</h2>
+        <ul class="org-list">
+          {current.map(async (org) => {
+            const { Content } = await org.render();
+            return (
+              <li>
+                <h3>{org.data.role}</h3>
+                <div class="org-name">{org.data.name}</div>
+                <div class="org-meta">
+                  {org.data.location} •{' '}
+                  {org.data.startDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                  })}{' '}
+                  – Present
+                  {org.data.website && (
+                    <>
+                      {' '}
+                      •{' '}
+                      <a href={org.data.website} target="_blank" rel="noopener noreferrer">
+                        Website
+                      </a>
+                    </>
+                  )}
+                </div>
+                <div class="org-content">
+                  <Content />
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    educational.length > 0 && (
+      <section>
+        <h2>Educational & Teaching</h2>
+        <ul class="org-list">
+          {educational.map(async (org) => {
+            const { Content } = await org.render();
+            return (
+              <li>
+                <h3>{org.data.role}</h3>
+                <div class="org-name">{org.data.name}</div>
+                <div class="org-meta">
+                  {org.data.location}
+                  {org.data.website && (
+                    <>
+                      {' '}
+                      •{' '}
+                      <a href={org.data.website} target="_blank" rel="noopener noreferrer">
+                        Website
+                      </a>
+                    </>
+                  )}
+                </div>
+                <div class="org-content">
+                  <Content />
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    past.length > 0 && (
+      <section>
+        <h2>Past Positions</h2>
+        <ul class="org-list">
+          {past.map(async (org) => {
+            const { Content } = await org.render();
+            return (
+              <li>
+                <h3>{org.data.role}</h3>
+                <div class="org-name">{org.data.name}</div>
+                <div class="org-meta">
+                  {org.data.location} •{' '}
+                  {org.data.startDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                  })}{' '}
+                  –{' '}
+                  {org.data.endDate?.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                  })}
+                </div>
+                <div class="org-content">
+                  <Content />
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    guest.length > 0 && (
+      <section>
+        <h2>Guest Conducting</h2>
+        <ul class="org-list">
+          {guest.map(async (org) => {
+            const { Content } = await org.render();
+            return (
+              <li>
+                <h3>{org.data.name}</h3>
+                <div class="org-meta">
+                  {org.data.location} •{' '}
+                  {org.data.startDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                  })}
+                  {org.data.endDate &&
+                    org.data.endDate.getTime() !== org.data.startDate.getTime() &&
+                    ` – ${org.data.endDate.toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                    })}`}
+                </div>
+                <div class="org-content">
+                  <Content />
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    margin-top: 3rem;
+    border-bottom: 2px solid #333;
+    padding-bottom: 0.5rem;
+  }
+
+  section:first-of-type h2 {
+    margin-top: 0;
+  }
+
+  .org-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .org-list > li {
+    margin-bottom: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid #eee;
+  }
+
+  .org-list > li:last-child {
+    border-bottom: none;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #2d7a3e;
+  }
+
+  .org-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .org-meta {
+    color: #666;
+    margin-bottom: 1rem;
+  }
+
+  .org-meta a {
+    color: #2d7a3e;
+    text-decoration: none;
+  }
+
+  .org-meta a:hover {
+    text-decoration: underline;
+  }
+
+  .org-content {
+    line-height: 1.7;
+  }
+</style>

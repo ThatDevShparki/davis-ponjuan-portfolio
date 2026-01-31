@@ -1,0 +1,119 @@
+---
+import { getCollection } from 'astro:content';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const allPress = await getCollection('press');
+const sortedPress = allPress.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BaseLayout title="Press - Davis Ponjuan" description="Press coverage and reviews">
+  <h1>Press & Reviews</h1>
+
+  <p class="intro">
+    Selected press coverage and critical reviews of performances throughout my career.
+  </p>
+
+  <ul class="press-list">
+    {
+      sortedPress.map(async (item) => {
+        const { Content } = await item.render();
+        return (
+          <li>
+            <article>
+              <h2>{item.data.title}</h2>
+              <div class="press-meta">
+                <strong>{item.data.publication}</strong>
+                {item.data.author && ` • ${item.data.author}`}
+                {' • '}
+                <time datetime={item.data.date.toISOString()}>
+                  {item.data.date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </time>
+                {item.data.url && (
+                  <>
+                    {' '}
+                    •{' '}
+                    <a href={item.data.url} target="_blank" rel="noopener noreferrer">
+                      Read full article
+                    </a>
+                  </>
+                )}
+              </div>
+              <blockquote>{item.data.excerpt}</blockquote>
+              <div class="press-content">
+                <Content />
+              </div>
+            </article>
+          </li>
+        );
+      })
+    }
+  </ul>
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .intro {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+    color: #555;
+  }
+
+  .press-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .press-list > li {
+    margin-bottom: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid #eee;
+  }
+
+  .press-list > li:last-child {
+    border-bottom: none;
+  }
+
+  article h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .press-meta {
+    color: #666;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+  }
+
+  .press-meta a {
+    color: #2d7a3e;
+    text-decoration: none;
+  }
+
+  .press-meta a:hover {
+    text-decoration: underline;
+  }
+
+  blockquote {
+    font-size: 1.2rem;
+    font-style: italic;
+    margin: 1.5rem 0;
+    padding-left: 1.5rem;
+    border-left: 4px solid #2d7a3e;
+    line-height: 1.6;
+  }
+
+  .press-content {
+    line-height: 1.7;
+    color: #555;
+  }
+</style>

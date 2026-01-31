@@ -95,9 +95,78 @@ const press = defineCollection({
   }),
 });
 
+// Education collection - academic background
+const education = defineCollection({
+  type: 'content',
+  schema: z.object({
+    institution: z.string(),
+    degree: z.string(),
+    field: z.string(),
+    location: z.string(),
+    startDate: z.date(),
+    endDate: z.date().optional(),
+    honors: z.string().optional(),
+    thesis: z.string().optional(),
+    advisors: z.array(z.string()).optional(),
+  }),
+});
+
+// Awards collection - honors and recognition
+const awards = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    organization: z.string(),
+    date: z.date(),
+    location: z.string().optional(),
+    category: z.enum(['competition', 'fellowship', 'grant', 'honor', 'residency', 'other']),
+    amount: z.string().optional(), // For grants/fellowships
+    url: z.string().optional(),
+  }),
+});
+
+// Recordings collection - discography
+const recordings = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    composer: z.string().optional(),
+    works: z.array(z.string()).optional(), // List of works on the recording
+    orchestra: z.string(),
+    label: z.string(),
+    releaseDate: z.date(),
+    format: z.enum(['CD', 'Digital', 'Vinyl', 'Streaming', 'DVD/Blu-ray']).array(),
+    catalogNumber: z.string().optional(),
+    coverImage: z.string().optional(),
+    purchaseUrl: z.string().optional(),
+    streamingUrl: z.string().optional(),
+    awards: z.array(z.string()).optional(), // Grammy nominations, etc.
+    featured: z.boolean().default(false),
+  }),
+});
+
+// Workshops collection - masterclasses, educational activities
+const workshops = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    institution: z.string(),
+    location: z.string(),
+    date: z.date(),
+    endDate: z.date().optional(), // For multi-day events
+    type: z.enum(['masterclass', 'workshop', 'residency', 'lecture', 'clinic', 'seminar']),
+    topic: z.string().optional(), // Main focus area
+    participants: z.string().optional(), // e.g., "Graduate conducting students"
+  }),
+});
+
 export const collections = {
   concerts,
   organizations,
   repertoire,
   press,
+  education,
+  awards,
+  recordings,
+  workshops,
 };

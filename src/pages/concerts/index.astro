@@ -1,0 +1,227 @@
+---
+import { getCollection } from 'astro:content';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const allConcerts = await getCollection('concerts');
+
+// Separate upcoming and past concerts
+const upcomingConcerts = allConcerts
+  .filter((concert) => concert.data.status === 'upcoming')
+  .sort((a, b) => a.data.date.getTime() - b.data.date.getTime());
+
+const pastConcerts = allConcerts
+  .filter((concert) => concert.data.status === 'past')
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+// Group past concerts by year
+const concertsByYear = pastConcerts.reduce(
+  (acc, concert) => {
+    const year = concert.data.date.getFullYear();
+    if (!acc[year]) {
+      acc[year] = [];
+    }
+    acc[year].push(concert);
+    return acc;
+  },
+  {} as Record<number, typeof pastConcerts>
+);
+
+const years = Object.keys(concertsByYear)
+  .map(Number)
+  .sort((a, b) => b - a);
+---
+
+<BaseLayout
+  title="Concerts - Davis Ponjuan"
+  description="Concert history and upcoming performances"
+>
+  <h1>Concerts</h1>
+
+  {
+    upcomingConcerts.length > 0 && (
+      <section>
+        <h2>Upcoming Performances</h2>
+        <ul class="concert-list">
+          {upcomingConcerts.map((concert) => (
+            <li>
+              <div class="concert-date">
+                {concert.data.date.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </div>
+              <div class="concert-details">
+                <h3>
+                  <a href={`/concerts/${concert.id}`}>{concert.data.title}</a>
+                </h3>
+                <div class="concert-meta">
+                  {concert.data.orchestra} • {concert.data.venue}, {concert.data.location}
+                </div>
+                {concert.data.program && (
+                  <ul class="program-list">
+                    {concert.data.program.map((piece) => (
+                      <li>
+                        {piece.composer}: <em>{piece.work}</em>
+                        {piece.soloist && ` (${piece.soloist})`}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section>
+    <h2>Past Performances</h2>
+    {
+      years.map((year) => (
+        <div class="year-section">
+          <h3 class="year-heading">{year}</h3>
+          <ul class="concert-list">
+            {concertsByYear[year].map((concert) => (
+              <li>
+                <div class="concert-date">
+                  {concert.data.date.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </div>
+                <div class="concert-details">
+                  <h4>
+                    <a href={`/concerts/${concert.id}`}>{concert.data.title}</a>
+                    {concert.data.featured && <span class="badge">Featured</span>}
+                  </h4>
+                  <div class="concert-meta">
+                    {concert.data.orchestra} • {concert.data.venue}, {concert.data.location}
+                  </div>
+                  {concert.data.program && concert.data.program.length > 0 && (
+                    <div class="program-preview">
+                      {concert.data.program[0].composer}: <em>{concert.data.program[0].work}</em>
+                      {concert.data.program.length > 1 &&
+                        ` + ${concert.data.program.length - 1} more`}
+                    </div>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </section>
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #333;
+    padding-bottom: 0.5rem;
+  }
+
+  section {
+    margin-bottom: 4rem;
+  }
+
+  .year-section {
+    margin-bottom: 3rem;
+  }
+
+  .year-heading {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #2d7a3e;
+  }
+
+  .concert-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .concert-list > li {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #eee;
+  }
+
+  .concert-list > li:last-child {
+    border-bottom: none;
+  }
+
+  .concert-date {
+    flex-shrink: 0;
+    width: 120px;
+    font-weight: 600;
+    color: #666;
+  }
+
+  .concert-details {
+    flex: 1;
+  }
+
+  .concert-details h3,
+  .concert-details h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+  }
+
+  .concert-details h4 {
+    font-size: 1.1rem;
+  }
+
+  .concert-details a {
+    color: #333;
+    text-decoration: none;
+  }
+
+  .concert-details a:hover {
+    color: #2d7a3e;
+    text-decoration: underline;
+  }
+
+  .concert-meta {
+    color: #666;
+    margin-bottom: 0.5rem;
+  }
+
+  .program-list,
+  .program-preview {
+    font-size: 0.95rem;
+    color: #555;
+    margin-top: 0.5rem;
+  }
+
+  .program-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .program-list li {
+    margin-bottom: 0.25rem;
+  }
+
+  .badge {
+    display: inline-block;
+    background: #2d7a3e;
+    color: white;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 3px;
+    margin-left: 0.5rem;
+    font-weight: normal;
+  }
+</style>

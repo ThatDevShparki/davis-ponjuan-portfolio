@@ -1,0 +1,231 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export const getStaticPaths = (async () => {
+  const concerts = await getCollection('concerts');
+  return concerts.map((concert) => ({
+    params: { id: concert.id },
+    props: { concert },
+  }));
+}) satisfies GetStaticPaths;
+
+const { concert } = Astro.props;
+const { Content } = await concert.render();
+---
+
+<BaseLayout
+  title={`${concert.data.title} - Davis Ponjuan`}
+  description={`${concert.data.orchestra} - ${concert.data.venue}`}
+>
+  <article>
+    <header>
+      <h1>{concert.data.title}</h1>
+      <div class="meta">
+        <time datetime={concert.data.date.toISOString()}>
+          {
+            concert.data.date.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })
+          }
+        </time>
+        <span>•</span>
+        <span>{concert.data.venue}, {concert.data.location}</span>
+        <span>•</span>
+        <span>{concert.data.orchestra}</span>
+      </div>
+    </header>
+
+    {
+      concert.data.program && (
+        <section class="program">
+          <h2>Program</h2>
+          <ul>
+            {concert.data.program.map((piece) => (
+              <li>
+                <strong>{piece.composer}</strong>
+                <br />
+                <em>{piece.work}</em>
+                {piece.soloist && (
+                  <>
+                    <br />
+                    <span class="soloist">{piece.soloist}</span>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      concert.data.featured && (
+        <section class="content">
+          <Content />
+        </section>
+      )
+    }
+
+    {
+      concert.data.media && concert.data.media.length > 0 && (
+        <section class="media">
+          <h2>Media</h2>
+          <ul>
+            {concert.data.media.map((item) => (
+              <li>
+                <a href={item.url} target="_blank" rel="noopener noreferrer">
+                  {item.type === 'video' && '🎥'}
+                  {item.type === 'photo' && '📷'}
+                  {item.type === 'audio' && '🎵'}
+                  {item.caption || item.url}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      concert.data.reviews && concert.data.reviews.length > 0 && (
+        <section class="reviews">
+          <h2>Press Coverage</h2>
+          {concert.data.reviews.map((review) => (
+            <blockquote>
+              <p>{review.excerpt}</p>
+              <cite>
+                — <strong>{review.publication}</strong>
+                {review.author && `, ${review.author}`}
+                {review.url && (
+                  <>
+                    {' '}
+                    •{' '}
+                    <a href={review.url} target="_blank" rel="noopener noreferrer">
+                      Read full review
+                    </a>
+                  </>
+                )}
+              </cite>
+            </blockquote>
+          ))}
+        </section>
+      )
+    }
+
+    <nav class="concert-nav">
+      <a href="/concerts">← Back to all concerts</a>
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  article {
+    max-width: 800px;
+  }
+
+  header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid #333;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .meta {
+    color: #666;
+    font-size: 1.1rem;
+  }
+
+  .meta span {
+    margin: 0 0.5rem;
+  }
+
+  section {
+    margin-bottom: 3rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #2d7a3e;
+  }
+
+  .program ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .program li {
+    margin-bottom: 1.5rem;
+    padding-left: 1rem;
+    border-left: 3px solid #2d7a3e;
+  }
+
+  .soloist {
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  .content {
+    line-height: 1.7;
+  }
+
+  .media ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .media li {
+    margin-bottom: 1rem;
+  }
+
+  .media a {
+    color: #2d7a3e;
+    text-decoration: none;
+  }
+
+  .media a:hover {
+    text-decoration: underline;
+  }
+
+  .reviews blockquote {
+    border-left: 4px solid #eee;
+    padding-left: 1.5rem;
+    margin: 0 0 2rem 0;
+    font-style: italic;
+  }
+
+  .reviews p {
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  .reviews cite {
+    font-style: normal;
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  .concert-nav {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid #ddd;
+  }
+
+  .concert-nav a {
+    color: #2d7a3e;
+    text-decoration: none;
+  }
+
+  .concert-nav a:hover {
+    text-decoration: underline;
+  }
+</style>

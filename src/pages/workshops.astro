@@ -1,0 +1,185 @@
+---
+import { getCollection } from 'astro:content';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const allWorkshops = await getCollection('workshops');
+
+// Group by year
+const workshopsByYear = allWorkshops.reduce(
+  (acc, workshop) => {
+    const year = workshop.data.date.getFullYear();
+    if (!acc[year]) {
+      acc[year] = [];
+    }
+    acc[year].push(workshop);
+    return acc;
+  },
+  {} as Record<number, typeof allWorkshops>
+);
+
+// Sort workshops within each year
+Object.keys(workshopsByYear).forEach((year) => {
+  workshopsByYear[Number(year)].sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+});
+
+const years = Object.keys(workshopsByYear)
+  .map(Number)
+  .sort((a, b) => b - a);
+---
+
+<BaseLayout
+  title="Workshops & Masterclasses - Davis Ponjuan"
+  description="Educational activities and teaching engagements"
+>
+  <h1>Workshops & Masterclasses</h1>
+
+  {
+    years.map((year) => (
+      <section class="year-section">
+        <h2 class="year-heading">{year}</h2>
+        <div class="workshops-list">
+          {workshopsByYear[year].map(async (workshop) => {
+            const { Content } = await workshop.render();
+            return (
+              <article class="workshop-card">
+                <div class="workshop-header">
+                  <h3>{workshop.data.title}</h3>
+                  <span class="type-badge">{workshop.data.type}</span>
+                </div>
+
+                <div class="workshop-meta">
+                  <div class="meta-item">
+                    <strong>Institution:</strong> {workshop.data.institution}
+                  </div>
+                  <div class="meta-item">
+                    <strong>Location:</strong> {workshop.data.location}
+                  </div>
+                  <div class="meta-item">
+                    <strong>Date:</strong>{' '}
+                    {workshop.data.date.toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                    {workshop.data.endDate &&
+                      workshop.data.endDate.getTime() !== workshop.data.date.getTime() &&
+                      ` – ${workshop.data.endDate.toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                      })}`}
+                  </div>
+                  {workshop.data.topic && (
+                    <div class="meta-item topic">
+                      <strong>Topic:</strong> {workshop.data.topic}
+                    </div>
+                  )}
+                  {workshop.data.participants && (
+                    <div class="meta-item">
+                      <strong>Participants:</strong> {workshop.data.participants}
+                    </div>
+                  )}
+                </div>
+
+                <div class="workshop-content">
+                  <Content />
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+    ))
+  }
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .year-section {
+    margin-bottom: 4rem;
+  }
+
+  .year-heading {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    color: #2d7a3e;
+    border-bottom: 2px solid #2d7a3e;
+    padding-bottom: 0.5rem;
+  }
+
+  .workshops-list {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .workshop-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 2rem;
+    background: #fafafa;
+  }
+
+  .workshop-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #ddd;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    margin: 0;
+    flex: 1;
+  }
+
+  .type-badge {
+    display: inline-block;
+    background: #2d7a3e;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    border-radius: 3px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+
+  .workshop-meta {
+    margin-bottom: 1.5rem;
+  }
+
+  .meta-item {
+    margin-bottom: 0.75rem;
+    color: #333;
+  }
+
+  .meta-item strong {
+    color: #666;
+    margin-right: 0.5rem;
+  }
+
+  .meta-item.topic {
+    font-style: italic;
+    color: #555;
+  }
+
+  .workshop-content {
+    line-height: 1.7;
+  }
+
+  .workshop-content p {
+    margin-bottom: 1rem;
+  }
+
+  .workshop-content p:last-child {
+    margin-bottom: 0;
+  }
+</style>

@@ -1,0 +1,169 @@
+---
+import { getCollection } from 'astro:content';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const allRepertoire = await getCollection('repertoire');
+
+// Group by genre
+const byGenre = allRepertoire.reduce(
+  (acc, work) => {
+    if (!acc[work.data.genre]) {
+      acc[work.data.genre] = [];
+    }
+    acc[work.data.genre].push(work);
+    return acc;
+  },
+  {} as Record<string, typeof allRepertoire>
+);
+
+// Sort works within each genre alphabetically by composer
+Object.keys(byGenre).forEach((genre) => {
+  byGenre[genre].sort((a, b) => {
+    const composerCompare = a.data.composer.localeCompare(b.data.composer);
+    if (composerCompare !== 0) return composerCompare;
+    return a.data.work.localeCompare(b.data.work);
+  });
+});
+
+const genreOrder = [
+  'symphonic',
+  'operatic',
+  'contemporary',
+  'chamber',
+  'choral',
+  'ballet',
+  'other',
+];
+const genres = genreOrder.filter((genre) => byGenre[genre]);
+
+const genreLabels: Record<string, string> = {
+  symphonic: 'Symphonic',
+  operatic: 'Operatic',
+  contemporary: 'Contemporary',
+  chamber: 'Chamber',
+  choral: 'Choral',
+  ballet: 'Ballet',
+  other: 'Other',
+};
+---
+
+<BaseLayout title="Repertoire - Davis Ponjuan" description="Complete list of works conducted">
+  <h1>Repertoire</h1>
+
+  <p class="intro">
+    A selection of works I have conducted throughout my career, organized by genre. Each entry
+    includes the number of times performed and, where applicable, notes on significant performances
+    or interpretative approach.
+  </p>
+
+  {
+    genres.map((genre) => (
+      <section>
+        <h2>{genreLabels[genre]}</h2>
+        <ul class="repertoire-list">
+          {byGenre[genre].map((work) => (
+            <li>
+              <div class="work-header">
+                <strong>{work.data.composer}</strong>
+              </div>
+              <div class="work-title">
+                <em>{work.data.work}</em>
+              </div>
+              <div class="work-meta">
+                Performed {work.data.timesPerformed}{' '}
+                {work.data.timesPerformed === 1 ? 'time' : 'times'}
+                {work.data.firstPerformed && (
+                  <>
+                    {' '}
+                    • First:{' '}
+                    {work.data.firstPerformed.toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                    })}
+                  </>
+                )}
+                {work.data.lastPerformed && (
+                  <>
+                    {' '}
+                    • Most recent:{' '}
+                    {work.data.lastPerformed.toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                    })}
+                  </>
+                )}
+              </div>
+              {work.data.notes && <div class="work-notes">{work.data.notes}</div>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .intro {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+    color: #555;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    color: #2d7a3e;
+    border-bottom: 2px solid #2d7a3e;
+    padding-bottom: 0.5rem;
+  }
+
+  section:first-of-type h2 {
+    margin-top: 0;
+  }
+
+  .repertoire-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .repertoire-list > li {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+  }
+
+  .repertoire-list > li:last-child {
+    border-bottom: none;
+  }
+
+  .work-header {
+    font-size: 1.1rem;
+  }
+
+  .work-title {
+    margin-top: 0.25rem;
+    font-size: 1rem;
+    color: #333;
+  }
+
+  .work-meta {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  .work-notes {
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+    color: #555;
+    font-style: italic;
+  }
+</style>
