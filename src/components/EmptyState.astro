@@ -1,0 +1,38 @@
+---
+interface Props {
+  title: string;
+  message?: string;
+  actionText?: string;
+  actionHref?: string;
+}
+
+const { title, message, actionText, actionHref } = Astro.props;
+---
+
+<div class="empty-state">
+  <h3>{title}</h3>
+  {message && <p>{message}</p>}
+  {
+    actionText && actionHref && (
+      <a href={actionHref} class="action-link">
+        {actionText}
+      </a>
+    )
+  }
+</div>
+
+<style>
+  .action-link {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: #2d7a3e;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .action-link:hover {
+    background: #246330;
+  }
+</style>

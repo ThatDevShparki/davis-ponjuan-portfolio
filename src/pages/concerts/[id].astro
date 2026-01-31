@@ -13,7 +13,17 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 const { concert } = Astro.props;
-const { Content } = await concert.render();
+
+// Error handling for markdown rendering
+let Content;
+let renderError = false;
+try {
+  const rendered = await concert.render();
+  Content = rendered.Content;
+} catch (error) {
+  console.error(`Failed to render concert: ${concert.id}`, error);
+  renderError = true;
+}
 ---
 
 <BaseLayout
@@ -64,9 +74,18 @@ const { Content } = await concert.render();
     }
 
     {
-      concert.data.featured && (
+      concert.data.featured && !renderError && (
         <section class="content">
           <Content />
+        </section>
+      )
+    }
+    {
+      renderError && (
+        <section class="content">
+          <p style="color: #666; font-style: italic;">
+            Program notes are currently unavailable for this performance.
+          </p>
         </section>
       )
     }

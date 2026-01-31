@@ -7,6 +7,9 @@ interface Props {
 }
 
 const { title = 'Davis Ponjuan - Conductor', description = 'Conductor and musician' } = Astro.props;
+
+// Get current path for active nav indication
+const currentPath = new URL(Astro.request.url).pathname;
 ---
 
 <!doctype html>
@@ -21,22 +24,35 @@ const { title = 'Davis Ponjuan - Conductor', description = 'Conductor and musici
     <title>{title}</title>
   </head>
   <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <header>
-      <nav>
-        <a href="/home">Home</a>
-        <a href="/about">About</a>
-        <a href="/concerts">Concerts</a>
-        <a href="/repertoire">Repertoire</a>
-        <a href="/organizations">Organizations</a>
-        <a href="/recordings">Recordings</a>
-        <a href="/workshops">Workshops</a>
-        <a href="/press">Press</a>
-        <a href="/cv">CV</a>
-        <a href="/contact">Contact</a>
+      <nav aria-label="Main navigation">
+        <a href="/home" aria-current={currentPath === '/home' ? 'page' : undefined}>Home</a>
+        <a href="/about" aria-current={currentPath === '/about' ? 'page' : undefined}>About</a>
+        <a href="/concerts" aria-current={currentPath.startsWith('/concerts') ? 'page' : undefined}
+          >Concerts</a
+        >
+        <a href="/repertoire" aria-current={currentPath === '/repertoire' ? 'page' : undefined}
+          >Repertoire</a
+        >
+        <a
+          href="/organizations"
+          aria-current={currentPath === '/organizations' ? 'page' : undefined}>Organizations</a
+        >
+        <a href="/recordings" aria-current={currentPath === '/recordings' ? 'page' : undefined}
+          >Recordings</a
+        >
+        <a href="/workshops" aria-current={currentPath === '/workshops' ? 'page' : undefined}
+          >Workshops</a
+        >
+        <a href="/press" aria-current={currentPath === '/press' ? 'page' : undefined}>Press</a>
+        <a href="/cv" aria-current={currentPath === '/cv' ? 'page' : undefined}>CV</a>
+        <a href="/contact" aria-current={currentPath === '/contact' ? 'page' : undefined}>Contact</a
+        >
       </nav>
     </header>
 
-    <main>
+    <main id="main-content" tabindex="-1">
       <slot />
     </main>
 
@@ -47,6 +63,21 @@ const { title = 'Davis Ponjuan - Conductor', description = 'Conductor and musici
 </html>
 
 <style>
+  .skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #2d7a3e;
+    color: white;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    z-index: 100;
+  }
+
+  .skip-link:focus {
+    top: 0;
+  }
+
   header {
     padding: 1rem 2rem;
     border-bottom: 1px solid #ddd;
@@ -65,6 +96,11 @@ const { title = 'Davis Ponjuan - Conductor', description = 'Conductor and musici
 
   nav a:hover {
     text-decoration: underline;
+  }
+
+  nav a[aria-current='page'] {
+    font-weight: 600;
+    color: #2d7a3e;
   }
 
   main {

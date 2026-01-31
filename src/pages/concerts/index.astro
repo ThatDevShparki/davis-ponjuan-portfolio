@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 
+import EmptyState from '../../components/EmptyState.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const allConcerts = await getCollection('concerts');
@@ -79,6 +80,14 @@ const years = Object.keys(concertsByYear)
 
   <section>
     <h2>Past Performances</h2>
+    {
+      years.length === 0 && (
+        <EmptyState
+          title="No past performances yet"
+          message="Check back soon for concert history and archive."
+        />
+      )
+    }
     {
       years.map((year) => (
         <div class="year-section">
@@ -177,6 +186,8 @@ const years = Object.keys(concertsByYear)
   .concert-details h4 {
     margin: 0 0 0.5rem 0;
     font-size: 1.25rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   .concert-details h4 {
@@ -196,6 +207,8 @@ const years = Object.keys(concertsByYear)
   .concert-meta {
     color: #666;
     margin-bottom: 0.5rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   .program-list,
