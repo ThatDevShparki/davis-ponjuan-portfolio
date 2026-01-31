@@ -120,7 +120,7 @@ const navLinkClass =
         const scrollPosition = window.scrollY;
         const isAtTop = scrollPosition <= scrollThreshold;
 
-        // Determine if button should be visible
+        // Determine if button should be visible and which icon to show
         let shouldShow = false;
         let useDownChevron = true;
 
@@ -143,8 +143,19 @@ const navLinkClass =
           scrollButton.setAttribute('href', '#');
           scrollButton.setAttribute('aria-label', 'Back to top');
         } else {
-          // Default: hide
+          // Default: hide (don't change icon when hiding)
           shouldShow = false;
+        }
+
+        // Update icon BEFORE changing visibility (prevents flash)
+        if (shouldShow) {
+          if (useDownChevron) {
+            chevronDown.classList.remove('hidden');
+            chevronUp.classList.add('hidden');
+          } else {
+            chevronDown.classList.add('hidden');
+            chevronUp.classList.remove('hidden');
+          }
         }
 
         // Update visibility
@@ -154,15 +165,6 @@ const navLinkClass =
         } else {
           scrollButton.classList.add('opacity-0', 'pointer-events-none');
           scrollButton.classList.remove('opacity-100', 'pointer-events-auto');
-        }
-
-        // Update icon
-        if (useDownChevron) {
-          chevronDown.classList.remove('hidden');
-          chevronUp.classList.add('hidden');
-        } else {
-          chevronDown.classList.add('hidden');
-          chevronUp.classList.remove('hidden');
         }
       }
 
