@@ -6,7 +6,7 @@ interface Props {
   description?: string;
 }
 
-const { title = 'Davis Ponjuan - Conductor', description = 'Conductor and musician' } = Astro.props;
+const { title = 'Davis Ponjuán - Conductor', description = 'Conductor and musician' } = Astro.props;
 
 // Get current path for active nav indication
 const currentPath = new URL(Astro.request.url).pathname;
@@ -129,7 +129,7 @@ const footerLinks = {
               href="/home"
               class="text-xl font-serif hover:text-primary transition-colors duration-300"
             >
-              Davis Ponjuan
+              Davis Ponjuán
             </a>
             <p class="text-sm text-muted-foreground mt-2">Conductor · Music Director · Educator</p>
           </div>
@@ -197,7 +197,7 @@ const footerLinks = {
           class="mt-12 pt-6 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4"
         >
           <p class="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} Davis Ponjuan. All rights reserved.
+            &copy; {new Date().getFullYear()} Davis Ponjuán. All rights reserved.
           </p>
           <p class="text-xs text-muted-foreground">
             For booking inquiries, please <a

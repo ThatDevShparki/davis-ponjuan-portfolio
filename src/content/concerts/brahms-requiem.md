@@ -59,7 +59,7 @@ gallery:
 reviews:
   - publication: 'The Philadelphia Inquirer'
     author: 'Peter Dobrin'
-    excerpt: "A deeply moving and spiritually resonant performance that showcased Ponjuan's profound understanding of Brahms's consoling masterwork."
+    excerpt: "A deeply moving and spiritually resonant performance that showcased Ponjuán's profound understanding of Brahms's consoling masterwork."
     url: 'https://www.inquirer.com'
 ---
 

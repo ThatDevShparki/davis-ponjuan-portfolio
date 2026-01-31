@@ -1,6 +1,6 @@
 # Content Management Guide
 
-This guide explains how to add and manage content for the Davis Ponjuan portfolio website.
+This guide explains how to add and manage content for the Davis Ponjuán portfolio website.
 
 ## Content Structure
 
@@ -204,7 +204,7 @@ Create a new file: `src/content/press/YYYY-MM-DD-publication-slug.md`
 
 ```markdown
 ---
-title: 'Ponjuan Brings Fresh Perspective to Mahler'
+title: 'Ponjuán Brings Fresh Perspective to Mahler'
 publication: 'The Boston Globe'
 author: 'Jane Critic' # optional
 date: 2024-03-16

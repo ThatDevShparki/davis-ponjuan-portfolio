@@ -58,4 +58,4 @@ externalLinks:
 
 This recording captures live performances from the 2023-24 season, showcasing the Metro City Symphony Orchestra's expressive power in two of Beethoven's most celebrated symphonies. The Fifth Symphony opens with its iconic four-note motif, while the Seventh demonstrates Beethoven's rhythmic vitality and dance-like energy.
 
-Critics have praised the recording's clarity and the orchestra's precision under Ponjuan's direction, noting particularly the nuanced dynamics and architectural coherence of both interpretations.
+Critics have praised the recording's clarity and the orchestra's precision under Ponjuán's direction, noting particularly the nuanced dynamics and architectural coherence of both interpretations.

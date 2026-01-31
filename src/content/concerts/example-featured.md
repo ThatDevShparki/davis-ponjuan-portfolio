@@ -66,7 +66,7 @@ gallery:
 reviews:
   - publication: 'The Boston Globe'
     author: 'Jane Critic'
-    excerpt: "Ponjuan brought a fresh perspective to Mahler's fifth, with meticulous attention to dynamics and a profound understanding of the work's emotional architecture."
+    excerpt: "Ponjuán brought a fresh perspective to Mahler's fifth, with meticulous attention to dynamics and a profound understanding of the work's emotional architecture."
     url: 'https://bostonglobe.com/example'
   - publication: 'Classical Music Review'
     excerpt: 'A stunning interpretation that balanced power with intimacy. The fourth movement Adagietto was particularly moving.'

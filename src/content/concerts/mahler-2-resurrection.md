@@ -33,7 +33,7 @@ gallery:
 reviews:
   - publication: 'Los Angeles Times'
     author: 'Mark Swed'
-    excerpt: 'A Resurrection to remember. Ponjuan drew playing of exceptional intensity from the orchestra.'
+    excerpt: 'A Resurrection to remember. Ponjuán drew playing of exceptional intensity from the orchestra.'
 ---
 
 An unforgettable performance of Mahler's monumental Second Symphony with the Los Angeles Philharmonic, LA Master Chorale, and distinguished soloists. The "Resurrection" finale brought the capacity audience to its feet.
