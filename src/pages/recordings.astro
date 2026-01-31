@@ -33,7 +33,41 @@ function getCoverImageSrc(coverImage: string | { src: string } | undefined): str
     </p>
   </header>
 
-  <hr class="divider-dashed" />
+  <div class="flex items-center justify-between mb-8 fade-in-up delay-1">
+    <hr class="divider-dashed flex-1 my-0" />
+    <!-- Role Filter -->
+    <nav class="ml-6 flex-shrink-0" aria-label="Filter by role">
+      <ul class="flex gap-3 text-sm" id="role-filter">
+        <li>
+          <button
+            type="button"
+            data-filter="all"
+            class="filter-btn text-foreground border-b border-primary pb-0.5"
+          >
+            All
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            data-filter="conductor"
+            class="filter-btn text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Conducting
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            data-filter="musician"
+            class="filter-btn text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Performing
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
 
   <!-- Featured Recordings -->
   {
@@ -46,7 +80,8 @@ function getCoverImageSrc(coverImage: string | { src: string } | undefined): str
             const coverSrc = getCoverImageSrc(recording.data.coverImage);
             return (
               <article
-                class={`group relative border border-primary rounded-md overflow-hidden bg-card fade-in-up delay-${Math.min(index + 2, 5)}`}
+                class={`recording-item group relative border border-primary rounded-md overflow-hidden bg-card fade-in-up delay-${Math.min(index + 2, 5)}`}
+                data-role={recording.data.role || 'conductor'}
               >
                 <div class="grid md:grid-cols-12 gap-0">
                   {/* Album Art */}
@@ -65,9 +100,21 @@ function getCoverImageSrc(coverImage: string | { src: string } | undefined): str
                   <div
                     class={`p-5 md:p-6 ${coverSrc ? 'md:col-span-8 lg:col-span-9' : 'md:col-span-12'}`}
                   >
-                    <Badge variant="featured" className="mb-3 text-[10px]">
-                      Featured
-                    </Badge>
+                    <div class="flex flex-wrap items-center gap-2 mb-3">
+                      <Badge variant="featured" className="text-[10px]">
+                        Featured
+                      </Badge>
+                      <span
+                        class:list={[
+                          'px-2 py-0.5 rounded text-[10px] font-medium capitalize',
+                          recording.data.role === 'conductor'
+                            ? 'bg-primary/10 text-primary'
+                            : 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
+                        ]}
+                      >
+                        {recording.data.role || 'Conductor'}
+                      </span>
+                    </div>
 
                     <h3 class="text-xl font-serif mb-3">{recording.data.title}</h3>
 
@@ -143,7 +190,10 @@ function getCoverImageSrc(coverImage: string | { src: string } | undefined): str
           {otherRecordings.map((recording, index) => {
             const coverSrc = getCoverImageSrc(recording.data.coverImage);
             return (
-              <article class={`group py-5 first:pt-0 fade-in-up delay-${Math.min(index + 4, 5)}`}>
+              <article
+                class={`recording-item group py-5 first:pt-0 fade-in-up delay-${Math.min(index + 4, 5)}`}
+                data-role={recording.data.role || 'conductor'}
+              >
                 <div class="flex gap-4 md:gap-6">
                   {/* Album Art Thumbnail */}
                   {coverSrc && (
@@ -171,9 +221,21 @@ function getCoverImageSrc(coverImage: string | { src: string } | undefined): str
 
                   {/* Content */}
                   <div class="flex-1 min-w-0">
-                    <h3 class="text-lg font-serif mb-1 group-hover:text-primary transition-colors duration-300">
-                      {recording.data.title}
-                    </h3>
+                    <div class="flex items-center gap-2 mb-1">
+                      <h3 class="text-lg font-serif group-hover:text-primary transition-colors duration-300">
+                        {recording.data.title}
+                      </h3>
+                      <span
+                        class:list={[
+                          'px-1.5 py-0.5 rounded text-[10px] font-medium capitalize flex-shrink-0',
+                          recording.data.role === 'conductor'
+                            ? 'bg-primary/10 text-primary'
+                            : 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
+                        ]}
+                      >
+                        {recording.data.role || 'Conductor'}
+                      </span>
+                    </div>
 
                     <div class="text-xs text-muted-foreground mb-2">
                       {recording.data.orchestra} · {recording.data.label} ·{' '}
@@ -220,3 +282,41 @@ function getCoverImageSrc(coverImage: string | { src: string } | undefined): str
     )
   }
 </BaseLayout>
+
+<script>
+  function initRecordingFilters() {
+    const filterBtns = document.querySelectorAll('#role-filter .filter-btn');
+    const recordingItems = document.querySelectorAll('.recording-item');
+
+    filterBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const filter = btn.getAttribute('data-filter');
+
+        // Update button states
+        filterBtns.forEach((b) => {
+          b.classList.remove('text-foreground', 'border-b', 'border-primary');
+          b.classList.add('text-muted-foreground');
+        });
+        btn.classList.remove('text-muted-foreground');
+        btn.classList.add('text-foreground', 'border-b', 'border-primary');
+
+        // Filter items
+        recordingItems.forEach((item) => {
+          const role = item.getAttribute('data-role');
+          const isPerforming = role === 'musician' || role === 'soloist' || role === 'collaborator';
+
+          if (filter === 'all') {
+            item.classList.remove('hidden');
+          } else if (filter === 'conductor') {
+            item.classList.toggle('hidden', role !== 'conductor');
+          } else if (filter === 'musician') {
+            item.classList.toggle('hidden', !isPerforming);
+          }
+        });
+      });
+    });
+  }
+
+  initRecordingFilters();
+  document.addEventListener('astro:after-swap', initRecordingFilters);
+</script>

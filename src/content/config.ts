@@ -106,6 +106,13 @@ const concerts = defineCollection({
     venue: z.string(),
     location: z.string(),
     orchestra: z.string(),
+    // Role differentiates between conducting and performing
+    role: z
+      .enum(['conductor', 'musician', 'soloist', 'collaborator'])
+      .default('conductor')
+      .describe(
+        'conductor = leading the ensemble, musician = playing in ensemble, soloist = featured performer'
+      ),
     status: z.enum(['upcoming', 'past']),
     featured: z.boolean().default(false),
     program: z.array(
@@ -152,7 +159,7 @@ const organizations = defineCollection({
   }),
 });
 
-// Repertoire collection - works conducted
+// Repertoire collection - works conducted or performed
 const repertoire = defineCollection({
   type: 'content',
   schema: z.object({
@@ -167,6 +174,11 @@ const repertoire = defineCollection({
       'ballet',
       'other',
     ]),
+    // Role differentiates between conducting and performing
+    role: z
+      .enum(['conductor', 'musician', 'soloist', 'collaborator'])
+      .default('conductor')
+      .describe('conductor = led the ensemble, musician = played in ensemble'),
     timesPerformed: z.number().default(1),
     firstPerformed: z.date().optional(),
     lastPerformed: z.date().optional(),
@@ -235,6 +247,11 @@ const recordings = defineCollection({
     composer: z.string().optional(),
     works: z.array(z.string()).optional(), // List of works on the recording
     orchestra: z.string(),
+    // Role differentiates between conducting and performing
+    role: z
+      .enum(['conductor', 'musician', 'soloist', 'collaborator'])
+      .default('conductor')
+      .describe('conductor = leading the ensemble, musician = playing in ensemble'),
     label: z.string(),
     releaseDate: z.date(),
     format: z.enum(['CD', 'Digital', 'Vinyl', 'Streaming', 'DVD/Blu-ray']).array(),

@@ -56,7 +56,41 @@ const years = Object.keys(concertsByYear)
     </p>
   </header>
 
-  <hr class="divider-dashed" />
+  <div class="flex items-center justify-between mb-8 fade-in-up delay-1">
+    <hr class="divider-dashed flex-1 my-0" />
+    <!-- Role Filter -->
+    <nav class="ml-6 flex-shrink-0" aria-label="Filter by role">
+      <ul class="flex gap-3 text-sm" id="role-filter">
+        <li>
+          <button
+            type="button"
+            data-filter="all"
+            class="filter-btn text-foreground border-b border-primary pb-0.5"
+          >
+            All
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            data-filter="conductor"
+            class="filter-btn text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Conducting
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            data-filter="musician"
+            class="filter-btn text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Performing
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
 
   <!-- Upcoming Performances -->
   {
@@ -67,7 +101,8 @@ const years = Object.keys(concertsByYear)
         <div class="space-y-4">
           {upcomingConcerts.map((concert, index) => (
             <article
-              class={`group border border-primary rounded-md overflow-hidden bg-card fade-in-up delay-${Math.min(index + 2, 5)}`}
+              class={`concert-item group border border-primary rounded-md overflow-hidden bg-card fade-in-up delay-${Math.min(index + 2, 5)}`}
+              data-role={concert.data.role || 'conductor'}
             >
               <div class="p-5 md:p-6">
                 <div class="flex flex-col md:flex-row md:items-start gap-4 md:gap-6">
@@ -86,9 +121,21 @@ const years = Object.keys(concertsByYear)
 
                   {/* Content */}
                   <div class="flex-1">
-                    <h3 class="text-xl font-serif mb-2 group-hover:text-primary transition-colors duration-300">
-                      <a href={`/concerts/${concert.id}`}>{concert.data.title}</a>
-                    </h3>
+                    <div class="flex items-center gap-2 mb-2">
+                      <h3 class="text-xl font-serif group-hover:text-primary transition-colors duration-300">
+                        <a href={`/concerts/${concert.id}`}>{concert.data.title}</a>
+                      </h3>
+                      <span
+                        class:list={[
+                          'px-2 py-0.5 rounded text-[10px] font-medium capitalize',
+                          concert.data.role === 'conductor'
+                            ? 'bg-primary/10 text-primary'
+                            : 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
+                        ]}
+                      >
+                        {concert.data.role || 'Conductor'}
+                      </span>
+                    </div>
 
                     <div class="flex flex-wrap gap-3 text-sm text-muted-foreground mb-3">
                       <span class="flex items-center gap-1">
@@ -155,7 +202,8 @@ const years = Object.keys(concertsByYear)
             const coverSrc = getCoverImageSrc(concert.data.coverImage);
             return (
               <article
-                class={`group overflow-hidden border border-border rounded-md bg-card hover:border-primary transition-all duration-300 fade-in-up delay-${Math.min(index + 3, 5)}`}
+                class={`concert-item group overflow-hidden border border-border rounded-md bg-card hover:border-primary transition-all duration-300 fade-in-up delay-${Math.min(index + 3, 5)}`}
+                data-role={concert.data.role || 'conductor'}
               >
                 {/* Cover Image */}
                 {coverSrc && (
@@ -230,7 +278,10 @@ const years = Object.keys(concertsByYear)
           </h3>
           <ul class="divide-y divide-border">
             {concertsByYear[year].map((concert) => (
-              <li class="group py-3 first:pt-0">
+              <li
+                class="concert-item group py-3 first:pt-0"
+                data-role={concert.data.role || 'conductor'}
+              >
                 <div class="flex gap-4">
                   <div class="w-12 flex-shrink-0">
                     <span class="text-nav text-muted-foreground">
@@ -241,9 +292,16 @@ const years = Object.keys(concertsByYear)
                     </span>
                   </div>
                   <div class="flex-1 min-w-0">
-                    <h4 class="text-base font-serif group-hover:text-primary transition-colors duration-300 truncate">
-                      <a href={`/concerts/${concert.id}`}>{concert.data.title}</a>
-                    </h4>
+                    <div class="flex items-center gap-2">
+                      <h4 class="text-base font-serif group-hover:text-primary transition-colors duration-300 truncate">
+                        <a href={`/concerts/${concert.id}`}>{concert.data.title}</a>
+                      </h4>
+                      {concert.data.role && concert.data.role !== 'conductor' && (
+                        <span class="px-1.5 py-0.5 rounded text-[9px] font-medium capitalize bg-amber-500/10 text-amber-600 dark:text-amber-400 flex-shrink-0">
+                          {concert.data.role}
+                        </span>
+                      )}
+                    </div>
                     <div class="text-xs text-muted-foreground mt-0.5 truncate">
                       {concert.data.orchestra} · {concert.data.venue}
                     </div>
@@ -257,3 +315,41 @@ const years = Object.keys(concertsByYear)
     }
   </section>
 </BaseLayout>
+
+<script>
+  function initConcertFilters() {
+    const filterBtns = document.querySelectorAll('#role-filter .filter-btn');
+    const concertItems = document.querySelectorAll('.concert-item');
+
+    filterBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const filter = btn.getAttribute('data-filter');
+
+        // Update button states
+        filterBtns.forEach((b) => {
+          b.classList.remove('text-foreground', 'border-b', 'border-primary');
+          b.classList.add('text-muted-foreground');
+        });
+        btn.classList.remove('text-muted-foreground');
+        btn.classList.add('text-foreground', 'border-b', 'border-primary');
+
+        // Filter items
+        concertItems.forEach((item) => {
+          const role = item.getAttribute('data-role');
+          const isPerforming = role === 'musician' || role === 'soloist' || role === 'collaborator';
+
+          if (filter === 'all') {
+            item.classList.remove('hidden');
+          } else if (filter === 'conductor') {
+            item.classList.toggle('hidden', role !== 'conductor');
+          } else if (filter === 'musician') {
+            item.classList.toggle('hidden', !isPerforming);
+          }
+        });
+      });
+    });
+  }
+
+  initConcertFilters();
+  document.addEventListener('astro:after-swap', initConcertFilters);
+</script>
