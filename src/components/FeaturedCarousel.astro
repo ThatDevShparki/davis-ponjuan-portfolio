@@ -57,12 +57,12 @@ const { quotes, interval = 5000 } = Astro.props;
   <!-- Navigation -->
   <div class="flex items-center justify-between mt-8 pt-6 border-t border-border/50">
     <!-- Dots -->
-    <div class="flex gap-2" role="tablist" aria-label="Carousel navigation">
+    <div class="flex gap-1.5" role="tablist" aria-label="Carousel navigation">
       {
         quotes.map((_, index) => (
           <button
-            class={`carousel-dot h-2 rounded-full transition-all duration-300 ${
-              index === 0 ? 'bg-primary w-8' : 'bg-border hover:bg-muted-foreground w-2'
+            class={`carousel-dot h-1.5 rounded-full transition-all duration-300 ${
+              index === 0 ? 'bg-primary w-5' : 'bg-border hover:bg-muted-foreground w-1.5'
             }`}
             data-dot={index}
             role="tab"
@@ -157,8 +157,8 @@ const { quotes, interval = 5000 } = Astro.props;
       this.slides[this.currentIndex].classList.add('opacity-0', 'invisible', 'pointer-events-none');
       this.slides[this.currentIndex].setAttribute('aria-hidden', 'true');
 
-      this.dots[this.currentIndex].classList.remove('bg-primary', 'w-8');
-      this.dots[this.currentIndex].classList.add('bg-border', 'w-2');
+      this.dots[this.currentIndex].classList.remove('bg-primary', 'w-5');
+      this.dots[this.currentIndex].classList.add('bg-border', 'w-1.5');
       this.dots[this.currentIndex].setAttribute('aria-selected', 'false');
 
       // Show new
@@ -171,8 +171,8 @@ const { quotes, interval = 5000 } = Astro.props;
       );
       this.slides[this.currentIndex].setAttribute('aria-hidden', 'false');
 
-      this.dots[this.currentIndex].classList.add('bg-primary', 'w-8');
-      this.dots[this.currentIndex].classList.remove('bg-border', 'w-2');
+      this.dots[this.currentIndex].classList.add('bg-primary', 'w-5');
+      this.dots[this.currentIndex].classList.remove('bg-border', 'w-1.5');
       this.dots[this.currentIndex].setAttribute('aria-selected', 'true');
     }
 
