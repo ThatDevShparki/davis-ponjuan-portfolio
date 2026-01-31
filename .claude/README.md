@@ -5,7 +5,9 @@ This directory contains project context and documentation for AI assistance with
 ## Contents
 
 ### 📋 project-context.md
+
 Complete project overview including:
+
 - Tech stack details
 - Project structure
 - Configuration details
@@ -13,7 +15,9 @@ Complete project overview including:
 - Current implementation status
 
 ### 🎨 design-system.md
+
 Comprehensive design system reference:
+
 - Color system (OKLCH values)
 - Typography scale
 - Spacing system
@@ -23,7 +27,9 @@ Comprehensive design system reference:
 - Dark mode implementation
 
 ### 💻 code-patterns.md
+
 Code examples and best practices:
+
 - Astro component patterns
 - React component patterns (shadcn/ui style)
 - Styling patterns
@@ -34,6 +40,7 @@ Code examples and best practices:
 ## Purpose
 
 These files help AI assistants (like Claude) maintain context about:
+
 - Project architecture and decisions
 - Coding standards and patterns
 - Design system tokens and usage
@@ -43,6 +50,7 @@ These files help AI assistants (like Claude) maintain context about:
 ## Usage
 
 When working with AI assistants on this project:
+
 1. Reference these files for consistent coding patterns
 2. Update when project structure or conventions change
 3. Add new patterns as they emerge

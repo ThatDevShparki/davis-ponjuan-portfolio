@@ -3,13 +3,14 @@
 ## Astro Component Pattern
 
 ### Basic Page Structure
+
 ```astro
 ---
 import '../styles/global.css';
 import { SomeReactComponent } from '@/components/SomeReactComponent';
 
 // Frontmatter: Server-side logic goes here
-const pageTitle = "My Page";
+const pageTitle = 'My Page';
 ---
 
 <html lang="en">
@@ -32,6 +33,7 @@ const pageTitle = "My Page";
 ```
 
 ### Layout Component Pattern
+
 ```astro
 ---
 import '../styles/global.css';
@@ -54,6 +56,7 @@ const { content } = Astro.props;
 ## React Component Pattern (shadcn/ui style)
 
 ### Component with CVA Variants
+
 ```typescript
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
@@ -108,6 +111,7 @@ export { Component, componentVariants }
 ```
 
 ### Simple Functional Component
+
 ```typescript
 import { cn } from "@/lib/utils"
 
@@ -127,6 +131,7 @@ export function SimpleComponent({ title, className, ...props }: Props) {
 ## Styling Patterns
 
 ### Using Design Tokens
+
 ```typescript
 // Prefer design system tokens
 <div className="bg-background text-foreground">
@@ -140,6 +145,7 @@ export function SimpleComponent({ title, className, ...props }: Props) {
 ```
 
 ### Conditional Classes with cn()
+
 ```typescript
 import { cn } from "@/lib/utils"
 
@@ -152,6 +158,7 @@ import { cn } from "@/lib/utils"
 ```
 
 ### Dark Mode Support
+
 ```typescript
 // Use dark: variant
 <div className="bg-white dark:bg-gray-900 text-black dark:text-white">
@@ -162,14 +169,15 @@ import { cn } from "@/lib/utils"
 ## Import Patterns
 
 ### Correct Import Usage
+
 ```typescript
 // ✅ Use path aliases
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import type { SomeType } from '@/lib/types'
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import type { SomeType } from '@/lib/types';
 
 // ✅ Relative imports for same directory
-import { helperFunction } from './helpers'
+import { helperFunction } from './helpers';
 
 // ❌ Avoid long relative paths
 // import { Button } from '../../../components/ui/button'
@@ -178,6 +186,7 @@ import { helperFunction } from './helpers'
 ## Astro Client Directives
 
 ### When to Hydrate
+
 ```astro
 <!-- Load immediately on page load -->
 <Component client:load />
@@ -196,6 +205,7 @@ import { helperFunction } from './helpers'
 ```
 
 ### Best Practice
+
 - Use `client:visible` for below-the-fold interactive components
 - Use `client:load` for critical interactive components
 - Use no directive for purely presentational components
@@ -203,53 +213,56 @@ import { helperFunction } from './helpers'
 ## Common Utilities
 
 ### cn() Usage (className merger)
+
 ```typescript
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 // Merges classes intelligently, Tailwind-aware
 const className = cn(
-  "px-4 py-2",           // Base classes
-  "bg-blue-500",         // Default color
-  isRed && "bg-red-500", // Conditional (overrides blue)
-  className              // Allow prop override
-)
+  'px-4 py-2', // Base classes
+  'bg-blue-500', // Default color
+  isRed && 'bg-red-500', // Conditional (overrides blue)
+  className // Allow prop override
+);
 ```
 
 ### CVA Pattern for Variants
+
 ```typescript
-import { cva } from "class-variance-authority"
+import { cva } from 'class-variance-authority';
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center", // base
+  'inline-flex items-center justify-center', // base
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground",
-        outline: "border border-input bg-background",
+        default: 'bg-primary text-primary-foreground',
+        outline: 'border border-input bg-background',
       },
       size: {
-        default: "h-9 px-4",
-        sm: "h-8 px-3",
+        default: 'h-9 px-4',
+        sm: 'h-8 px-3',
       },
     },
     compoundVariants: [
       {
-        variant: "outline",
-        size: "sm",
-        className: "text-sm",
+        variant: 'outline',
+        size: 'sm',
+        className: 'text-sm',
       },
     ],
     defaultVariants: {
-      variant: "default",
-      size: "default",
+      variant: 'default',
+      size: 'default',
     },
   }
-)
+);
 ```
 
 ## File Organization
 
 ### Component Files
+
 ```
 components/
 ├── ui/                    # shadcn/ui components
@@ -266,6 +279,7 @@ components/
 ```
 
 ### Naming Conventions
+
 - **Astro files:** PascalCase or kebab-case (e.g., `Main.astro` or `main.astro`)
 - **React components:** PascalCase (e.g., `Button.tsx`)
 - **Utilities:** camelCase (e.g., `utils.ts`)
@@ -294,6 +308,7 @@ components/
 ## Accessibility Patterns
 
 ### Radix UI + shadcn/ui
+
 ```typescript
 // Radix components are accessible by default
 import { Slot } from "@radix-ui/react-slot"
@@ -308,6 +323,7 @@ import { Slot } from "@radix-ui/react-slot"
 ```
 
 ### Semantic HTML
+
 ```astro
 <!-- Use semantic elements -->
 <nav>...</nav>
@@ -321,34 +337,212 @@ import { Slot } from "@radix-ui/react-slot"
 ## Error Prevention
 
 ### Type Safety
+
 ```typescript
 // ✅ Use TypeScript interfaces
 interface Props {
-  title: string
-  count?: number
+  title: string;
+  count?: number;
 }
 
 // ✅ Use ComponentProps for HTML elements
-interface ButtonProps extends React.ComponentProps<"button"> {
-  variant?: "primary" | "secondary"
+interface ButtonProps extends React.ComponentProps<'button'> {
+  variant?: 'primary' | 'secondary';
 }
 
 // ✅ Use VariantProps for CVA
-import { type VariantProps } from "class-variance-authority"
+import { type VariantProps } from 'class-variance-authority';
 interface Props extends VariantProps<typeof variants> {
   // ...
 }
 ```
 
 ### Prop Validation
+
 ```typescript
 // Destructure with defaults
-function Component({
-  variant = "default",
-  size = "md",
-  className,
-  ...props
-}: Props) {
+function Component({ variant = 'default', size = 'md', className, ...props }: Props) {
   // ...
 }
 ```
+
+## Code Quality & Formatting
+
+### Auto-Formatting on Save (VS Code)
+
+The project is configured to automatically format and fix code when you save:
+
+1. **Prettier** runs on save (formats code)
+2. **ESLint** auto-fixes on save (fixes linting issues)
+
+**Configuration:** `.vscode/settings.json`
+
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
+}
+```
+
+### Import Organization
+
+Imports are automatically sorted alphabetically in this order:
+
+1. **External packages** (from node_modules)
+2. **Internal imports with @/ alias**
+3. **Relative imports** (./filename)
+
+**Example:**
+
+```typescript
+// ✅ Correct order (auto-sorted)
+import { Slot } from '@radix-ui/react-slot';
+import { cva, type VariantProps } from 'class-variance-authority';
+import * as React from 'react';
+
+import { cn } from '@/lib/utils';
+import type { ButtonProps } from '@/lib/types';
+
+import { helperFunction } from './helpers';
+```
+
+**Plugin:** `eslint-plugin-simple-import-sort`
+
+### Unused Imports
+
+Unused imports are automatically detected and can be removed:
+
+```typescript
+// ❌ ESLint will flag this
+import { Button } from '@/components/ui/button'; // unused
+import { cn } from '@/lib/utils'; // used
+
+function Component() {
+  return <div className={cn('test')} />;
+}
+```
+
+**To fix:**
+
+```bash
+pnpm lint:fix  # Removes unused imports
+```
+
+**Plugin:** `eslint-plugin-unused-imports`
+
+### Git Workflow with Hooks
+
+The pre-commit hook automatically runs on every commit:
+
+```bash
+# 1. Make changes
+echo "const foo='bar'" > test.ts
+
+# 2. Stage changes
+git add test.ts
+
+# 3. Commit (hook runs automatically)
+git commit -m "add test file"
+  ↓
+[Pre-commit hook]
+  - Runs ESLint --fix
+  - Runs Prettier --write
+  - Adds fixed files to commit
+  ↓
+✅ Commit succeeds with formatted code
+```
+
+**To bypass (emergency only):**
+
+```bash
+git commit --no-verify -m "hotfix"
+```
+
+### Code Style Rules
+
+#### Prettier Enforces:
+
+- Single quotes (except in JSX)
+- Semicolons
+- 2-space indentation
+- 100 character line width
+- Trailing commas (ES5)
+- LF line endings
+
+#### ESLint Enforces:
+
+- No unused variables (warns if prefixed with `_`)
+- No unused imports
+- React Hooks rules
+- Accessibility rules (jsx-a11y)
+- TypeScript best practices
+
+### VS Code Recommended Extensions
+
+Install these for the best experience:
+
+```bash
+# Extensions defined in .vscode/extensions.json
+- Astro (astro-build.astro-vscode)
+- ESLint (dbaeumer.vscode-eslint)
+- Prettier (esbenp.prettier-vscode)
+- Tailwind CSS IntelliSense (bradlc.vscode-tailwindcss)
+```
+
+VS Code will prompt you to install these when you open the project.
+
+### Debugging Linting Issues
+
+**Check for errors:**
+
+```bash
+pnpm lint
+```
+
+**Auto-fix what's possible:**
+
+```bash
+pnpm lint:fix
+```
+
+**Check formatting:**
+
+```bash
+pnpm format:check
+```
+
+**Format all files:**
+
+```bash
+pnpm format
+```
+
+**Run both checks (CI-ready):**
+
+```bash
+pnpm check
+```
+
+### Ignoring Linting Rules
+
+Only when absolutely necessary:
+
+```typescript
+// Disable next line
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const data: any = fetchData();
+
+// Disable for entire file (top of file)
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+// Prettier ignore
+// prettier-ignore
+const matrix = [
+  [1, 2, 3],
+  [4, 5, 6]
+];
+```
+
+**Note:** Avoid disabling rules unless there's a good reason. The hooks and linters are there to maintain code quality.
