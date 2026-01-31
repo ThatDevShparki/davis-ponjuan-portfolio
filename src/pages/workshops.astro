@@ -1,6 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 
+import { Badge } from '@/components/ui/badge';
+
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const allWorkshops = await getCollection('workshops');
@@ -32,36 +34,44 @@ const years = Object.keys(workshopsByYear)
   title="Workshops & Masterclasses - Davis Ponjuan"
   description="Educational activities and teaching engagements"
 >
-  <h1 class="text-5xl mb-12">Workshops & Masterclasses</h1>
+  <header class="section fade-in">
+    <h1 class="mb-6">Workshops & Masterclasses</h1>
+    <p class="text-xl leading-relaxed text-muted-foreground max-w-3xl">
+      Educational activities and teaching engagements at institutions worldwide.
+    </p>
+  </header>
+
+  <hr class="divider-dashed" />
 
   {
-    years.map((year) => (
-      <section class="mb-16">
-        <h2 class="text-3xl font-bold mb-8 text-[#2d7a3e] border-b-2 border-[#2d7a3e] pb-2">
+    years.map((year, yearIndex) => (
+      <section class={`section fade-in-up delay-${Math.min(yearIndex + 1, 5)}`}>
+        <h2 class="text-4xl font-serif text-primary border-b-2 border-primary pb-2 mb-8 inline-block">
           {year}
         </h2>
         <div class="grid gap-8">
           {workshopsByYear[year].map(async (workshop) => {
             const { Content } = await workshop.render();
             return (
-              <article class="border border-gray-300 rounded-lg p-8 bg-gray-50">
-                <div class="flex items-start gap-4 mb-6 pb-4 border-b border-gray-300">
-                  <h3 class="text-2xl m-0 flex-1">{workshop.data.title}</h3>
-                  <span class="inline-block bg-[#2d7a3e] text-white py-1 px-3 text-xs rounded font-semibold uppercase tracking-wide flex-shrink-0">
+              <article class="border border-border rounded-lg p-8 bg-card">
+                <div class="flex items-start gap-4 mb-6 pb-4 border-b border-border">
+                  <h3 class="text-2xl font-serif m-0 flex-1">{workshop.data.title}</h3>
+                  <Badge variant="featured" className="flex-shrink-0">
                     {workshop.data.type}
-                  </span>
+                  </Badge>
                 </div>
 
-                <div class="mb-6">
-                  <div class="mb-3 text-gray-800">
-                    <strong class="text-gray-600 mr-2">Institution:</strong>{' '}
+                <div class="mb-6 space-y-3">
+                  <div>
+                    <strong class="text-muted-foreground mr-2">Institution:</strong>{' '}
                     {workshop.data.institution}
                   </div>
-                  <div class="mb-3 text-gray-800">
-                    <strong class="text-gray-600 mr-2">Location:</strong> {workshop.data.location}
+                  <div>
+                    <strong class="text-muted-foreground mr-2">Location:</strong>{' '}
+                    {workshop.data.location}
                   </div>
-                  <div class="mb-3 text-gray-800">
-                    <strong class="text-gray-600 mr-2">Date:</strong>{' '}
+                  <div>
+                    <strong class="text-muted-foreground mr-2">Date:</strong>{' '}
                     {workshop.data.date.toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
@@ -75,19 +85,20 @@ const years = Object.keys(workshopsByYear)
                       })}`}
                   </div>
                   {workshop.data.topic && (
-                    <div class="mb-3 text-gray-800 italic text-gray-600">
-                      <strong class="text-gray-600 mr-2">Topic:</strong> {workshop.data.topic}
+                    <div class="italic">
+                      <strong class="text-muted-foreground mr-2 not-italic">Topic:</strong>{' '}
+                      {workshop.data.topic}
                     </div>
                   )}
                   {workshop.data.participants && (
-                    <div class="mb-3 text-gray-800">
-                      <strong class="text-gray-600 mr-2">Participants:</strong>{' '}
+                    <div>
+                      <strong class="text-muted-foreground mr-2">Participants:</strong>{' '}
                       {workshop.data.participants}
                     </div>
                   )}
                 </div>
 
-                <div class="leading-relaxed [&_p]:mb-4 [&_p:last-child]:mb-0">
+                <div class="leading-relaxed text-muted-foreground [&_p]:mb-4 [&_p:last-child]:mb-0">
                   <Content />
                 </div>
               </article>

@@ -1,8 +1,6 @@
 ---
 import '../styles/global.css';
 
-import { Button } from '@/components/ui/button';
-
 interface Props {
   title?: string;
   description?: string;
@@ -74,15 +72,17 @@ const navItems = [
       </svg>
     </a>
 
-    <header class="py-4 px-8 border-b border-border print-hidden">
-      <nav aria-label="Main navigation" class="flex gap-6 flex-wrap items-center">
+    <header class="py-6 px-8 md:px-12 border-b border-border print-hidden">
+      <nav aria-label="Main navigation" class="flex gap-8 flex-wrap items-center">
         {
           navItems.map((item) => (
-            <Button asChild variant="nav" size="default" className="h-auto">
-              <a href={item.href} aria-current={item.match(currentPath) ? 'page' : undefined}>
-                {item.label}
-              </a>
-            </Button>
+            <a
+              href={item.href}
+              aria-current={item.match(currentPath) ? 'page' : undefined}
+              class="text-nav text-muted-foreground hover:text-foreground transition-colors duration-300 aria-[current=page]:text-foreground aria-[current=page]:border-b-2 aria-[current=page]:border-primary pb-1"
+            >
+              {item.label}
+            </a>
           ))
         }
       </nav>
@@ -91,13 +91,15 @@ const navItems = [
     <main
       id="main-content"
       tabindex="-1"
-      class="max-w-6xl mx-auto p-8 min-h-[calc(100vh-200px)] print-full-width"
+      class="max-w-5xl mx-auto px-8 md:px-12 py-16 md:py-24 min-h-[calc(100vh-200px)] print-full-width"
     >
       <slot />
     </main>
 
-    <footer class="p-8 text-center border-t border-border text-muted-foreground print-hidden">
-      <p>&copy; {new Date().getFullYear()} Davis Ponjuan. All rights reserved.</p>
+    <footer class="py-12 px-8 md:px-12 text-center border-t border-border print-hidden">
+      <p class="text-nav text-muted-foreground">
+        &copy; {new Date().getFullYear()} Davis Ponjuan. All rights reserved.
+      </p>
     </footer>
 
     <script>

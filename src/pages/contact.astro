@@ -1,73 +1,93 @@
 ---
+import { Button } from '@/components/ui/button';
+
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Contact - Davis Ponjuan" description="Get in touch for bookings and inquiries">
-  <h1 class="text-5xl mb-8">Contact</h1>
+  <header class="section fade-in">
+    <h1 class="mb-6">Contact</h1>
+    <p class="text-xl leading-relaxed text-muted-foreground max-w-3xl">
+      For conducting engagements, guest appearances, and masterclass inquiries.
+    </p>
+  </header>
 
-  <section class="mb-16">
-    <h2 class="text-3xl mb-6 border-b-2 border-gray-800 pb-2">Booking Inquiries</h2>
-    <p>For conducting engagements, guest appearances, and masterclass inquiries, please contact:</p>
+  <hr class="divider-dashed" />
 
-    <div class="bg-gray-100 p-8 rounded mt-4">
-      <p class="mb-3"><strong>Email:</strong> [your.email@example.com]</p>
-      <p class="mb-3"><strong>Phone:</strong> [Your phone number]</p>
-      <p class="mb-3"><strong>Management:</strong> [Management company name, if applicable]</p>
+  <section class="section fade-in-up delay-1">
+    <h2 class="section-heading">Booking Inquiries</h2>
+    <div class="bg-card border border-border rounded-lg p-8 mt-6">
+      <p class="mb-4">
+        <strong>Email:</strong>
+        <span class="text-muted-foreground">[your.email@example.com]</span>
+      </p>
+      <p class="mb-4">
+        <strong>Phone:</strong>
+        <span class="text-muted-foreground">[Your phone number]</span>
+      </p>
+      <p class="mb-0">
+        <strong>Management:</strong>
+        <span class="text-muted-foreground">[Management company name, if applicable]</span>
+      </p>
     </div>
   </section>
 
-  <section class="mb-16">
-    <h2 class="text-3xl mb-6 border-b-2 border-gray-800 pb-2">General Contact</h2>
-    <form class="max-w-xl">
-      <div class="mb-6">
-        <label for="name" class="block mb-2 font-semibold">Name</label>
+  <section class="section fade-in-up delay-2">
+    <h2 class="section-heading">General Contact</h2>
+    <form class="max-w-xl space-y-6">
+      <div>
+        <label for="name" class="block mb-2 font-semibold text-sm uppercase tracking-wide"
+          >Name</label
+        >
         <input
           type="text"
           id="name"
           name="name"
           required
-          class="w-full p-3 border border-gray-300 rounded text-base font-[inherit] outline-none focus:border-[#2d7a3e] focus:shadow-[0_0_0_3px_rgba(45,122,62,0.1)]"
+          class="w-full p-4 border border-border rounded-md text-base bg-background outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300"
         />
       </div>
 
-      <div class="mb-6">
-        <label for="email" class="block mb-2 font-semibold">Email</label>
+      <div>
+        <label for="email" class="block mb-2 font-semibold text-sm uppercase tracking-wide"
+          >Email</label
+        >
         <input
           type="email"
           id="email"
           name="email"
           required
-          class="w-full p-3 border border-gray-300 rounded text-base font-[inherit] outline-none focus:border-[#2d7a3e] focus:shadow-[0_0_0_3px_rgba(45,122,62,0.1)]"
+          class="w-full p-4 border border-border rounded-md text-base bg-background outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300"
         />
       </div>
 
-      <div class="mb-6">
-        <label for="subject" class="block mb-2 font-semibold">Subject</label>
+      <div>
+        <label for="subject" class="block mb-2 font-semibold text-sm uppercase tracking-wide"
+          >Subject</label
+        >
         <input
           type="text"
           id="subject"
           name="subject"
           required
-          class="w-full p-3 border border-gray-300 rounded text-base font-[inherit] outline-none focus:border-[#2d7a3e] focus:shadow-[0_0_0_3px_rgba(45,122,62,0.1)]"
+          class="w-full p-4 border border-border rounded-md text-base bg-background outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300"
         />
       </div>
 
-      <div class="mb-6">
-        <label for="message" class="block mb-2 font-semibold">Message</label>
+      <div>
+        <label for="message" class="block mb-2 font-semibold text-sm uppercase tracking-wide"
+          >Message</label
+        >
         <textarea
           id="message"
           name="message"
           rows="6"
           required
-          class="w-full p-3 border border-gray-300 rounded text-base font-[inherit] outline-none focus:border-[#2d7a3e] focus:shadow-[0_0_0_3px_rgba(45,122,62,0.1)] resize-y"
+          class="w-full p-4 border border-border rounded-md text-base bg-background outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 resize-y"
         ></textarea>
       </div>
 
-      <button
-        type="submit"
-        class="bg-[#2d7a3e] text-white py-3 px-8 border-none rounded text-base font-semibold cursor-pointer hover:bg-[#246330]"
-        >Send Message</button
-      >
+      <Button size="xl" className="w-full sm:w-auto">Send Message</Button>
     </form>
 
     <!-- TODO: Connect form to backend (Formspree, Netlify Forms, etc.) before going live -->

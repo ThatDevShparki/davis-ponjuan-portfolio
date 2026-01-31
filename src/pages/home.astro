@@ -1,8 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 
-import { Button } from '@/components/ui/button';
-
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 // Get featured concerts and upcoming performances
@@ -26,32 +24,46 @@ const featuredPress = allPress
 ---
 
 <BaseLayout title="Davis Ponjuan - Conductor">
-  <section class="mb-16">
-    <h1 class="text-5xl mb-2">Davis Ponjuan</h1>
-    <p>Conductor • Music Director • Educator</p>
-  </section>
+  <!-- Hero Section - DRAMATIC -->
+  <header class="section fade-in">
+    <h1 class="text-display-sm md:text-display mb-6">Davis Ponjuan</h1>
+    <p class="text-xl leading-relaxed text-muted-foreground max-w-3xl">
+      Conductor • Music Director • Educator
+    </p>
+  </header>
+
+  <hr class="divider-dashed" />
 
   {
     upcomingConcerts.length > 0 && (
-      <section class="section">
+      <section class="section fade-in-up delay-1">
         <h2 class="section-heading">Upcoming Performances</h2>
         <ul class="list-none p-0">
           {upcomingConcerts.map((concert) => (
-            <li class="list-divider">
-              <Button asChild variant="link" className="font-semibold">
-                <a href={`/concerts/${concert.id}`}>{concert.data.title}</a>
-              </Button>
-              <div class="metadata">
-                {concert.data.date.toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
+            <li class="list-divider py-6">
+              <h3 class="text-xl md:text-2xl font-serif mb-2">
+                <a
+                  href={`/concerts/${concert.id}`}
+                  class="hover:text-primary transition-colors duration-300"
+                >
+                  {concert.data.title}
+                </a>
+              </h3>
+              <div class="metadata flex flex-wrap gap-x-1">
+                <span>
+                  {concert.data.date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </span>
+                <span class="metadata-separator" />
+                <span>
+                  {concert.data.venue}, {concert.data.location}
+                </span>
+                <span class="metadata-separator" />
+                <span>{concert.data.orchestra}</span>
               </div>
-              <div class="metadata">
-                {concert.data.venue}, {concert.data.location}
-              </div>
-              <div class="metadata">{concert.data.orchestra}</div>
             </li>
           ))}
         </ul>
@@ -61,66 +73,94 @@ const featuredPress = allPress
 
   {
     featuredConcerts.length > 0 && (
-      <section class="section">
+      <section class="section fade-in-up delay-2">
         <h2 class="section-heading">Featured Performances</h2>
         <ul class="list-none p-0">
           {featuredConcerts.map((concert) => (
-            <li class="list-divider">
-              <Button asChild variant="link" className="font-semibold">
-                <a href={`/concerts/${concert.id}`}>{concert.data.title}</a>
-              </Button>
-              <div class="metadata">
-                {concert.data.date.toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
+            <li class="list-divider py-6">
+              <h3 class="text-xl md:text-2xl font-serif mb-2">
+                <a
+                  href={`/concerts/${concert.id}`}
+                  class="hover:text-primary transition-colors duration-300"
+                >
+                  {concert.data.title}
+                </a>
+              </h3>
+              <div class="metadata flex flex-wrap gap-x-1">
+                <span>
+                  {concert.data.date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </span>
+                <span class="metadata-separator" />
+                <span>
+                  {concert.data.venue}, {concert.data.location}
+                </span>
+                <span class="metadata-separator" />
+                <span>{concert.data.orchestra}</span>
               </div>
-              <div class="metadata">
-                {concert.data.venue}, {concert.data.location}
-              </div>
-              <div class="metadata">{concert.data.orchestra}</div>
             </li>
           ))}
         </ul>
-        <Button asChild variant="link">
-          <a href="/concerts">View all concerts →</a>
-        </Button>
+        <div class="mt-8">
+          <a
+            href="/concerts"
+            class="text-primary hover:underline underline-offset-4 transition-all duration-300"
+          >
+            View all concerts →
+          </a>
+        </div>
       </section>
     )
   }
 
+  <hr class="divider-dashed" />
+
   {
     featuredPress.length > 0 && (
-      <section class="section">
+      <section class="section fade-in-up delay-3">
         <h2 class="section-heading">Press</h2>
         <ul class="list-none p-0">
           {featuredPress.map((item) => (
-            <li class="list-divider">
-              <blockquote class="press-quote">{item.data.excerpt}</blockquote>
-              <cite class="press-quote-cite">
+            <li class="mb-12">
+              <blockquote class="press-quote-lg">{item.data.excerpt}</blockquote>
+              <cite class="press-quote-cite pl-10">
                 — {item.data.publication}
                 {item.data.author && `, ${item.data.author}`}
               </cite>
             </li>
           ))}
         </ul>
-        <Button asChild variant="link">
-          <a href="/press">View all press →</a>
-        </Button>
+        <div class="mt-8">
+          <a
+            href="/press"
+            class="text-primary hover:underline underline-offset-4 transition-all duration-300"
+          >
+            View all press →
+          </a>
+        </div>
       </section>
     )
   }
 
+  <hr class="divider-dashed" />
+
   <!-- TODO: Customize this bio excerpt before going live -->
-  <section class="section">
+  <section class="section fade-in-up delay-4">
     <h2 class="section-heading">About</h2>
-    <p>
+    <p class="text-xl leading-relaxed max-w-3xl">
       Davis Ponjuan is a dynamic conductor known for combining technical precision with deep musical
       insight, bringing fresh perspectives to both standard repertoire and contemporary works.
     </p>
-    <Button asChild variant="link">
-      <a href="/about">Read full biography →</a>
-    </Button>
+    <div class="mt-8">
+      <a
+        href="/about"
+        class="text-primary hover:underline underline-offset-4 transition-all duration-300"
+      >
+        Read full biography →
+      </a>
+    </div>
   </section>
 </BaseLayout>

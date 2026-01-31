@@ -49,57 +49,58 @@ const genreLabels: Record<string, string> = {
 ---
 
 <BaseLayout title="Repertoire - Davis Ponjuan" description="Complete list of works conducted">
-  <h1 class="text-5xl mb-4">Repertoire</h1>
+  <header class="section fade-in">
+    <h1 class="mb-6">Repertoire</h1>
+    <p class="text-xl leading-relaxed text-muted-foreground max-w-3xl">
+      A selection of works conducted throughout my career, organized by genre.
+    </p>
+  </header>
 
-  <p class="text-lg leading-relaxed mb-12 text-gray-600">
-    A selection of works I have conducted throughout my career, organized by genre. Each entry
-    includes the number of times performed and, where applicable, notes on significant performances
-    or interpretative approach.
-  </p>
+  <hr class="divider-dashed" />
 
   {
     genres.map((genre, index) => (
-      <section>
-        <h2
-          class={`text-3xl mt-12 mb-6 text-[#2d7a3e] border-b-2 border-[#2d7a3e] pb-2 ${index === 0 ? 'first:mt-0' : ''}`}
-        >
+      <section class={`section fade-in-up delay-${Math.min(index + 1, 5)}`}>
+        <h2 class="text-3xl font-serif text-primary border-b-2 border-primary pb-2 mb-8">
           {genreLabels[genre]}
         </h2>
         <ul class="list-none p-0">
           {byGenre[genre].map((work) => (
-            <li class="mb-6 pb-6 border-b border-gray-200 last:border-b-0">
-              <div class="text-lg">
-                <strong>{work.data.composer}</strong>
-              </div>
-              <div class="mt-1 text-base text-gray-800">
-                <em>{work.data.work}</em>
-              </div>
-              <div class="mt-2 text-sm text-gray-600">
-                Performed {work.data.timesPerformed}{' '}
-                {work.data.timesPerformed === 1 ? 'time' : 'times'}
+            <li class="list-divider py-5">
+              <div class="text-lg font-semibold">{work.data.composer}</div>
+              <div class="mt-1 text-base font-serif italic">{work.data.work}</div>
+              <div class="metadata mt-2 flex flex-wrap gap-x-1">
+                <span>
+                  Performed {work.data.timesPerformed}{' '}
+                  {work.data.timesPerformed === 1 ? 'time' : 'times'}
+                </span>
                 {work.data.firstPerformed && (
                   <>
-                    {' '}
-                    • First:{' '}
-                    {work.data.firstPerformed.toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                    })}
+                    <span class="metadata-separator" />
+                    <span>
+                      First:{' '}
+                      {work.data.firstPerformed.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                      })}
+                    </span>
                   </>
                 )}
                 {work.data.lastPerformed && (
                   <>
-                    {' '}
-                    • Most recent:{' '}
-                    {work.data.lastPerformed.toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                    })}
+                    <span class="metadata-separator" />
+                    <span>
+                      Most recent:{' '}
+                      {work.data.lastPerformed.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                      })}
+                    </span>
                   </>
                 )}
               </div>
               {work.data.notes && (
-                <div class="mt-2 text-[0.95rem] text-gray-600 italic">{work.data.notes}</div>
+                <div class="mt-2 text-sm text-muted-foreground italic">{work.data.notes}</div>
               )}
             </li>
           ))}

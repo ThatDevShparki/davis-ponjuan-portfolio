@@ -1,6 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
 
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const allRecordings = await getCollection('recordings');
@@ -10,44 +13,50 @@ const sortedRecordings = allRecordings.sort(
 ---
 
 <BaseLayout title="Recordings - Davis Ponjuan" description="Discography and recordings">
-  <h1 class="text-5xl mb-8">Recordings</h1>
+  <header class="section fade-in">
+    <h1 class="mb-6">Recordings</h1>
+    <p class="text-xl leading-relaxed text-muted-foreground max-w-3xl">
+      Discography and selected recordings from throughout my career.
+    </p>
+  </header>
+
+  <hr class="divider-dashed" />
 
   <section class="grid gap-12">
     {
-      sortedRecordings.map(async (recording) => {
+      sortedRecordings.map(async (recording, index) => {
         const { Content } = await recording.render();
         return (
-          <article class="border border-gray-300 rounded-lg p-8 bg-gray-50">
-            <div class="flex items-center gap-4 mb-6 pb-4 border-b-2 border-[#2d7a3e]">
-              <h2 class="text-3xl m-0 flex-1">{recording.data.title}</h2>
-              {recording.data.featured && (
-                <span class="inline-block bg-[#2d7a3e] text-white py-1 px-3 text-xs rounded font-normal">
-                  Featured
-                </span>
-              )}
+          <article
+            class={`border border-border rounded-lg p-8 bg-card fade-in-up delay-${Math.min(index + 1, 5)}`}
+          >
+            <div class="flex items-center gap-4 mb-6 pb-4 border-b-2 border-primary">
+              <h2 class="text-2xl md:text-3xl font-serif m-0 flex-1">{recording.data.title}</h2>
+              {recording.data.featured && <Badge variant="featured">Featured</Badge>}
             </div>
 
-            <div class="mb-6">
-              <div class="mb-2 text-gray-800">
-                <strong class="text-gray-600 mr-2">Orchestra:</strong> {recording.data.orchestra}
+            <div class="mb-6 space-y-2">
+              <div>
+                <strong class="text-muted-foreground mr-2">Orchestra:</strong>{' '}
+                {recording.data.orchestra}
               </div>
-              <div class="mb-2 text-gray-800">
-                <strong class="text-gray-600 mr-2">Label:</strong> {recording.data.label}
+              <div>
+                <strong class="text-muted-foreground mr-2">Label:</strong> {recording.data.label}
               </div>
-              <div class="mb-2 text-gray-800">
-                <strong class="text-gray-600 mr-2">Released:</strong>{' '}
+              <div>
+                <strong class="text-muted-foreground mr-2">Released:</strong>{' '}
                 {recording.data.releaseDate.toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
                 })}
               </div>
-              <div class="mb-2 text-gray-800">
-                <strong class="text-gray-600 mr-2">Format:</strong>{' '}
+              <div>
+                <strong class="text-muted-foreground mr-2">Format:</strong>{' '}
                 {recording.data.format.join(', ')}
               </div>
               {recording.data.catalogNumber && (
-                <div class="mb-2 text-gray-800">
-                  <strong class="text-gray-600 mr-2">Catalog:</strong>{' '}
+                <div>
+                  <strong class="text-muted-foreground mr-2">Catalog:</strong>{' '}
                   {recording.data.catalogNumber}
                 </div>
               )}
@@ -56,9 +65,9 @@ const sortedRecordings = allRecordings.sort(
             {recording.data.works && recording.data.works.length > 0 && (
               <div class="mb-6">
                 <strong>Works:</strong>
-                <ul class="list-none p-0 mt-2">
+                <ul class="list-none p-0 mt-2 space-y-1">
                   {recording.data.works.map((work) => (
-                    <li class="pl-4 mb-1 relative before:content-['•'] before:absolute before:left-0 before:text-[#2d7a3e]">
+                    <li class="pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-primary font-serif italic">
                       {work}
                     </li>
                   ))}
@@ -67,39 +76,31 @@ const sortedRecordings = allRecordings.sort(
             )}
 
             {recording.data.awards && recording.data.awards.length > 0 && (
-              <div class="mb-6 p-4 bg-white border-l-[3px] border-[#2d7a3e]">
+              <div class="mb-6 p-4 bg-background border-l-4 border-primary">
                 {recording.data.awards.map((award) => (
-                  <div class="text-[#2d7a3e] font-semibold text-[0.95rem] mb-2 last:mb-0">
-                    {award}
-                  </div>
+                  <div class="text-primary font-semibold mb-2 last:mb-0">{award}</div>
                 ))}
               </div>
             )}
 
-            <div class="leading-relaxed mb-6">
+            <div class="leading-relaxed mb-6 text-muted-foreground">
               <Content />
             </div>
 
             <div class="flex gap-4 flex-wrap">
               {recording.data.purchaseUrl && (
-                <a
-                  href={recording.data.purchaseUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-block py-3 px-6 no-underline rounded font-semibold transition-colors bg-[#2d7a3e] text-white hover:bg-[#246330]"
-                >
-                  Purchase
-                </a>
+                <Button asChild size="lg">
+                  <a href={recording.data.purchaseUrl} target="_blank" rel="noopener noreferrer">
+                    Purchase
+                  </a>
+                </Button>
               )}
               {recording.data.streamingUrl && (
-                <a
-                  href={recording.data.streamingUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-block py-3 px-6 no-underline rounded font-semibold transition-colors bg-white text-[#2d7a3e] border-2 border-[#2d7a3e] hover:bg-gray-100"
-                >
-                  Listen
-                </a>
+                <Button asChild variant="outline" size="lg">
+                  <a href={recording.data.streamingUrl} target="_blank" rel="noopener noreferrer">
+                    Listen
+                  </a>
+                </Button>
               )}
             </div>
           </article>

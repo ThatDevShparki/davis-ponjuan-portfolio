@@ -1,8 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 
-import { Button } from '@/components/ui/button';
-
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const allPress = await getCollection('press');
@@ -10,26 +8,28 @@ const sortedPress = allPress.sort((a, b) => b.data.date.getTime() - a.data.date.
 ---
 
 <BaseLayout title="Press - Davis Ponjuan" description="Press coverage and reviews">
-  <h1 class="text-5xl mb-4">Press & Reviews</h1>
+  <header class="section fade-in">
+    <h1 class="mb-6">Press & Reviews</h1>
+    <p class="text-xl leading-relaxed text-muted-foreground max-w-3xl">
+      Selected press coverage and critical reviews of performances throughout my career.
+    </p>
+  </header>
 
-  <p class="text-lg leading-relaxed mb-12 text-muted-foreground">
-    Selected press coverage and critical reviews of performances throughout my career.
-  </p>
+  <hr class="divider-dashed" />
 
   <ul class="list-none p-0">
     {
-      sortedPress.map(async (item) => {
+      sortedPress.map(async (item, index) => {
         const { Content } = await item.render();
         return (
-          <li class="list-divider mb-12 pb-12">
+          <li class={`section fade-in-up delay-${Math.min(index + 1, 5)}`}>
             <article>
-              <h2 class="text-2xl mb-3">{item.data.title}</h2>
-              <div class="metadata mb-4">
-                <strong>{item.data.publication}</strong>
+              <div class="metadata mb-4 flex flex-wrap gap-x-1">
+                <strong class="text-foreground">{item.data.publication}</strong>
                 {item.data.author && (
                   <>
                     <span class="metadata-separator" />
-                    {item.data.author}
+                    <span>{item.data.author}</span>
                   </>
                 )}
                 <span class="metadata-separator" />
@@ -40,22 +40,26 @@ const sortedPress = allPress.sort((a, b) => b.data.date.getTime() - a.data.date.
                     day: 'numeric',
                   })}
                 </time>
-                {item.data.url && (
-                  <>
-                    <span class="metadata-separator" />
-                    <Button asChild variant="link" className="no-external-icon">
-                      <a href={item.data.url} target="_blank" rel="noopener noreferrer">
-                        Read full article ↗
-                      </a>
-                    </Button>
-                  </>
-                )}
               </div>
-              <blockquote class="press-quote">{item.data.excerpt}</blockquote>
-              <div class="leading-relaxed text-muted-foreground">
+              <h2 class="text-2xl md:text-3xl mb-6">{item.data.title}</h2>
+              <blockquote class="press-quote-lg">{item.data.excerpt}</blockquote>
+              <div class="leading-relaxed text-muted-foreground mt-6 max-w-3xl">
                 <Content />
               </div>
+              {item.data.url && (
+                <div class="mt-6">
+                  <a
+                    href={item.data.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-primary hover:underline underline-offset-4 transition-all duration-300 no-external-icon"
+                  >
+                    Read full article ↗
+                  </a>
+                </div>
+              )}
             </article>
+            <hr class="divider-dashed-sm mt-12" />
           </li>
         );
       })
