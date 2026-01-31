@@ -1,0 +1,155 @@
+---
+/**
+ * MediaLinks - Display external platform links with icons
+ *
+ * Usage:
+ * <MediaLinks
+ *   links={[
+ *     { url: 'https://spotify.com/...', label: 'Listen on Spotify', platform: 'spotify' },
+ *     { url: 'https://apple.com/...', label: 'Apple Music', platform: 'apple-music' },
+ *   ]}
+ * />
+ */
+
+interface ExternalLink {
+  url: string;
+  label: string;
+  platform?:
+    | 'spotify'
+    | 'apple-music'
+    | 'youtube'
+    | 'vimeo'
+    | 'soundcloud'
+    | 'bandcamp'
+    | 'amazon'
+    | 'website'
+    | 'other';
+  icon?: string;
+}
+
+interface Props {
+  links: ExternalLink[];
+  variant?: 'buttons' | 'list' | 'inline';
+  class?: string;
+}
+
+const { links, variant = 'buttons', class: className = '' } = Astro.props;
+
+// Platform colors for button variant
+const platformColors: Record<string, string> = {
+  spotify: 'bg-[#1DB954] hover:bg-[#1ed760] text-white',
+  'apple-music': 'bg-[#FC3C44] hover:bg-[#fd5c63] text-white',
+  youtube: 'bg-[#FF0000] hover:bg-[#cc0000] text-white',
+  vimeo: 'bg-[#1ab7ea] hover:bg-[#19a5d4] text-white',
+  soundcloud: 'bg-[#ff5500] hover:bg-[#ff6a1a] text-white',
+  bandcamp: 'bg-[#629aa9] hover:bg-[#4d7a87] text-white',
+  amazon: 'bg-[#FF9900] hover:bg-[#e68a00] text-black',
+  website: 'bg-primary hover:bg-primary/90 text-primary-foreground',
+  other: 'bg-muted hover:bg-muted/80 text-foreground',
+};
+
+// Platform icons (SVG) - server-side helper
+function getPlatformIcon(platform?: string): string {
+  const icons: Record<string, string> = {
+    spotify: `<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>`,
+    'apple-music': `<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M23.994 6.124a9.23 9.23 0 00-.24-2.19c-.317-1.31-1.062-2.31-2.18-3.043a5.022 5.022 0 00-1.877-.726 10.496 10.496 0 00-1.564-.15c-.04-.003-.083-.01-.124-.013H5.99c-.152.01-.303.017-.455.026-.747.043-1.49.123-2.193.364-1.063.363-1.9.962-2.49 1.925-.378.618-.576 1.302-.667 2.024-.06.476-.09.955-.097 1.433-.005.36-.006.72-.006 1.08v10.304c.002.32.003.64.009.96.013.714.063 1.42.225 2.11.253 1.075.802 1.97 1.676 2.65.62.48 1.328.77 2.103.927.59.12 1.188.164 1.79.18.596.015 1.192.01 1.788.01h9.933c.553 0 1.107-.007 1.658-.033.63-.03 1.25-.1 1.854-.27 1.118-.318 2.01-.924 2.645-1.913.394-.61.635-1.283.754-2.003.074-.45.111-.905.132-1.36.013-.28.019-.558.02-.837V7.343c0-.404-.006-.808-.02-1.22zM16.43 17.84a.48.48 0 01-.67.12c-1.85-1.13-4.18-1.39-6.93-.76-.27.06-.53-.11-.59-.37-.06-.27.11-.53.38-.59 3.01-.67 5.6-.38 7.68.88.24.15.31.47.13.7zm1.79-3.44c-.18.24-.56.32-.8.14-2.12-1.3-5.35-1.68-7.85-.92-.32.1-.67-.08-.77-.4-.1-.32.08-.67.4-.77 2.86-.87 6.42-.45 8.87 1.05.24.14.32.55.14.79zm.15-3.63c-2.54-1.5-6.73-1.64-9.16-.91-.4.12-.81-.1-.93-.49-.12-.4.1-.81.49-.93 2.8-.85 7.45-.68 10.39 1.05.36.21.48.67.27 1.03-.21.34-.67.48-1.04.27z"/></svg>`,
+    youtube: `<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`,
+    vimeo: `<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M23.977 6.416c-.105 2.338-1.739 5.543-4.894 9.609-3.268 4.247-6.026 6.37-8.29 6.37-1.409 0-2.578-1.294-3.553-3.881L5.322 11.4C4.603 8.816 3.834 7.522 3.01 7.522c-.179 0-.806.378-1.881 1.132L0 7.197c1.185-1.044 2.351-2.084 3.501-3.128C5.08 2.701 6.266 1.984 7.055 1.91c1.867-.18 3.016 1.1 3.447 3.838.465 2.953.789 4.789.971 5.507.539 2.45 1.131 3.674 1.776 3.674.502 0 1.256-.796 2.265-2.385 1.004-1.589 1.54-2.797 1.612-3.628.144-1.371-.395-2.061-1.614-2.061-.574 0-1.167.121-1.777.391 1.186-3.868 3.434-5.757 6.762-5.637 2.473.06 3.628 1.664 3.493 4.797l-.013.01z"/></svg>`,
+    soundcloud: `<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M1.175 12.225c-.051 0-.094.046-.101.1l-.233 2.154.233 2.105c.007.058.05.098.101.098.05 0 .09-.04.099-.098l.255-2.105-.27-2.154c-.006-.057-.048-.1-.084-.1z"/></svg>`,
+    bandcamp: `<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M0 18.75l7.437-13.5H24l-7.438 13.5z"/></svg>`,
+    amazon: `<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M.045 18.02c.072-.116.187-.124.348-.022 3.636 2.11 7.594 3.166 11.87 3.166 2.852 0 5.668-.533 8.447-1.595l.315-.14c.138-.06.234-.1.293-.13.226-.088.39-.046.493.13.12.205.02.405-.325.6z"/></svg>`,
+    website: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>`,
+    other: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>`,
+  };
+  return icons[platform || 'other'] || icons.other;
+}
+---
+
+{/* Button variant - horizontal row of platform buttons */}
+{
+  variant === 'buttons' && (
+    <div class:list={['media-links flex flex-wrap gap-2', className]}>
+      {links.map((link) => (
+        <a
+          href={link.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class:list={[
+            'inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-300',
+            platformColors[link.platform || 'other'],
+          ]}
+        >
+          <Fragment set:html={getPlatformIcon(link.platform)} />
+          {link.label}
+        </a>
+      ))}
+    </div>
+  )
+}
+
+{/* List variant - vertical list with descriptions */}
+{
+  variant === 'list' && (
+    <ul class:list={['media-links divide-y divide-border', className]}>
+      {links.map((link) => (
+        <li>
+          <a
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group flex items-center gap-3 py-3 hover:text-primary transition-colors duration-300"
+          >
+            <div class="flex-shrink-0 w-8 h-8 rounded-md bg-muted flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
+              <Fragment set:html={getPlatformIcon(link.platform)} />
+            </div>
+            <span class="flex-1">{link.label}</span>
+            <svg
+              class="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+              />
+            </svg>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+{/* Inline variant - simple text links with separators */}
+{
+  variant === 'inline' && (
+    <div
+      class:list={['media-links flex flex-wrap items-center gap-x-3 gap-y-1 text-sm', className]}
+    >
+      {links.map((link, index) => (
+        <>
+          {index > 0 && <span class="text-muted-foreground">·</span>}
+          <a
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1 text-primary hover:underline underline-offset-4 transition-colors duration-300"
+          >
+            {link.label}
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+              />
+            </svg>
+          </a>
+        </>
+      ))}
+    </div>
+  )
+}

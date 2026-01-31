@@ -1,0 +1,162 @@
+---
+/**
+ * MediaAudio - Audio player component with platform embed support
+ *
+ * Usage:
+ * <MediaAudio
+ *   audio={{
+ *     src: 'https://open.spotify.com/track/...',
+ *     title: 'Beethoven Symphony No. 5',
+ *     platform: 'spotify',
+ *     embedUrl: 'https://open.spotify.com/embed/track/...'
+ *   }}
+ * />
+ */
+
+interface Props {
+  audio: {
+    src: string;
+    title: string;
+    duration?: string;
+    description?: string;
+    platform?:
+      | 'spotify'
+      | 'apple-music'
+      | 'soundcloud'
+      | 'bandcamp'
+      | 'youtube-music'
+      | 'self-hosted'
+      | 'other';
+    embedUrl?: string;
+  };
+  variant?: 'compact' | 'full';
+  class?: string;
+}
+
+const { audio, variant = 'full', class: className = '' } = Astro.props;
+
+// Detect if we should use an embed or native player
+const useEmbed = audio.embedUrl && audio.platform !== 'self-hosted';
+const useNativePlayer = audio.platform === 'self-hosted' || (!audio.embedUrl && audio.src);
+
+// Platform-specific embed heights
+const embedHeights = {
+  spotify: variant === 'compact' ? '80' : '152',
+  'apple-music': '175',
+  soundcloud: variant === 'compact' ? '166' : '300',
+  bandcamp: '120',
+  'youtube-music': '80',
+  other: '150',
+};
+
+const platformLabels = {
+  spotify: 'Spotify',
+  'apple-music': 'Apple Music',
+  soundcloud: 'SoundCloud',
+  bandcamp: 'Bandcamp',
+  'youtube-music': 'YouTube Music',
+  'self-hosted': 'Audio',
+  other: 'Listen',
+};
+---
+
+<div class:list={['media-audio', className]}>
+  {/* Embedded player (Spotify, SoundCloud, etc.) */}
+  {
+    useEmbed && audio.embedUrl && (
+      <div class="audio-embed rounded-md overflow-hidden bg-muted">
+        <iframe
+          src={audio.embedUrl}
+          width="100%"
+          height={embedHeights[audio.platform || 'other']}
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+          title={`${platformLabels[audio.platform || 'other']} player: ${audio.title}`}
+          class="border-0"
+        />
+      </div>
+    )
+  }
+
+  {/* Native HTML5 audio player */}
+  {
+    useNativePlayer && (
+      <div class="native-audio p-4 rounded-md bg-muted">
+        <div class="flex items-start gap-4">
+          {/* Play button placeholder */}
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
+            <svg class="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+
+          <div class="flex-1 min-w-0">
+            <h4 class="font-medium truncate">{audio.title}</h4>
+            {audio.duration && <p class="text-sm text-muted-foreground">{audio.duration}</p>}
+            {audio.description && variant === 'full' && (
+              <p class="text-sm text-muted-foreground mt-1 line-clamp-2">{audio.description}</p>
+            )}
+          </div>
+        </div>
+
+        <audio controls class="w-full mt-3" preload="metadata">
+          <source src={audio.src} type="audio/mpeg" />
+          <source src={audio.src} type="audio/ogg" />
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+    )
+  }
+
+  {/* Fallback link for unsupported embeds */}
+  {
+    !useEmbed && !useNativePlayer && (
+      <a
+        href={audio.src}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex items-center gap-3 p-4 rounded-md bg-muted hover:bg-muted/80 transition-colors group"
+      >
+        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
+            />
+          </svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="font-medium group-hover:text-primary transition-colors truncate">
+            {audio.title}
+          </div>
+          <div class="text-sm text-muted-foreground">
+            {platformLabels[audio.platform || 'other']}
+            {audio.duration && ` · ${audio.duration}`}
+          </div>
+        </div>
+        <svg
+          class="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+          />
+        </svg>
+      </a>
+    )
+  }
+</div>
+
+{/* Audio info below player (full variant only) */}
+{
+  variant === 'full' && audio.description && useEmbed && (
+    <p class="mt-2 text-sm text-muted-foreground">{audio.description}</p>
+  )
+}

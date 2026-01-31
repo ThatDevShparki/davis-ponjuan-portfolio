@@ -1,0 +1,174 @@
+---
+/**
+ * MediaGallery - Displays a grid of images with lightbox capability
+ *
+ * Usage:
+ * <MediaGallery
+ *   images={[
+ *     { src: '/images/1.jpg', alt: 'Description' },
+ *     { src: '/images/2.jpg', alt: 'Description' },
+ *   ]}
+ *   columns={3}
+ * />
+ */
+
+interface ImageItem {
+  src: string;
+  alt: string;
+  caption?: string;
+  credit?: string;
+  width?: number;
+  height?: number;
+}
+
+interface Props {
+  images: ImageItem[];
+  columns?: 2 | 3 | 4;
+  gap?: 'sm' | 'md' | 'lg';
+  class?: string;
+}
+
+const { images, columns = 3, gap = 'md', class: className = '' } = Astro.props;
+
+const columnClasses = {
+  2: 'grid-cols-1 sm:grid-cols-2',
+  3: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
+  4: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4',
+};
+
+const gapClasses = {
+  sm: 'gap-2',
+  md: 'gap-4',
+  lg: 'gap-6',
+};
+---
+
+<div
+  class:list={['media-gallery grid', columnClasses[columns], gapClasses[gap], className]}
+  role="list"
+  aria-label="Image gallery"
+>
+  {
+    images.map((image, _index) => (
+      <figure class="group relative overflow-hidden rounded-md bg-muted" role="listitem">
+        <button
+          type="button"
+          class="w-full cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          data-lightbox-trigger
+          data-image-src={image.src}
+          data-image-alt={image.alt}
+          data-image-caption={image.caption}
+          data-image-credit={image.credit}
+          aria-label={`View ${image.alt}`}
+        >
+          <img
+            src={image.src}
+            alt={image.alt}
+            width={image.width}
+            height={image.height}
+            loading="lazy"
+            decoding="async"
+            class="w-full aspect-[4/3] object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+          {/* Hover overlay */}
+          <div class="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/10 transition-colors duration-300" />
+        </button>
+        {image.caption && (
+          <figcaption class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/60 to-transparent text-white text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            {image.caption}
+          </figcaption>
+        )}
+      </figure>
+    ))
+  }
+</div>
+
+{/* Lightbox Modal - hidden by default */}
+<div
+  id="media-lightbox"
+  class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 p-4"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Image lightbox"
+>
+  <button
+    type="button"
+    id="lightbox-close"
+    class="absolute top-4 right-4 p-2 text-white/80 hover:text-white transition-colors"
+    aria-label="Close lightbox"
+  >
+    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"
+      ></path>
+    </svg>
+  </button>
+
+  <figure class="max-w-5xl max-h-[90vh] flex flex-col items-center">
+    <img
+      id="lightbox-image"
+      src=""
+      alt=""
+      class="max-w-full max-h-[80vh] object-contain rounded-md"
+    />
+    <figcaption id="lightbox-caption" class="mt-4 text-center text-white/90 text-sm max-w-2xl">
+    </figcaption>
+  </figure>
+</div>
+
+<script>
+  function initGalleryLightbox() {
+    const lightbox = document.getElementById('media-lightbox');
+    const lightboxImage = document.getElementById('lightbox-image') as HTMLImageElement;
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    const lightboxClose = document.getElementById('lightbox-close');
+    const triggers = document.querySelectorAll('[data-lightbox-trigger]');
+
+    if (!lightbox || !lightboxImage || !lightboxCaption || !lightboxClose) return;
+
+    // Open lightbox
+    triggers.forEach((trigger) => {
+      trigger.addEventListener('click', () => {
+        const src = trigger.getAttribute('data-image-src') || '';
+        const alt = trigger.getAttribute('data-image-alt') || '';
+        const caption = trigger.getAttribute('data-image-caption') || '';
+        const credit = trigger.getAttribute('data-image-credit') || '';
+
+        lightboxImage.src = src;
+        lightboxImage.alt = alt;
+
+        let captionText = caption;
+        if (credit) captionText += captionText ? ` · Photo: ${credit}` : `Photo: ${credit}`;
+        lightboxCaption.textContent = captionText;
+
+        lightbox.classList.remove('hidden');
+        lightbox.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    // Close lightbox
+    function closeLightbox() {
+      lightbox.classList.add('hidden');
+      lightbox.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+        closeLightbox();
+      }
+    });
+  }
+
+  // Initialize on page load
+  initGalleryLightbox();
+
+  // Re-initialize on Astro page transitions
+  document.addEventListener('astro:after-swap', initGalleryLightbox);
+</script>

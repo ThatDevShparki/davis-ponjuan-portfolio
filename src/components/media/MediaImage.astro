@@ -1,0 +1,56 @@
+---
+/**
+ * MediaImage - Displays a single image with optional caption and credit
+ *
+ * Usage:
+ * <MediaImage
+ *   image={{ src: '/images/concert.jpg', alt: 'Concert at Symphony Hall' }}
+ *   size="full"
+ *   rounded
+ * />
+ */
+
+interface Props {
+  image: {
+    src: string;
+    alt: string;
+    caption?: string;
+    credit?: string;
+    width?: number;
+    height?: number;
+  };
+  size?: 'sm' | 'md' | 'lg' | 'full';
+  rounded?: boolean;
+  class?: string;
+}
+
+const { image, size = 'full', rounded = false, class: className = '' } = Astro.props;
+
+const sizeClasses = {
+  sm: 'max-w-sm',
+  md: 'max-w-md',
+  lg: 'max-w-lg',
+  full: 'w-full',
+};
+---
+
+<figure class:list={['media-image', sizeClasses[size], className]}>
+  <img
+    src={image.src}
+    alt={image.alt}
+    width={image.width}
+    height={image.height}
+    loading="lazy"
+    decoding="async"
+    class:list={['w-full h-auto object-cover', { 'rounded-md': rounded }]}
+  />
+  {
+    (image.caption || image.credit) && (
+      <figcaption class="mt-2 text-sm text-muted-foreground">
+        {image.caption && <span>{image.caption}</span>}
+        {image.caption && image.credit && <span> · </span>}
+        {image.credit && <span class="italic">Photo: {image.credit}</span>}
+      </figcaption>
+    )
+  }
+</figure>

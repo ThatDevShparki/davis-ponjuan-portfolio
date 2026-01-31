@@ -1,5 +1,102 @@
 import { defineCollection, z } from 'astro:content';
 
+// =============================================================================
+// SHARED MEDIA SCHEMAS
+// Reusable schema definitions for media across all collections
+// =============================================================================
+
+/**
+ * Image/Photo schema - for galleries, hero images, thumbnails
+ */
+const imageSchema = z.object({
+  src: z.string(), // Path to image (local or URL)
+  alt: z.string(), // Required for accessibility
+  caption: z.string().optional(),
+  credit: z.string().optional(), // Photographer credit
+  width: z.number().optional(), // For optimization hints
+  height: z.number().optional(),
+});
+
+/**
+ * Flexible image schema - accepts either a string (legacy) or full image object
+ * Use this for backward compatibility with existing content
+ */
+const flexibleImageSchema = z.union([
+  z.string(), // Legacy: just the path
+  imageSchema, // New: full image object with alt, caption, etc.
+]);
+
+/**
+ * Audio schema - for recordings, clips, podcasts
+ */
+const audioSchema = z.object({
+  src: z.string(), // URL to audio file or embed
+  title: z.string(),
+  duration: z.string().optional(), // e.g., "4:32" or "1:23:45"
+  description: z.string().optional(),
+  platform: z
+    .enum([
+      'spotify',
+      'apple-music',
+      'soundcloud',
+      'bandcamp',
+      'youtube-music',
+      'self-hosted',
+      'other',
+    ])
+    .optional(),
+  embedUrl: z.string().optional(), // For embedded players
+});
+
+/**
+ * Video schema - for performances, interviews, documentaries
+ */
+const videoSchema = z.object({
+  src: z.string(), // URL to video or embed
+  title: z.string(),
+  duration: z.string().optional(),
+  description: z.string().optional(),
+  thumbnail: z.string().optional(), // Preview image
+  platform: z.enum(['youtube', 'vimeo', 'self-hosted', 'other']).optional(),
+  embedUrl: z.string().optional(),
+});
+
+/**
+ * External link schema - for linking to media on other platforms
+ */
+const externalLinkSchema = z.object({
+  url: z.string(),
+  label: z.string(),
+  platform: z
+    .enum([
+      'spotify',
+      'apple-music',
+      'youtube',
+      'vimeo',
+      'soundcloud',
+      'bandcamp',
+      'amazon',
+      'website',
+      'other',
+    ])
+    .optional(),
+  icon: z.string().optional(), // Custom icon identifier
+});
+
+/**
+ * Media gallery schema - collection of mixed media
+ */
+const _mediaGallerySchema = z.object({
+  images: z.array(imageSchema).optional(),
+  audio: z.array(audioSchema).optional(),
+  video: z.array(videoSchema).optional(),
+  externalLinks: z.array(externalLinkSchema).optional(),
+});
+
+// =============================================================================
+// CONTENT COLLECTIONS
+// =============================================================================
+
 // Concerts collection - for all performances
 const concerts = defineCollection({
   type: 'content',
@@ -18,17 +115,13 @@ const concerts = defineCollection({
         soloist: z.string().optional(),
       })
     ),
-    // Optional rich content (for featured performances)
-    coverImage: z.string().optional(),
-    media: z
-      .array(
-        z.object({
-          type: z.enum(['photo', 'video', 'audio']),
-          url: z.string(),
-          caption: z.string().optional(),
-        })
-      )
-      .optional(),
+    // Media - enhanced with typed schemas (flexibleImageSchema for backward compat)
+    coverImage: flexibleImageSchema.optional(),
+    gallery: z.array(imageSchema).optional(),
+    videos: z.array(videoSchema).optional(),
+    audioClips: z.array(audioSchema).optional(),
+    externalLinks: z.array(externalLinkSchema).optional(),
+    // Reviews with optional media
     reviews: z
       .array(
         z.object({
@@ -53,7 +146,8 @@ const organizations = defineCollection({
     endDate: z.date().optional(),
     location: z.string(),
     website: z.string().optional(),
-    logo: z.string().optional(),
+    logo: flexibleImageSchema.optional(), // Accepts string or full image object
+    gallery: z.array(imageSchema).optional(), // Photos from this organization
     order: z.number().default(0), // For manual sorting
   }),
 });
@@ -77,6 +171,10 @@ const repertoire = defineCollection({
     firstPerformed: z.date().optional(),
     lastPerformed: z.date().optional(),
     notes: z.string().optional(),
+    // Media links for this work
+    recordings: z.array(audioSchema).optional(), // Links to recordings of this work
+    videos: z.array(videoSchema).optional(), // Performance videos
+    externalLinks: z.array(externalLinkSchema).optional(), // Spotify, Apple Music, etc.
   }),
 });
 
@@ -92,6 +190,10 @@ const press = defineCollection({
     url: z.string().optional(),
     concertId: z.string().optional(), // Link to related concert
     featured: z.boolean().default(false),
+    // Media from the press coverage
+    image: imageSchema.optional(), // Article header image or screenshot
+    video: videoSchema.optional(), // Video interview or segment
+    audio: audioSchema.optional(), // Radio interview or podcast
   }),
 });
 
@@ -137,11 +239,17 @@ const recordings = defineCollection({
     releaseDate: z.date(),
     format: z.enum(['CD', 'Digital', 'Vinyl', 'Streaming', 'DVD/Blu-ray']).array(),
     catalogNumber: z.string().optional(),
-    coverImage: z.string().optional(),
-    purchaseUrl: z.string().optional(),
-    streamingUrl: z.string().optional(),
     awards: z.array(z.string()).optional(), // Grammy nominations, etc.
     featured: z.boolean().default(false),
+    // Enhanced media fields (flexibleImageSchema for backward compat)
+    coverImage: flexibleImageSchema.optional(), // Album artwork - string or full image object
+    samples: z.array(audioSchema).optional(), // Audio samples/previews
+    video: videoSchema.optional(), // Behind-the-scenes or promo video
+    // Purchase and streaming links
+    externalLinks: z
+      .array(externalLinkSchema)
+      .optional()
+      .describe('Links to purchase or stream (Spotify, Apple Music, Amazon, etc.)'),
   }),
 });
 
@@ -157,6 +265,10 @@ const workshops = defineCollection({
     type: z.enum(['masterclass', 'workshop', 'residency', 'lecture', 'clinic', 'seminar']),
     topic: z.string().optional(), // Main focus area
     participants: z.string().optional(), // e.g., "Graduate conducting students"
+    // Media from the workshop
+    gallery: z.array(imageSchema).optional(), // Photos from the event
+    videos: z.array(videoSchema).optional(), // Recorded sessions or highlights
+    externalLinks: z.array(externalLinkSchema).optional(),
   }),
 });
 
