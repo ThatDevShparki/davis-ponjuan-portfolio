@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 
 import FeaturedCarousel from '../components/FeaturedCarousel.astro';
+import MediaVideo from '../components/media/MediaVideo.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const allPress = await getCollection('press');
@@ -14,6 +15,12 @@ const pressQuotes = featuredPress.map((item) => ({
   publication: item.data.publication,
   author: item.data.author,
 }));
+
+// Helper to get image src
+function getImageSrc(image: { src: string } | undefined): string | undefined {
+  if (!image) return undefined;
+  return image.src;
+}
 ---
 
 <BaseLayout title="Press - Davis Ponjuan" description="Press coverage and reviews">
@@ -43,11 +50,26 @@ const pressQuotes = featuredPress.map((item) => ({
       {
         sortedPress.map(async (item, index) => {
           const { Content } = await item.render();
+          const imageSrc = getImageSrc(item.data.image);
+          const hasVideo = item.data.video;
+
           return (
             <article class={`group py-6 first:pt-0 fade-in-up delay-${Math.min(index + 2, 5)}`}>
               <div class="grid lg:grid-cols-12 gap-4 lg:gap-8">
-                {/* Sidebar - Publication info */}
+                {/* Sidebar - Publication info & Media */}
                 <div class="lg:col-span-3">
+                  {/* Featured image for press item */}
+                  {item.data.featured && imageSrc && (
+                    <div class="mb-4 rounded-md overflow-hidden">
+                      <img
+                        src={imageSrc}
+                        alt={item.data.title}
+                        class="w-full aspect-video object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+
                   <div class="font-semibold text-sm">{item.data.publication}</div>
                   {item.data.author && (
                     <div class="text-xs text-muted-foreground">{item.data.author}</div>
@@ -82,6 +104,13 @@ const pressQuotes = featuredPress.map((item) => ({
                   <div class="text-sm text-muted-foreground line-clamp-2">
                     <Content />
                   </div>
+
+                  {/* Video embed for featured press */}
+                  {item.data.featured && hasVideo && (
+                    <div class="mt-4">
+                      <MediaVideo video={item.data.video} />
+                    </div>
+                  )}
 
                   {item.data.url && (
                     <a

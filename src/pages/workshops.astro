@@ -3,6 +3,9 @@ import { getCollection } from 'astro:content';
 
 import { Badge } from '@/components/ui/badge';
 
+import MediaGallery from '../components/media/MediaGallery.astro';
+import MediaLinks from '../components/media/MediaLinks.astro';
+import MediaVideo from '../components/media/MediaVideo.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const allWorkshops = await getCollection('workshops');
@@ -49,56 +52,122 @@ const years = Object.keys(workshopsByYear)
         <h2 class="text-2xl font-serif text-primary mb-4 pb-1 border-b border-primary inline-block">
           {year}
         </h2>
-        <div class="space-y-4">
+        <div class="space-y-6">
           {workshopsByYear[year].map(async (workshop) => {
             const { Content } = await workshop.render();
+            const hasGallery = workshop.data.gallery && workshop.data.gallery.length > 0;
+            const hasVideos = workshop.data.videos && workshop.data.videos.length > 0;
+            const hasLinks = workshop.data.externalLinks && workshop.data.externalLinks.length > 0;
+            const hasMedia = hasGallery || hasVideos || hasLinks;
+
+            // Get first gallery image as hero
+            const heroImage = hasGallery ? workshop.data.gallery![0] : null;
+
             return (
-              <article class="border border-border rounded-md p-4 bg-card">
-                <div class="flex items-start gap-3 mb-3">
-                  <h3 class="text-lg font-serif flex-1">{workshop.data.title}</h3>
-                  <Badge variant="featured" className="flex-shrink-0 text-[10px]">
-                    {workshop.data.type}
-                  </Badge>
-                </div>
-
-                <div class="grid grid-cols-2 gap-2 mb-3 text-xs">
-                  <div>
-                    <span class="text-muted-foreground">Institution:</span>{' '}
-                    {workshop.data.institution}
-                  </div>
-                  <div>
-                    <span class="text-muted-foreground">Location:</span> {workshop.data.location}
-                  </div>
-                  <div>
-                    <span class="text-muted-foreground">Date:</span>{' '}
-                    {workshop.data.date.toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                    {workshop.data.endDate &&
-                      workshop.data.endDate.getTime() !== workshop.data.date.getTime() &&
-                      ` – ${workshop.data.endDate.toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                      })}`}
-                  </div>
-                  {workshop.data.participants && (
-                    <div>
-                      <span class="text-muted-foreground">Participants:</span>{' '}
-                      {workshop.data.participants}
-                    </div>
-                  )}
-                </div>
-
-                {workshop.data.topic && (
-                  <div class="text-sm font-serif italic text-muted-foreground mb-3">
-                    {workshop.data.topic}
+              <article class="border border-border rounded-md overflow-hidden bg-card">
+                {/* Hero image from gallery */}
+                {heroImage && (
+                  <div class="relative h-48 md:h-56 overflow-hidden">
+                    <img
+                      src={heroImage.src}
+                      alt={heroImage.alt}
+                      class="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    <div class="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
+                    <Badge
+                      variant="featured"
+                      className="absolute bottom-4 left-4 text-[10px] bg-background/90"
+                    >
+                      {workshop.data.type}
+                    </Badge>
                   </div>
                 )}
 
-                <div class="text-sm text-muted-foreground [&_p]:mb-2 [&_p:last-child]:mb-0">
-                  <Content />
+                <div class="p-4 md:p-5">
+                  {/* Header */}
+                  <div class="flex items-start gap-3 mb-3">
+                    <h3 class="text-lg font-serif flex-1">{workshop.data.title}</h3>
+                    {!heroImage && (
+                      <Badge variant="featured" className="flex-shrink-0 text-[10px]">
+                        {workshop.data.type}
+                      </Badge>
+                    )}
+                  </div>
+
+                  {/* Details */}
+                  <div class="grid grid-cols-2 gap-2 mb-3 text-xs">
+                    <div>
+                      <span class="text-muted-foreground">Institution:</span>{' '}
+                      {workshop.data.institution}
+                    </div>
+                    <div>
+                      <span class="text-muted-foreground">Location:</span> {workshop.data.location}
+                    </div>
+                    <div>
+                      <span class="text-muted-foreground">Date:</span>{' '}
+                      {workshop.data.date.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                      {workshop.data.endDate &&
+                        workshop.data.endDate.getTime() !== workshop.data.date.getTime() &&
+                        ` – ${workshop.data.endDate.toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                        })}`}
+                    </div>
+                    {workshop.data.participants && (
+                      <div>
+                        <span class="text-muted-foreground">Participants:</span>{' '}
+                        {workshop.data.participants}
+                      </div>
+                    )}
+                  </div>
+
+                  {workshop.data.topic && (
+                    <div class="text-sm font-serif italic text-muted-foreground mb-3">
+                      {workshop.data.topic}
+                    </div>
+                  )}
+
+                  <div class="text-sm text-muted-foreground [&_p]:mb-2 [&_p:last-child]:mb-0">
+                    <Content />
+                  </div>
+
+                  {/* Media Section */}
+                  {hasMedia && (
+                    <div class="mt-4 pt-4 border-t border-border">
+                      {/* Videos */}
+                      {hasVideos && (
+                        <div class="mb-4">
+                          <h4 class="text-nav text-muted-foreground mb-3">Videos</h4>
+                          <div class="grid md:grid-cols-2 gap-4">
+                            {workshop.data.videos!.slice(0, 2).map((video) => (
+                              <MediaVideo video={video} />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Gallery (show additional images beyond hero) */}
+                      {hasGallery && workshop.data.gallery!.length > 1 && (
+                        <div class="mb-4">
+                          <h4 class="text-nav text-muted-foreground mb-3">Gallery</h4>
+                          <MediaGallery images={workshop.data.gallery!.slice(1)} columns={3} />
+                        </div>
+                      )}
+
+                      {/* External Links */}
+                      {hasLinks && (
+                        <div>
+                          <h4 class="text-nav text-muted-foreground mb-3">Resources</h4>
+                          <MediaLinks links={workshop.data.externalLinks!} variant="inline" />
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </article>
             );

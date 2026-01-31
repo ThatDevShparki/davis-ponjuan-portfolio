@@ -2,6 +2,10 @@
 import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 
+import MediaAudio from '../../components/media/MediaAudio.astro';
+import MediaGallery from '../../components/media/MediaGallery.astro';
+import MediaLinks from '../../components/media/MediaLinks.astro';
+import MediaVideo from '../../components/media/MediaVideo.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export const getStaticPaths = (async () => {
@@ -24,16 +28,48 @@ try {
   console.error(`Failed to render concert: ${concert.id}`, error);
   renderError = true;
 }
+
+// Helper to get cover image src
+function getCoverImageSrc(coverImage: string | { src: string } | undefined): string | undefined {
+  if (!coverImage) return undefined;
+  if (typeof coverImage === 'string') return coverImage;
+  return coverImage.src;
+}
+
+const coverSrc = getCoverImageSrc(concert.data.coverImage);
+const hasVideos = concert.data.videos && concert.data.videos.length > 0;
+const hasAudio = concert.data.audioClips && concert.data.audioClips.length > 0;
+const hasGallery = concert.data.gallery && concert.data.gallery.length > 0;
+const hasLinks = concert.data.externalLinks && concert.data.externalLinks.length > 0;
+const hasReviews = concert.data.reviews && concert.data.reviews.length > 0;
+const hasMedia = hasVideos || hasAudio || hasGallery || hasLinks;
 ---
 
 <BaseLayout
   title={`${concert.data.title} - Davis Ponjuan`}
   description={`${concert.data.orchestra} - ${concert.data.venue}`}
 >
-  <article class="max-w-3xl">
-    <header class="mb-12 pb-8 border-b-2 border-gray-800">
-      <h1 class="text-4xl mb-4">{concert.data.title}</h1>
-      <div class="text-gray-600 text-lg">
+  <article class="max-w-4xl fade-in">
+    <!-- Hero Image -->
+    {
+      coverSrc && (
+        <div class="relative -mx-6 md:-mx-10 lg:-mx-16 mb-8 overflow-hidden">
+          <div class="relative h-[40vh] md:h-[50vh]">
+            <img
+              src={coverSrc}
+              alt={concert.data.title}
+              class="w-full h-full object-cover"
+              loading="eager"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+          </div>
+        </div>
+      )
+    }
+
+    <!-- Header -->
+    <header class="mb-8 pb-6 border-b border-border fade-in-up delay-1">
+      <div class="flex flex-wrap items-center gap-2 text-nav text-muted-foreground mb-3">
         <time datetime={concert.data.date.toISOString()}>
           {
             concert.data.date.toLocaleDateString('en-US', {
@@ -43,113 +79,195 @@ try {
             })
           }
         </time>
-        <span class="mx-2">•</span>
-        <span>{concert.data.venue}, {concert.data.location}</span>
-        <span class="mx-2">•</span>
-        <span>{concert.data.orchestra}</span>
+        <span>·</span>
+        <span
+          class:list={[
+            'px-2 py-0.5 rounded text-xs font-medium',
+            concert.data.status === 'upcoming'
+              ? 'bg-primary/10 text-primary'
+              : 'bg-muted text-muted-foreground',
+          ]}
+        >
+          {concert.data.status === 'upcoming' ? 'Upcoming' : 'Past Performance'}
+        </span>
+      </div>
+
+      <h1 class="text-3xl md:text-4xl font-serif mb-4">{concert.data.title}</h1>
+
+      <div class="flex flex-wrap gap-4 text-sm text-muted-foreground">
+        <span class="flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+            ></path>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+          {concert.data.venue}, {concert.data.location}
+        </span>
+        <span class="flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+            ></path>
+          </svg>
+          {concert.data.orchestra}
+        </span>
       </div>
     </header>
 
+    <div class="grid lg:grid-cols-12 gap-8 lg:gap-12">
+      <!-- Main Content -->
+      <div class="lg:col-span-7">
+        <!-- Program -->
+        {
+          concert.data.program && concert.data.program.length > 0 && (
+            <section class="mb-10 fade-in-up delay-2">
+              <h2 class="text-xl font-serif text-primary mb-4">Program</h2>
+              <ul class="space-y-4">
+                {concert.data.program.map((piece) => (
+                  <li class="pl-4 border-l-2 border-primary">
+                    <div class="font-medium">{piece.composer}</div>
+                    <div class="font-serif italic text-foreground/80">{piece.work}</div>
+                    {piece.soloist && (
+                      <div class="text-sm text-muted-foreground mt-1">{piece.soloist}</div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+
+        <!-- Program Notes (Markdown Content) -->
+        {
+          !renderError && (
+            <section class="mb-10 prose prose-neutral dark:prose-invert max-w-none fade-in-up delay-3">
+              <Content />
+            </section>
+          )
+        }
+        {
+          renderError && (
+            <section class="mb-10 fade-in-up delay-3">
+              <p class="text-muted-foreground italic">
+                Program notes are currently unavailable for this performance.
+              </p>
+            </section>
+          )
+        }
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="lg:col-span-5 lg:border-l lg:border-border lg:pl-8">
+        <!-- Press Reviews -->
+        {
+          hasReviews && (
+            <section class="mb-8 fade-in-up delay-3">
+              <h2 class="text-nav text-muted-foreground mb-4">Press</h2>
+              <div class="space-y-4">
+                {concert.data.reviews!.map((review) => (
+                  <blockquote class="border-l-2 border-primary/30 pl-4">
+                    <p class="text-sm italic leading-relaxed mb-2">"{review.excerpt}"</p>
+                    <cite class="not-italic text-xs text-muted-foreground">
+                      — <span class="font-medium">{review.publication}</span>
+                      {review.author && `, ${review.author}`}
+                      {review.url && (
+                        <>
+                          {' · '}
+                          <a
+                            href={review.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-primary hover:underline"
+                          >
+                            Read full review
+                          </a>
+                        </>
+                      )}
+                    </cite>
+                  </blockquote>
+                ))}
+              </div>
+            </section>
+          )
+        }
+
+        <!-- External Links -->
+        {
+          hasLinks && (
+            <section class="mb-8 fade-in-up delay-4">
+              <h2 class="text-nav text-muted-foreground mb-4">Listen & Watch</h2>
+              <MediaLinks links={concert.data.externalLinks!} variant="list" />
+            </section>
+          )
+        }
+      </aside>
+    </div>
+
+    <hr class="divider-dashed" />
+
+    {/* Media Section */}
     {
-      concert.data.program && (
-        <section class="mb-12">
-          <h2 class="text-2xl mb-4 text-[#2d7a3e]">Program</h2>
-          <ul class="list-none p-0">
-            {concert.data.program.map((piece) => (
-              <li class="mb-6 pl-4 border-l-[3px] border-[#2d7a3e]">
-                <strong>{piece.composer}</strong>
-                <br />
-                <em>{piece.work}</em>
-                {piece.soloist && (
-                  <>
-                    <br />
-                    <span class="text-gray-600 text-sm">{piece.soloist}</span>
-                  </>
-                )}
-              </li>
-            ))}
-          </ul>
+      hasMedia && (
+        <section class="fade-in-up delay-4">
+          <h2 class="text-2xl font-serif mb-6">Media</h2>
+
+          {/* Videos */}
+          {hasVideos && (
+            <div class="mb-8">
+              <h3 class="text-nav text-muted-foreground mb-4">Videos</h3>
+              <div class="grid md:grid-cols-2 gap-6">
+                {concert.data.videos!.map((video) => (
+                  <MediaVideo video={video} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Audio */}
+          {hasAudio && (
+            <div class="mb-8">
+              <h3 class="text-nav text-muted-foreground mb-4">Audio Recordings</h3>
+              <div class="space-y-4">
+                {concert.data.audioClips!.map((audio) => (
+                  <MediaAudio audio={audio} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Gallery */}
+          {hasGallery && (
+            <div class="mb-8">
+              <h3 class="text-nav text-muted-foreground mb-4">Gallery</h3>
+              <MediaGallery images={concert.data.gallery!} columns={3} />
+            </div>
+          )}
         </section>
       )
     }
 
-    {
-      concert.data.featured && !renderError && (
-        <section class="mb-12 leading-relaxed">
-          <Content />
-        </section>
-      )
-    }
-    {
-      renderError && (
-        <section class="mb-12 leading-relaxed">
-          <p class="text-gray-600 italic">
-            Program notes are currently unavailable for this performance.
-          </p>
-        </section>
-      )
-    }
-
-    {
-      concert.data.media && concert.data.media.length > 0 && (
-        <section class="mb-12">
-          <h2 class="text-2xl mb-4 text-[#2d7a3e]">Media</h2>
-          <ul class="list-none p-0">
-            {concert.data.media.map((item) => (
-              <li class="mb-4">
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-[#2d7a3e] no-underline hover:underline"
-                >
-                  {item.type === 'video' && '🎥'}
-                  {item.type === 'photo' && '📷'}
-                  {item.type === 'audio' && '🎵'}
-                  {item.caption || item.url}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )
-    }
-
-    {
-      concert.data.reviews && concert.data.reviews.length > 0 && (
-        <section class="mb-12">
-          <h2 class="text-2xl mb-4 text-[#2d7a3e]">Press Coverage</h2>
-          {concert.data.reviews.map((review) => (
-            <blockquote class="border-l-4 border-gray-200 pl-6 m-0 mb-8 italic">
-              <p class="mb-2 text-lg">{review.excerpt}</p>
-              <cite class="not-italic text-sm text-gray-600">
-                — <strong>{review.publication}</strong>
-                {review.author && `, ${review.author}`}
-                {review.url && (
-                  <>
-                    {' '}
-                    •{' '}
-                    <a
-                      href={review.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="text-[#2d7a3e] no-underline hover:underline"
-                    >
-                      Read full review
-                    </a>
-                  </>
-                )}
-              </cite>
-            </blockquote>
-          ))}
-        </section>
-      )
-    }
-
-    <nav class="mt-16 pt-8 border-t border-gray-300">
-      <a href="/concerts" class="text-[#2d7a3e] no-underline hover:underline"
-        >← Back to all concerts</a
+    <nav class="mt-12 pt-6 border-t border-border">
+      <a
+        href="/concerts"
+        class="inline-flex items-center gap-2 text-primary hover:underline underline-offset-4 transition-all"
       >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"
+          ></path>
+        </svg>
+        Back to all concerts
+      </a>
     </nav>
   </article>
 </BaseLayout>

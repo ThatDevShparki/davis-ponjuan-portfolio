@@ -20,6 +20,13 @@ const pastConcerts = allConcerts
 // Featured past concerts
 const featuredConcerts = pastConcerts.filter((c) => c.data.featured).slice(0, 3);
 
+// Helper to get cover image src
+function getCoverImageSrc(coverImage: string | { src: string } | undefined): string | undefined {
+  if (!coverImage) return undefined;
+  if (typeof coverImage === 'string') return coverImage;
+  return coverImage.src;
+}
+
 // Group past concerts by year
 const concertsByYear = pastConcerts.reduce(
   (acc, concert) => {
@@ -143,28 +150,60 @@ const years = Object.keys(concertsByYear)
       <section class="mb-10 fade-in-up delay-2">
         <h2 class="text-nav text-muted-foreground mb-4">Highlights</h2>
 
-        <div class="grid md:grid-cols-3 gap-3">
-          {featuredConcerts.map((concert, index) => (
-            <article
-              class={`group p-4 border border-border rounded-md bg-card hover:border-primary transition-colors duration-300 fade-in-up delay-${Math.min(index + 3, 5)}`}
-            >
-              <Badge variant="featured" className="mb-2 text-[10px]">
-                Featured
-              </Badge>
-              <div class="text-nav text-muted-foreground mb-1">
-                {concert.data.date.toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'short',
-                })}
-              </div>
-              <h3 class="text-sm font-serif mb-2 leading-tight group-hover:text-primary transition-colors duration-300">
-                <a href={`/concerts/${concert.id}`}>{concert.data.title}</a>
-              </h3>
-              <div class="text-xs text-muted-foreground">
-                {concert.data.orchestra} · {concert.data.venue}
-              </div>
-            </article>
-          ))}
+        <div class="grid md:grid-cols-3 gap-4">
+          {featuredConcerts.map((concert, index) => {
+            const coverSrc = getCoverImageSrc(concert.data.coverImage);
+            return (
+              <article
+                class={`group overflow-hidden border border-border rounded-md bg-card hover:border-primary transition-all duration-300 fade-in-up delay-${Math.min(index + 3, 5)}`}
+              >
+                {/* Cover Image */}
+                {coverSrc && (
+                  <a href={`/concerts/${concert.id}`} class="block overflow-hidden">
+                    <img
+                      src={coverSrc}
+                      alt={concert.data.title}
+                      class="w-full aspect-[16/10] object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                  </a>
+                )}
+
+                <div class="p-4">
+                  <Badge variant="featured" className="mb-2 text-[10px]">
+                    Featured
+                  </Badge>
+                  <div class="text-nav text-muted-foreground mb-1">
+                    {concert.data.date.toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                    })}
+                  </div>
+                  <h3 class="text-sm font-serif mb-2 leading-tight group-hover:text-primary transition-colors duration-300">
+                    <a href={`/concerts/${concert.id}`}>{concert.data.title}</a>
+                  </h3>
+                  <div class="text-xs text-muted-foreground">
+                    {concert.data.orchestra} · {concert.data.venue}
+                  </div>
+
+                  {/* Video link if available */}
+                  {concert.data.videos && concert.data.videos.length > 0 && (
+                    <a
+                      href={concert.data.videos[0].src}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center gap-1.5 mt-3 text-xs text-primary hover:underline"
+                    >
+                      <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                      Watch Performance
+                    </a>
+                  )}
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
     )
