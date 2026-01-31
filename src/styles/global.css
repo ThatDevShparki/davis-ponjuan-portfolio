@@ -3,9 +3,8 @@
 
 /* ─────────────────────────────────────────────────────────
    TYPOGRAPHY - Cormorant Garamond for classical authority
+   Font loaded via <link> in BaseLayout.astro for non-blocking load
    ───────────────────────────────────────────────────────── */
-/* Font loaded with display=swap in URL for FOUT prevention */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
@@ -711,6 +710,33 @@ select:focus-visible {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ─────────────────────────────────────────────────────────
+   PERFORMANCE OPTIMIZATIONS
+   ───────────────────────────────────────────────────────── */
+
+/* CSS Containment - Isolate rendering for better performance */
+article,
+section,
+aside {
+  contain: layout style;
+}
+
+/* Content visibility for off-screen content (lazy rendering) */
+.content-lazy {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px; /* Estimated height */
+}
+
+/* GPU acceleration hints for animated elements */
+.will-animate {
+  will-change: transform, opacity;
+}
+
+/* Remove will-change after animation completes */
+.animation-done {
+  will-change: auto;
 }
 
 /* ─────────────────────────────────────────────────────────

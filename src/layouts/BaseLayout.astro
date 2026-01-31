@@ -47,10 +47,38 @@ const footerLinks = {
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
+
+    {/* Preconnect to external domains for faster resource loading */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://images.unsplash.com" />
+
+    {/* DNS prefetch for external resources */}
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://images.unsplash.com" />
+
+    {/* Prefetch likely navigation targets for faster page transitions */}
+    <link rel="prefetch" href="/about" />
+    <link rel="prefetch" href="/concerts" />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+
+    {/* Non-blocking font loading with swap display */}
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"
+      />
+    </noscript>
   </head>
   <body>
     <a
@@ -445,8 +473,9 @@ const footerLinks = {
         }
       });
 
-      window.addEventListener('scroll', handleScroll);
-      window.addEventListener('mousemove', handleMouseMove);
+      // Use passive listeners for better scroll performance
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      window.addEventListener('mousemove', handleMouseMove, { passive: true });
       updateButtonState();
 
       // Mobile menu toggle with animation

@@ -51,10 +51,17 @@ function getCoverImageSrc(coverImage: string | { src: string } | undefined): str
     <!-- Image Container - responsive height for different devices -->
     <div class="relative h-[30vh] min-h-[200px] md:h-[40vh] lg:h-[45vh] overflow-hidden">
       <img
-        src="https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=1920&q=80"
+        src="https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=1200&q=80&auto=format"
+        srcset="https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=640&q=80&auto=format 640w,
+                https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=1200&q=80&auto=format 1200w,
+                https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=1920&q=80&auto=format 1920w"
+        sizes="100vw"
         alt="Davis Ponjuán conducting"
         class="w-full h-full object-cover object-[center_30%]"
+        width="1920"
+        height="1280"
         loading="eager"
+        decoding="async"
         fetchpriority="high"
       />
       <!-- Subtle gradient at bottom for blend -->
