@@ -173,7 +173,7 @@ const years = Object.keys(concertsByYear)
                         ))}
                         {concert.data.program.length > 2 && (
                           <div class="text-muted-foreground">
-                            +{concert.data.program.length - 2} more
+                            +{concert.data.program.length - 2} more works
                           </div>
                         )}
                       </div>
@@ -263,8 +263,8 @@ const years = Object.keys(concertsByYear)
     {
       years.length === 0 && (
         <EmptyState
-          title="No past performances yet"
-          message="Check back soon for concert history and archive."
+          title="Archive coming soon"
+          message="Past performances will appear here once concerts are completed."
         />
       )
     }

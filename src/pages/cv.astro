@@ -31,7 +31,7 @@ const sortedWorkshops = allWorkshops.sort((a, b) => b.data.date.getTime() - a.da
   <header class="mb-6 md:mb-8 fade-in">
     <h1 class="text-4xl md:text-5xl mb-3">Curriculum Vitae</h1>
     <p class="text-lg text-muted-foreground max-w-2xl">
-      A comprehensive overview of education, professional experience, and achievements.
+      Education, professional experience, awards, and discography.
     </p>
   </header>
 
@@ -173,8 +173,11 @@ const sortedWorkshops = allWorkshops.sort((a, b) => b.data.date.getTime() - a.da
 
   <hr class="divider-dashed" />
 
-  <nav class="fade-in-up">
-    <Button onclick="window.print(); return false;">Print CV as PDF</Button>
+  <nav class="fade-in-up flex flex-wrap gap-3">
+    <Button onclick="window.print(); return false;">Print as PDF</Button>
+    <Button asChild variant="outline">
+      <a href="/contact">Request Full CV</a>
+    </Button>
   </nav>
 </BaseLayout>
 
